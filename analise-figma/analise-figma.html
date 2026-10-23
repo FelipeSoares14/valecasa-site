@@ -1,0 +1,314 @@
+<title>Análise Figma ValeCasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: documento de decisão. Faixa roxa com o veredito, depois três blocos (marca, ilustração, cards), cada um com imagem do Figma + diagnóstico + proposta. Coluna de 960px. */
+:root{
+  --green:#03FE9F; --green-ink:#00331F; --green-text:#007F50; --purple:#4D00AF; --purple-50:#F3ECFF; --purple-100:#E2C9F8; --sun:#FFDA00; --cream:#FBF3E7;
+  --keep:#007F50; --adapt:#B45309; --retire:#DC2626;
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --ink:#140E1B; --ink-2:#4E4A5E; --ink-3:#817C93;
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --green-text:#03FE9F; --purple:#B48CFF; --purple-50:#2A1A55; --keep:#4ADE80; --adapt:#FBBF24; --retire:#F87171;
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --green-text:#03FE9F; --purple:#B48CFF; --purple-50:#2A1A55; --keep:#4ADE80; --adapt:#FBBF24; --retire:#F87171;
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6}
+h1,h2,h3,h4{margin:0;line-height:1.2;text-wrap:balance}
+p{margin:0}
+code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+:focus-visible{outline:2px solid #6514D6;outline-offset:2px}
+
+.hero{background:linear-gradient(135deg,#140E1B,#4D00AF 60%,#6A00FF);color:#fff;padding-inline:20px;padding-block:40px 44px}
+.hero-in{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--green)}
+.hero h1{font-size:clamp(26px,4.2vw,38px);font-weight:800;letter-spacing:-.01em;max-width:24ch}
+.hero p{color:#E2C9F8;max-width:64ch}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:8px}
+.verdict div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.verdict b{font-size:15px}
+.verdict span{font-size:13.5px;color:#E2C9F8}
+
+.toc{max-width:960px;margin:0 auto;padding-inline:20px;padding-block:16px 0;display:flex;flex-wrap:wrap;gap:8px}
+.toc a{font-size:13px;font-weight:500;color:var(--ink-2);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 14px}
+.toc a:hover{border-color:var(--ink-3)}
+
+.wrap{max-width:960px;margin:0 auto;padding-inline:20px;padding-block:8px 72px}
+section{padding-top:48px;display:flex;flex-direction:column;gap:18px}
+.sec-h{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.sec-h .n{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.sec-h h2{font-size:26px;font-weight:700;letter-spacing:-.01em}
+.sec-h p{color:var(--ink-2);max-width:70ch}
+h3.sub{font-size:17px;font-weight:700;margin-top:6px}
+
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+figure img{display:block;width:100%;height:auto;max-width:100%;background:#fff}
+figcaption{font-size:12.5px;color:var(--ink-3);padding:8px 14px;border-top:1px solid var(--line)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start}
+
+.fam{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+@media (max-width:760px){.fam{grid-template-columns:minmax(0,1fr)}}
+.fam figure{border-radius:10px}
+.fam .txt{display:flex;flex-direction:column;gap:10px;min-width:0}
+.fam h4{font-size:17px;font-weight:700;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fam ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+.pill{font:700 10.5px/1 var(--font);letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:999px;color:#fff;white-space:nowrap}
+.pill.keep{background:var(--keep)} .pill.adapt{background:var(--adapt)} .pill.retire{background:var(--retire)}
+.imgs{display:flex;flex-direction:column;gap:8px}
+
+.rec{background:var(--purple-50);border:1px solid var(--purple-100);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.rec h3{font-size:20px;font-weight:700;color:var(--purple)}
+.rec p{max-width:72ch}
+.rec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.rule b{font-size:14px}
+.rule span{font-size:13.5px;color:var(--ink-2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{width:26px;height:26px;border-radius:8px;border:1px solid rgba(0,0,0,.12)}
+
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+tr:last-child td{border-bottom:0}
+td .sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.15)}
+td code{white-space:nowrap}
+.ok{color:var(--keep);font-weight:600}
+.ch{color:var(--adapt);font-weight:600}
+.new{color:var(--purple);font-weight:600}
+
+.list{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 0}
+.li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:14px}
+.li:last-child{border-bottom:0}
+.li .k{font-family:var(--mono);font-size:12px;color:var(--ink-3);padding-top:2px}
+.li b{font-weight:600}
+.li span{color:var(--ink-2)}
+
+.decide{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.dc{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--purple);border-radius:0 0 12px 12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.dc .q{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.dc b{font-size:15px}
+.dc span{font-size:13.5px;color:var(--ink-2)}
+.note{font-size:13px;color:var(--ink-3)}
+</style>
+
+<header class="hero">
+  <div class="hero-in">
+    <span class="eyebrow">Figma VALE CASA 2026 · cards, ilustrações e resumo da marca</span>
+    <h1>O que manter, mudar e acrescentar no novo design system</h1>
+    <p>O material tem uma identidade forte, com bons achados: os marcos de Guaratinguetá, a skyline e as formas orgânicas. Ele só não decidiu ainda qual linguagem é a oficial. Há quatro estilos de ilustração convivendo, oito versões do card de contato e uma paleta que o design system que eu montei ainda não refletia por completo.</p>
+    <div class="verdict">
+      <div><b>Marca: ajustar o design system</b><span>O manual tem uma cor terciária (amarelo), tons de apoio, degradês e o padrão de formas orgânicas que eu não tinha. Vou incorporar tudo.</span></div>
+      <div><b>Ilustração: escolher um caminho</b><span>Minha recomendação é o estilo de pictograma geométrico e local, com fotografia sempre que a peça precisar mostrar pessoas.</span></div>
+      <div><b>Cards: transformar em componentes</b><span>São muitas variações soltas. Proponho 6 componentes com propriedades, em vez de dezenas de frames.</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Seções">
+  <a href="#marca">1 · Marca e cores</a>
+  <a href="#ilustracao">2 · Ilustrações</a>
+  <a href="#cards">3 · Cards</a>
+  <a href="#decisoes">4 · Decisões e próximos passos</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- 1 MARCA -->
+  <section id="marca">
+    <div class="sec-h">
+      <span class="n">01</span>
+      <h2>Marca e cores</h2>
+      <p>O resumo da marca confirma a Geologica, o Heroicons e as duas cores principais que já estão no design system. Ele também traz elementos que faltavam: o amarelo terciário, os tons de apoio, três degradês e o padrão de formas.</p>
+    </div>
+    <div class="two">
+      <figure><img src="img/paleta.jpg" alt="Paleta do manual: primária verde 03FE9F com BDFFE6 e 1FCC8A, secundária roxa 4D00AF com E2C9F8 e 140E1B, terciária amarela FFDA00 com FBF3E7 e E09200, e três degradês" loading="lazy"><figcaption>Paleta e degradês do resumo da marca</figcaption></figure>
+      <figure><img src="img/elementos.jpg" alt="Elementos orgânicos em verde e roxo e pattern de formas sobre fundo verde e sobre fundo roxo" loading="lazy"><figcaption>Elementos e pattern</figcaption></figure>
+    </div>
+
+    <h3 class="sub">Conciliação da paleta</h3>
+    <p class="note">Quando o manual e o design system divergem, vence o manual. As exceções ficam marcadas, sempre por causa de contraste.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Papel</th><th>Manual</th><th>Design system hoje</th><th>Proposta</th></tr></thead>
+      <tbody>
+        <tr><td>Verde principal</td><td><span class="sw" style="background:#03FE9F"></span><code>#03FE9F</code></td><td><code>#03FE9F</code></td><td class="ok">Igual. Manter.</td></tr>
+        <tr><td>Verde claro</td><td><span class="sw" style="background:#BDFFE6"></span><code>#BDFFE6</code></td><td><code>#C4FFE7</code></td><td class="ch">Usar #BDFFE6 como green-100</td></tr>
+        <tr><td>Verde escuro</td><td><span class="sw" style="background:#1FCC8A"></span><code>#1FCC8A</code></td><td><code>#00DB88</code></td><td class="ch">Usar #1FCC8A como green-600, só em fundos e ilustração. Em texto ele fica em 2:1, então o texto verde segue com #007F50.</td></tr>
+        <tr><td>Roxo principal</td><td><span class="sw" style="background:#4D00AF"></span><code>#4D00AF</code></td><td><code>#4D00AF</code></td><td class="ok">Igual. Manter.</td></tr>
+        <tr><td>Roxo claro</td><td><span class="sw" style="background:#E2C9F8"></span><code>#E2C9F8</code></td><td><code>#E2D2FF</code></td><td class="ch">Usar #E2C9F8 como purple-100</td></tr>
+        <tr><td>Quase preto</td><td><span class="sw" style="background:#140E1B"></span><code>#140E1B</code></td><td><code>#1B1825</code></td><td class="ch">Usar #140E1B como cor de texto principal (ink)</td></tr>
+        <tr><td>Amarelo</td><td><span class="sw" style="background:#FFDA00"></span><code>#FFDA00</code></td><td>não existia</td><td class="new">Novo: sun-500. Só para fundo e destaque. Nunca como cor de texto sobre branco; texto sobre ele, sempre escuro.</td></tr>
+        <tr><td>Creme</td><td><span class="sw" style="background:#FBF3E7"></span><code>#FBF3E7</code></td><td>não existia</td><td class="new">Novo: sun-50. Fundo acolhedor para seções editoriais, como a série "cantinhos".</td></tr>
+        <tr><td>Âmbar</td><td><span class="sw" style="background:#E09200"></span><code>#E09200</code></td><td>não existia</td><td class="new">Novo: sun-700. Também serve como cor de aviso.</td></tr>
+        <tr><td>Degradê roxo</td><td><span class="sw" style="background:linear-gradient(135deg,#4D00AF,#6A00FF)"></span><code>4D00AF → 6A00FF</code></td><td>não existia</td><td class="new">Novo token. A aba "Todos" do site já usa esse degradê. Corrijo a auditoria: lá estava indicado trocar, e o certo é manter, só que como token.</td></tr>
+        <tr><td>Degradê verde</td><td><span class="sw" style="background:linear-gradient(135deg,#1FCC8A,#03FE9F)"></span><code>1FCC8A → 03FE9F</code></td><td>não existia</td><td class="new">Novo token</td></tr>
+        <tr><td>Degradê lilás</td><td><span class="sw" style="background:linear-gradient(135deg,#9B7FD8,#03FE9F)"></span><code>4D00AF → 03FE9F</code></td><td>não existia</td><td class="new">Novo token. Usar só em fundos amplos e suaves, como os cards de bairro.</td></tr>
+        <tr><td>Coral do bairro</td><td>não aparece no manual</td><td><code>#E5483B</code></td><td class="ch">Está em todos os cards do Figma e do site. Proponho oficializar no manual como "cor de localização".</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="rules">
+      <div class="rule"><b>Elementos e pattern</b><span>Entram no design system como recurso de marca. Uso: fundo de banner, de hero e de estados vazios. Nunca atrás de texto pequeno.</span></div>
+      <div class="rule"><b>Fotografia</b><span>As artes da série "cantinho em Guará" (luz natural, casas reais, pessoas em momentos do dia a dia) são o melhor material da marca. Viram a regra de fotografia.</span></div>
+      <div class="rule"><b>Heroicons confirmado</b><span>O manual já indica o Heroicons, o mesmo dos 150 ícones de comodidades. Isso reforça o pedido para o dev trocar o Lucide.</span></div>
+    </div>
+  </section>
+
+  <!-- 2 ILUSTRAÇÃO -->
+  <section id="ilustracao">
+    <div class="sec-h">
+      <span class="n">02</span>
+      <h2>Ilustrações: quatro linguagens</h2>
+      <p>Cada grupo funciona sozinho. O problema aparece quando eles se juntam: muda a proporção das pessoas, a paleta, o uso de contorno e o nível de detalhe. Para quem usa o site, cada tela parece ter sido feita por uma marca diferente.</p>
+    </div>
+
+    <div class="fam">
+      <div class="imgs">
+        <figure><img src="img/d-marcos.jpg" alt="Marcos de Guaratinguetá em roxo e em verde: EEAR, Casa Frei Galvão, Monumento das Garças e Estação Ferroviária" loading="lazy"></figure>
+        <div class="two" style="gap:8px">
+          <figure><img src="img/d-skyline.jpg" alt="Skyline de casas, prédios e loja em linha verde e roxa" loading="lazy"></figure>
+          <figure><img src="img/d-blobs.jpg" alt="Casa e prédio em pictograma sobre forma orgânica" loading="lazy"></figure>
+        </div>
+      </div>
+      <div class="txt">
+        <h4>D · Pictogramas geométricos e locais <span class="pill keep">Base do sistema</span></h4>
+        <ul>
+          <li>É o grupo mais autoral. Nenhum outro portal tem a EEAR, a Casa Frei Galvão ou o Monumento das Garças.</li>
+          <li>Coloca em prática o pilar "Local, de verdade" do tom de voz.</li>
+          <li>Formas retas e chapadas, em duas ou três cores. Conversa com os ícones e com o A em forma de seta do logo.</li>
+          <li>É fácil de produzir e de manter consistente: a próxima peça sai na mesma gramática.</li>
+          <li>Vale ampliar a coleção de marcos (Catedral de Santo Antônio, rio Paraíba, Frei Galvão) e criar marcos para as cidades vizinhas.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fam">
+      <div class="imgs"><figure><img src="img/a-spots.jpg" alt="Ilustrações de mensagens do site: chave e celular, caixa de correio, e-mail com erro, celular com check, porta 404 com tábuas, cadeado com pessoa e cachorro" loading="lazy"></figure></div>
+      <div class="txt">
+        <h4>A · Mensagens do site <span class="pill adapt">Manter e ajustar</span></h4>
+        <ul>
+          <li>O conceito está certo: objeto simples sobre a forma roxa, em cores da marca. A porta 404 com tábuas é a melhor do grupo.</li>
+          <li>Ajustar para a gramática do grupo D: tirar o contorno preto dos celulares, reduzir o amarelo a um único destaque por peça e remover sombras e gradientes dos objetos.</li>
+          <li>A cena da pessoa correndo do cachorro destoa das outras (traz uma pessoa detalhada). Trocar por um cadeado com o símbolo VA.</li>
+          <li>Faltam estados importantes: busca sem resultado, sem favoritos, imóvel sem foto, sem lançamentos e erro de servidor.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fam">
+      <div class="imgs"><figure><img src="img/b-personas.jpg" alt="Cards de tipo de usuário: proprietário com casal, corretor com duas pessoas, construtora com prédios" loading="lazy"></figure></div>
+      <div class="txt">
+        <h4>B · Cards de tipo de usuário <span class="pill adapt">Redesenhar</span></h4>
+        <ul>
+          <li>Os rostos semirrealistas sobre a forma verde não combinam com o prédio ao lado, que já está no estilo do grupo D.</li>
+          <li>Proposta: os três tipos como pictogramas. Proprietário vira casa com chave, corretor vira crachá com o símbolo VA, e construtora vira prédio com guindaste. Fica consistente e reaproveita os ícones de comodidade em escala maior.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fam">
+      <div class="imgs">
+        <figure><img src="img/c-loja.jpg" alt="Loja de lançamentos com casal e carrinho de compras" loading="lazy"></figure>
+        <div class="two" style="gap:8px">
+          <figure><img src="img/c-cidade.jpg" alt="Cena de cidade com pessoas e balões de texto" loading="lazy"></figure>
+          <figure><img src="img/c-chat.jpg" alt="Conversa por chat entre cliente e corretora" loading="lazy"></figure>
+        </div>
+      </div>
+      <div class="txt">
+        <h4>C · Cenas com pessoas <span class="pill retire">Aposentar aos poucos</span></h4>
+        <ul>
+          <li>É o estilo "flat corporativo", muito comum em bancos de ilustração. Isso enfraquece a marca justamente onde ela mais aparece: home, lançamentos e páginas institucionais.</li>
+          <li>As cores de roupa e pele saem da paleta (azul claro, laranja, amarelo-ouro), e as proporções mudam de cena para cena.</li>
+          <li>Manter pessoas ilustradas consistentes e diversas dá muito trabalho a cada peça nova.</li>
+          <li>O calor humano que essas cenas buscam, a fotografia "cantinho em Guará" já entrega melhor. Onde a peça precisar de gente, use foto. Onde precisar de conceito, use pictograma.</li>
+          <li>A loja "Lançamentos" pode virar um pictograma: um prédio em obra com guindaste e o símbolo VA no topo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rec">
+      <h3>Caminho recomendado</h3>
+      <p>Uma linguagem só: <b>pictograma geométrico e local</b> (grupo D) para tudo o que é conceito, estado ou lugar, e <b>fotografia</b> para tudo o que envolve pessoas. As mensagens do site (grupo A) migram para essa gramática, e as cenas com pessoas (grupo C) saem conforme as telas forem refeitas.</p>
+      <ol>
+        <li>Começar pelos estados do site, que têm mais impacto no uso do dia a dia: 404, busca vazia, sem foto, sem favoritos, contato enviado e sem lançamentos.</li>
+        <li>Depois os três tipos de usuário e a seção de lançamentos.</li>
+        <li>Por último, ampliar os marcos de Guaratinguetá para as cidades do Vale.</li>
+      </ol>
+    </div>
+
+    <h3 class="sub">Regras do sistema de ilustração</h3>
+    <div class="rules">
+      <div class="rule"><b>Paleta restrita</b><div class="chips"><i class="chip" style="background:#4D00AF"></i><i class="chip" style="background:#8A4DF0"></i><i class="chip" style="background:#E2C9F8"></i><i class="chip" style="background:#03FE9F"></i><i class="chip" style="background:#BDFFE6"></i><i class="chip" style="background:#FFDA00"></i></div><span>No máximo três cores por peça. O amarelo aparece uma vez, como destaque.</span></div>
+      <div class="rule"><b>Forma</b><span>Geometria reta com cantos levemente arredondados. Cores chapadas, sem contorno preto e sem degradê nos objetos.</span></div>
+      <div class="rule"><b>Fundo</b><span>A forma orgânica da marca (o "Elemento") atrás do objeto, em roxo 600 ou verde 500. Uma linha de chão de 2 px, como na skyline.</span></div>
+      <div class="rule"><b>Tamanhos</b><span>Spot de 120 px para estados, médio de 240 px para seções e cena de 480 px ou mais para hero e banners.</span></div>
+      <div class="rule"><b>Pessoas</b><span>Fotografia. Se não houver foto, usar uma silhueta pictográfica no estilo do Monumento das Garças, nunca rostos detalhados.</span></div>
+      <div class="rule"><b>Local</b><span>Sempre que possível, um marco ou referência real da cidade na cena.</span></div>
+    </div>
+  </section>
+
+  <!-- 3 CARDS -->
+  <section id="cards">
+    <div class="sec-h">
+      <span class="n">03</span>
+      <h2>Cards</h2>
+      <p>A estrutura dos cards está boa e bate com o design system: bairro, preço, composição, título e atributos. O problema é a quantidade de versões soltas, com detalhes que variam de uma para outra.</p>
+    </div>
+    <div class="two">
+      <figure><img src="img/cards-lcmto.jpg" alt="Cards de lançamento em versões desktop e pesquisa" loading="lazy"><figcaption>Cards de lançamento: quatro versões só nesta área</figcaption></figure>
+      <figure><img src="img/cards-contato.jpg" alt="Cards de construtora e cards de contato de venda e aluguel" loading="lazy"><figcaption>Construtoras e card de contato, que tem oito versões no arquivo</figcaption></figure>
+    </div>
+    <figure><img src="img/cards-imovel.jpg" alt="Cards de imóvel da home com placeholders e card com foto" loading="lazy"><figcaption>Card da home com três versões de ícones e textos provisórios</figcaption></figure>
+
+    <h3 class="sub">O que corrigir</h3>
+    <div class="list">
+      <div class="li"><span class="k">01</span><div><b>Preço com vírgula no milhar:</b> <span>"R$ 799,000" aparece em todos os cards de lançamento. O formato brasileiro é R$ 799.000.</span></div></div>
+      <div class="li"><span class="k">02</span><div><b>Três famílias de ícone nos atributos:</b> <span>pictogramas cheios (cama sólida), traço fino parecido com o Lucide e Heroicons. Padronizar com o Heroicons e os ícones de comodidade.</span></div></div>
+      <div class="li"><span class="k">03</span><div><b>Unidade de área:</b> <span>aparece "67m2", "45 e 67m2" e "78m2". O padrão é "67 m²", com espaço e expoente.</span></div></div>
+      <div class="li"><span class="k">04</span><div><b>Selo de lançamento em dois formatos:</b> <span>pílula roxa e retângulo roxo. Fica um só, o badge "Lançamento" do design system.</span></div></div>
+      <div class="li"><span class="k">05</span><div><b>Textos provisórios:</b> <span>"Kitnet com cozinha compartilhada asdf a as asd". Trocar por conteúdo real, porque o dev copia o que vê no Figma.</span></div></div>
+      <div class="li"><span class="k">06</span><div><b>Botão de contato com três nomes:</b> <span>"Contatar anunciante" no Figma, "Contato" no site e "Entrar em contato" no design system. Escolher um. Sugestão: "Entrar em contato".</span></div></div>
+      <div class="li"><span class="k">07</span><div><b>Denúncia:</b> <span>"Algo de errado com este anúncio? Nos informe" vira "Viu algo errado neste anúncio? Avisa a gente.", como no guia de voz.</span></div></div>
+      <div class="li"><span class="k">08</span><div><b>Cards de corretor e construtora:</b> <span>o contador "25 Imóveis" aparece como pílula arredondada num e retângulo no outro. Unificar com o formato pílula.</span></div></div>
+    </div>
+
+    <h3 class="sub">De dezenas de frames para 6 componentes</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Componente</th><th>Propriedades (variantes)</th><th>Substitui no Figma</th></tr></thead>
+      <tbody>
+        <tr><td><b>Card/Imóvel</b></td><td><code>negócio</code> venda · aluguel · <code>layout</code> vertical · compacto · <code>fotos</code> uma · carrossel · sem foto</td><td>Card home, card busca e as versões com placeholder</td></tr>
+        <tr><td><b>Card/Lançamento</b></td><td><code>layout</code> vertical · horizontal · vitrine · <code>status</code> na planta · em obras · pronto · <code>dispositivo</code> desktop · mobile</td><td>As cinco versões "CARD LCMTO"</td></tr>
+        <tr><td><b>Card/Contato</b></td><td><code>negócio</code> venda · aluguel · ambos (com abas) · <code>detalhe</code> resumido · completo · <code>anunciante</code> corretor · imobiliária · proprietário</td><td>As oito versões de venda e aluguel</td></tr>
+        <tr><td><b>Card/Anunciante</b></td><td><code>tipo</code> corretor (foto) · imobiliária (logo) · construtora (logo)</td><td>Os cards de corretor e de construtora</td></tr>
+        <tr><td><b>Card/Bairro</b></td><td><code>tamanho</code> grande · pequeno · <code>mostrar preço médio</code> sim · não</td><td>Os cards "Bairro Belo Bairro" e Pedregulho</td></tr>
+        <tr><td><b>Card/Vídeo</b></td><td><code>estado</code> padrão · reproduzindo</td><td>O card de vídeo da home</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Os nomes de frame, como "CARD LCMTO DESKTOP PAGINA LCMTO", viram propriedades. Assim o dev enxerga um componente com opções, e não cinco telas diferentes.</p>
+  </section>
+
+  <!-- 4 DECISÕES -->
+  <section id="decisoes">
+    <div class="sec-h">
+      <span class="n">04</span>
+      <h2>Decisões e próximos passos</h2>
+      <p>Com estas três respostas, eu atualizo o design system, o tema do site e começo a parte de ilustração.</p>
+    </div>
+    <div class="decide">
+      <div class="dc"><span class="q">Decisão 1</span><b>Aprovar a conciliação da paleta?</b><span>Adoto os tons de apoio do manual, acrescento o amarelo e os degradês, e atualizo o design system e o <code>valecasa-theme.css</code>.</span></div>
+      <div class="dc"><span class="q">Decisão 2</span><b>Seguir com pictograma e fotografia?</b><span>Se sim, faço um piloto com três estados do site (404, busca vazia e imóvel sem foto) em SVG, nas regras acima, para você avaliar antes de seguir com o resto.</span></div>
+      <div class="dc"><span class="q">Decisão 3</span><b>Oficializar o coral do bairro?</b><span>Ou o bairro passa a usar o roxo 600 e o vermelho fica só para erros.</span></div>
+    </div>
+    <div class="rules">
+      <div class="rule"><b>Estrutura do novo Figma</b><span>Capa, Fundamentos, Marca, Ícones, Ilustrações, Componentes, Telas e Arquivo. O material atual inteiro vai para "Arquivo", para não se perder nada.</span></div>
+      <div class="rule"><b>Montagem no Figma</b><span>Para eu criar variáveis e componentes direto no arquivo, o plano precisa de mais chamadas de integração (assento Dev ou Professional). No plano atual, eu entrego as especificações e você monta.</span></div>
+    </div>
+    <p class="note">Análise feita a partir de CARDS.pdf, ILLUSTRATIONS.pdf e REsumo Marca ValeCasa.pdf, exportados do arquivo VALE CASA 2026 em 04/10/2026.</p>
+  </section>
+</div>

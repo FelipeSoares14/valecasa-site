@@ -1,0 +1,131 @@
+/* ValeCasa · tema do design system para Tailwind v4 + shadcn/ui
+   Substitui o bloco :root / @theme do globals.css.
+   Os nomes antigos (valecasa-green-primary / -secondary) continuam existindo
+   para não quebrar o que já está em produção; migre aos poucos para a escala vc-*. */
+
+@theme inline {
+  /* Fonte */
+  --font-sans: var(--font-geologica-sans), ui-sans-serif, "Segoe UI", system-ui, sans-serif;
+
+  /* Verde · ação (oficial = 500) */
+  --color-vc-green-50: #E6FFF5;
+  --color-vc-green-100: #BDFFE6;
+  --color-vc-green-300: #6BFFC8;
+  --color-vc-green-500: #03FE9F;
+  --color-vc-green-600: #1FCC8A;   /* só fundo/ilustração (2,1:1) */
+  --color-vc-green-700: #007F50;   /* verde para TEXTO sobre branco (4,9:1) */
+  --color-vc-green-ink: #00331F;   /* texto SOBRE o verde 500 */
+
+  /* Roxo · institucional (oficial = 600) */
+  --color-vc-purple-50: #F3ECFF;
+  --color-vc-purple-100: #E2C9F8;
+  --color-vc-purple-400: #8A4DF0;
+  --color-vc-purple-500: #6514D6;
+  --color-vc-purple-600: #4D00AF;
+  --color-vc-purple-700: #3D008C;
+  --color-vc-purple-900: #22004F;
+
+  /* Amarelo · terciário (destaque e ilustração, nunca texto sobre branco) */
+  --color-vc-sun-50: #FBF3E7;
+  --color-vc-sun-500: #FFDA00;
+  --color-vc-sun-700: #E09200;
+
+  /* Apoio */
+  --color-vc-coral: #E5483B;       /* cor oficial de localização: bairro e categoria */
+  --color-vc-star: #F5B400;
+  --color-vc-link: #1F6FE0;
+
+  /* Neutros com leve tom violeta */
+  --color-vc-ink: #140E1B;
+  --color-vc-ink-2: #4E4A5E;
+  --color-vc-ink-3: #817C93;
+  --color-vc-line: #E3E0EC;
+  --color-vc-line-strong: #C9C5D6;
+  --color-vc-surface-2: #F1EFF7;
+  --color-vc-bg: #F7F6FB;
+
+  /* Degradês oficiais (use com bg-[image:var(--gradient-vc-purple)]) */
+  --gradient-vc-purple: linear-gradient(135deg, #4D00AF, #6A00FF);
+  --gradient-vc-green: linear-gradient(135deg, #1FCC8A, #03FE9F);
+  --gradient-vc-lilac: linear-gradient(135deg, rgb(77 0 175 / .45), rgb(3 254 159 / .55));
+
+  /* Compatibilidade com as classes atuais */
+  --color-valecasa-green-primary: var(--color-vc-green-500);
+  --color-valecasa-green-secondary: var(--color-vc-green-700);
+
+  /* Raios: --radius base 10px gera sm 6 · md 8 · lg 10 · xl 14 */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* shadcn → tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  --background: #FFFFFF;
+  --foreground: #140E1B;
+  --card: #FFFFFF;
+  --card-foreground: #140E1B;
+  --popover: #FFFFFF;
+  --popover-foreground: #140E1B;
+
+  /* Botão padrão = CTA verde em pílula */
+  --primary: #03FE9F;
+  --primary-foreground: #00331F;
+
+  /* Secundário = contorno/superfície roxa clara */
+  --secondary: #F3ECFF;
+  --secondary-foreground: #4D00AF;
+
+  --muted: #F1EFF7;
+  --muted-foreground: #4E4A5E;
+  --accent: #F3ECFF;
+  --accent-foreground: #4D00AF;
+  --destructive: #DC2626;
+
+  --border: #E3E0EC;
+  --input: #C9C5D6;
+  --ring: #6514D6;
+}
+
+.dark {
+  --background: #121019;
+  --foreground: #F3F1F8;
+  --card: #1B1824;
+  --card-foreground: #F3F1F8;
+  --popover: #1B1824;
+  --popover-foreground: #F3F1F8;
+  --primary: #03FE9F;
+  --primary-foreground: #00331F;
+  --secondary: #2A1A55;
+  --secondary-foreground: #E2C9F8;
+  --muted: #24202F;
+  --muted-foreground: #C4BFD3;
+  --accent: #2A1A55;
+  --accent-foreground: #E2C9F8;
+  --destructive: #F87171;
+  --border: #302B3D;
+  --input: #463F57;
+  --ring: #8A4DF0;
+}

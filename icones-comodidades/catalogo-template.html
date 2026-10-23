@@ -1,0 +1,243 @@
+<title>ValeCasa Comodidades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: catálogo de consulta. Barra roxa de marca, busca + filtros por categoria, grade de ícones e painel de detalhe fixo à direita (abaixo no celular). */
+:root{
+  --vc-green-500:#03FE9F; --vc-green-ink:#00331F; --vc-green-700:#007F50;
+  --vc-purple-600:#4D00AF; --vc-purple-500:#6514D6; --vc-purple-100:#E2D2FF; --vc-purple-50:#F3ECFF; --vc-purple-900:#22004F;
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
+  --ink:#1B1825; --ink-2:#4E4A5E; --ink-3:#817C93; --purple-text:#4D00AF; --sel:#F3ECFF; --coral:#E5483B;
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;margin:0}
+:focus-visible{outline:2px solid var(--vc-purple-500);outline-offset:2px}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.top{background:linear-gradient(135deg,var(--vc-purple-900),var(--vc-purple-600) 70%,var(--vc-purple-500));color:#fff;padding-inline:20px;padding-block:28px 32px}
+.top-in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:46px;height:auto;color:var(--vc-green-500)}
+.brand h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.brand p{margin:4px 0 0;color:#E2D2FF;font-size:14px}
+.prog{display:flex;flex-direction:column;gap:8px;min-width:240px;flex:0 1 360px}
+.prog-row{display:flex;justify-content:space-between;font-size:13px;color:#E2D2FF;font-variant-numeric:tabular-nums}
+.prog-row b{color:#fff;font-size:22px;font-weight:700}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--vc-green-500);border-radius:4px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:24px 64px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line-strong);border-radius:6px;padding:0 12px}
+.search:focus-within{border-color:var(--vc-purple-500)}
+.search input{flex:1;min-width:0;border:0;background:none;font:400 15px var(--font);color:var(--ink);padding:11px 0;outline:none}
+.search .ic{width:20px;height:20px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--vc-green-500);border-color:var(--vc-green-500);color:var(--vc-green-ink);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--vc-green-ink)}
+.chip.done::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--vc-green-700)}
+
+.cat{margin-top:22px}
+.cat h2{font-size:15px;font-weight:600;margin:0 0 10px;display:flex;align-items:baseline;gap:10px}
+.cat h2 small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--ink);font:inherit;text-align:center;min-width:0}
+.tile:hover{border-color:var(--line-strong)}
+.tile[aria-pressed="true"]{background:var(--sel);border-color:var(--vc-purple-600);color:var(--purple-text)}
+.tile .ic{width:28px;height:28px}
+.tile span{font-size:12px;line-height:1.25;color:var(--ink-2);overflow-wrap:anywhere}
+.tile[aria-pressed="true"] span{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.tags>span:first-child{font-size:12px;color:var(--ink-3)}
+.tag{font-size:12.5px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:4px;padding:3px 10px;cursor:help}
+.pending{border:1px dashed var(--line-strong);border-radius:8px;padding:14px;font-size:13px;color:var(--ink-3)}
+.empty{padding:40px 0;color:var(--ink-3);font-size:14px}
+
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stage{background:var(--surface-2);display:grid;place-items:center;padding:24px;position:relative}
+.g24{width:168px;height:168px;position:relative;border:1px solid var(--line-strong);background:var(--surface);
+  background-image:repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 7px),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 7px);color:var(--ink)}
+.g24::before{content:"";position:absolute;inset:15px;border:1px dashed var(--coral);opacity:.7}
+.g24 .ic{position:absolute;inset:0;width:100%;height:100%}
+.d-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.d-body h3{margin:0;font-size:18px;font-weight:700;line-height:1.25}
+.d-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.pill{border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--ink-2)}
+.pill.fam{background:var(--vc-purple-50);color:var(--vc-purple-600)}
+.file{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+.alias{font-size:13px;color:var(--ink-2)}
+.alias b{font-weight:600;color:var(--ink)}
+.sizes{display:flex;gap:16px;align-items:flex-end;color:var(--ink)}
+.sizes div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sizes small{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.on-brand{display:flex;gap:8px}
+.on-brand div{flex:1;border-radius:8px;display:grid;place-items:center;padding:12px}
+.acts{display:flex;flex-direction:column;gap:8px}
+.btn{font:600 13px/1 var(--font);border-radius:999px;padding:10px 16px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--vc-green-500);color:var(--vc-green-ink)}
+.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.copied{font-size:12px;color:var(--vc-green-700);min-height:18px}
+.note{font-size:12px;color:var(--ink-3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo-mark" viewBox="0 0 123 89"><g fill="currentColor"><path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z"/><path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z"/></g></symbol>
+  <symbol id="ui-search" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></symbol>
+<!--__SPRITE__-->
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
+      <div>
+        <h1>Ícones de comodidades</h1>
+        <p>Biblioteca própria do ValeCasa na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+      </div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+    <div class="tools">
+      <label class="search" for="q"><svg class="ic"><use href="#ui-search"/></svg><input id="q" type="search" placeholder="Buscar: piscina, quadra, segurança…" autocomplete="off"></label>
+      <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+    </div>
+    <div id="list"></div>
+  </main>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+(function(){
+  const cats = DATA.categorias, icons = DATA.icones;
+  const byCat = id => icons.filter(i => i.categoria === id);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  let cat = 'todas', sel = icons[0] && icons[0].id;
+  try { const h = location.hash.slice(1); if (h && icons.some(i => i.id === h)) sel = h; } catch(e){}
+
+  // progresso
+  const tot = cats.reduce((a,c)=>a+c.total,0), cob = cats.reduce((a,c)=>a+c.cobertos,0);
+  document.getElementById('prog').innerHTML =
+    `<div class="prog-row"><span><b>${icons.length}</b> ícones desenhados</span><span>${cob} de ${tot} itens da planilha</span></div>
+     <div class="bar"><i style="width:${(cob/tot*100).toFixed(1)}%"></i></div>
+     <div class="prog-row"><span>Versão ${DATA.versao}</span><span>${cats.filter(c=>c.cobertos>=c.total).map(c=>c.nome).join(', ') || ''} ${cats.some(c=>c.cobertos>=c.total)?'completa':''}</span></div>`;
+
+  // filtros
+  const chips = document.getElementById('chips');
+  function drawChips(){
+    chips.innerHTML = '';
+    const mk = (id, label, n, done) => {
+      const b = document.createElement('button'); b.type='button'; b.className='chip'+(done?' done':'');
+      b.setAttribute('aria-pressed', String(cat===id)); b.innerHTML = `${label} <small>${n}</small>`;
+      b.onclick = () => { cat = id; drawChips(); drawList(); }; chips.appendChild(b);
+    };
+    mk('todas','Todas',icons.length,false);
+    cats.forEach(c => mk(c.id, c.nome, `${c.cobertos}/${c.total}`, c.cobertos>=c.total));
+  }
+
+  const q = document.getElementById('q');
+  q.addEventListener('input', drawList);
+  const list = document.getElementById('list');
+  function drawList(){
+    const t = norm(q.value.trim());
+    const match = i => !t || norm([i.nome, i.id, ...(i.aliases||[]), i.familia||''].join(' ')).includes(t);
+    list.innerHTML = '';
+    let any = false;
+    const tagsAll = DATA.etiquetas || [];
+    cats.filter(c => cat==='todas' || c.id===cat).forEach(c => {
+      const items = byCat(c.id).filter(match);
+      const tags = tagsAll.filter(e => e.categoria===c.id && (!t || norm(e.nome).includes(t)));
+      if (t && !items.length && !tags.length) return;
+      if (tags.length) any = true;
+      const sec = document.createElement('section'); sec.className='cat';
+      sec.innerHTML = `<h2>${c.nome} <small>${c.cobertos}/${c.total} itens</small></h2>`;
+      if (items.length){
+        any = true;
+        const g = document.createElement('div'); g.className='grid';
+        items.forEach(i => {
+          const b = document.createElement('button'); b.type='button'; b.className='tile';
+          b.setAttribute('aria-pressed', String(i.id===sel));
+          b.innerHTML = `<svg class="ic"><use href="#vc-${i.id}"/></svg><span>${i.nome}</span>`;
+          b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
+          g.appendChild(b);
+        });
+        sec.appendChild(g);
+      }
+      if (tags.length) {
+        const r = document.createElement('div'); r.className='tags';
+        r.innerHTML = '<span>Sem ícone, usar como etiqueta de texto:</span>' +
+          tags.map(e => `<span class="tag" title="${e.motivo}">${e.nome}</span>`).join('');
+        sec.appendChild(r);
+      }
+      if (!t && c.cobertos < c.total) {
+        const p = document.createElement('div'); p.className='pending';
+        p.textContent = `${c.total - c.cobertos} itens desta categoria ainda vão ser desenhados.`;
+        sec.appendChild(p);
+      }
+      list.appendChild(sec);
+    });
+    if (t && !any) list.innerHTML = `<p class="empty">Nenhum ícone para “${q.value}”. Tente outro nome, como “quadra” ou “piscina”.</p>`;
+  }
+
+  function svgSource(id){
+    const s = document.getElementById('vc-'+id);
+    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s.innerHTML.trim()}</svg>`;
+  }
+  const det = document.getElementById('detail');
+  function drawDetail(){
+    const i = icons.find(x => x.id===sel); if (!i) { det.hidden = true; return; }
+    const c = cats.find(x => x.id===i.categoria);
+    const u = `<use href="#vc-${i.id}"/>`;
+    det.innerHTML = `
+      <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
+      <div class="d-body">
+        <h3>${i.nome}</h3>
+        <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${i.familia?`<span class="pill fam">Família ${i.familia}</span>`:''}${i.extra?'<span class="pill">Extra</span>':''}</div>
+        ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
+        <div class="file">svg/${i.id}.svg</div>
+        <div class="sizes">
+          <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
+          <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
+          <div><svg class="ic" style="width:28px;height:28px">${u}</svg><small>28</small></div>
+          <div><svg class="ic" style="width:40px;height:40px">${u}</svg><small>40</small></div>
+        </div>
+        <div class="on-brand">
+          <div style="background:#4D00AF;color:#03FE9F"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#03FE9F;color:#4D00AF"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+        </div>
+        <div class="acts">
+          <button class="btn btn-primary" type="button" data-copy="svg">Copiar SVG</button>
+          <button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>
+        </div>
+        <div class="copied" id="copied"></div>
+        <p class="note">Os arquivos ficam na pasta <code>icones-comodidades</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).</p>
+      </div>`;
+    det.hidden = false;
+    det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
+      const txt = b.dataset.copy==='svg' ? svgSource(i.id)
+        : `<svg class="icon" width="24" height="24"><use href="comodidades-sprite.svg#vc-${i.id}"/></svg>`;
+      const out = det.querySelector('#copied');
+      const ok = () => out.textContent = b.dataset.copy==='svg' ? 'SVG copiado.' : 'Código copiado.';
+      const fail = () => { out.textContent = 'Não deu para copiar aqui. Selecione o código abaixo e use Ctrl+C.'; const pre=document.createElement('pre'); pre.className='file'; pre.textContent=txt; out.after(pre); };
+      try { navigator.clipboard.writeText(txt).then(ok, fail); } catch(e) { fail(); }
+    });
+  }
+  drawChips(); drawList(); drawDetail();
+})();
+</script>

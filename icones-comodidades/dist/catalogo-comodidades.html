@@ -1,0 +1,567 @@
+<title>ValeCasa Comodidades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: catálogo de consulta. Barra roxa de marca, busca + filtros por categoria, grade de ícones e painel de detalhe fixo à direita (abaixo no celular). */
+:root{
+  --vc-green-500:#03FE9F; --vc-green-ink:#00331F; --vc-green-700:#007F50;
+  --vc-purple-600:#4D00AF; --vc-purple-500:#6514D6; --vc-purple-100:#E2D2FF; --vc-purple-50:#F3ECFF; --vc-purple-900:#22004F;
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
+  --ink:#1B1825; --ink-2:#4E4A5E; --ink-3:#817C93; --purple-text:#4D00AF; --sel:#F3ECFF; --coral:#E5483B;
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;margin:0}
+:focus-visible{outline:2px solid var(--vc-purple-500);outline-offset:2px}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.top{background:linear-gradient(135deg,var(--vc-purple-900),var(--vc-purple-600) 70%,var(--vc-purple-500));color:#fff;padding-inline:20px;padding-block:28px 32px}
+.top-in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:46px;height:auto;color:var(--vc-green-500)}
+.brand h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.brand p{margin:4px 0 0;color:#E2D2FF;font-size:14px}
+.prog{display:flex;flex-direction:column;gap:8px;min-width:240px;flex:0 1 360px}
+.prog-row{display:flex;justify-content:space-between;font-size:13px;color:#E2D2FF;font-variant-numeric:tabular-nums}
+.prog-row b{color:#fff;font-size:22px;font-weight:700}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--vc-green-500);border-radius:4px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:24px 64px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line-strong);border-radius:6px;padding:0 12px}
+.search:focus-within{border-color:var(--vc-purple-500)}
+.search input{flex:1;min-width:0;border:0;background:none;font:400 15px var(--font);color:var(--ink);padding:11px 0;outline:none}
+.search .ic{width:20px;height:20px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--vc-green-500);border-color:var(--vc-green-500);color:var(--vc-green-ink);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--vc-green-ink)}
+.chip.done::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--vc-green-700)}
+
+.cat{margin-top:22px}
+.cat h2{font-size:15px;font-weight:600;margin:0 0 10px;display:flex;align-items:baseline;gap:10px}
+.cat h2 small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--ink);font:inherit;text-align:center;min-width:0}
+.tile:hover{border-color:var(--line-strong)}
+.tile[aria-pressed="true"]{background:var(--sel);border-color:var(--vc-purple-600);color:var(--purple-text)}
+.tile .ic{width:28px;height:28px}
+.tile span{font-size:12px;line-height:1.25;color:var(--ink-2);overflow-wrap:anywhere}
+.tile[aria-pressed="true"] span{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.tags>span:first-child{font-size:12px;color:var(--ink-3)}
+.tag{font-size:12.5px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:4px;padding:3px 10px;cursor:help}
+.pending{border:1px dashed var(--line-strong);border-radius:8px;padding:14px;font-size:13px;color:var(--ink-3)}
+.empty{padding:40px 0;color:var(--ink-3);font-size:14px}
+
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stage{background:var(--surface-2);display:grid;place-items:center;padding:24px;position:relative}
+.g24{width:168px;height:168px;position:relative;border:1px solid var(--line-strong);background:var(--surface);
+  background-image:repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 7px),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 7px);color:var(--ink)}
+.g24::before{content:"";position:absolute;inset:15px;border:1px dashed var(--coral);opacity:.7}
+.g24 .ic{position:absolute;inset:0;width:100%;height:100%}
+.d-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.d-body h3{margin:0;font-size:18px;font-weight:700;line-height:1.25}
+.d-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.pill{border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--ink-2)}
+.pill.fam{background:var(--vc-purple-50);color:var(--vc-purple-600)}
+.file{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+.alias{font-size:13px;color:var(--ink-2)}
+.alias b{font-weight:600;color:var(--ink)}
+.sizes{display:flex;gap:16px;align-items:flex-end;color:var(--ink)}
+.sizes div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sizes small{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.on-brand{display:flex;gap:8px}
+.on-brand div{flex:1;border-radius:8px;display:grid;place-items:center;padding:12px}
+.acts{display:flex;flex-direction:column;gap:8px}
+.btn{font:600 13px/1 var(--font);border-radius:999px;padding:10px 16px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--vc-green-500);color:var(--vc-green-ink)}
+.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.copied{font-size:12px;color:var(--vc-green-700);min-height:18px}
+.note{font-size:12px;color:var(--ink-3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo-mark" viewBox="0 0 123 89"><g fill="currentColor"><path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z"/><path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z"/></g></symbol>
+  <symbol id="ui-search" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></symbol>
+  <symbol id="vc-academia" viewBox="0 0 24 24"><rect x="3.75" y="6.75" width="3" height="10.5" rx="1.125"/><rect x="17.25" y="6.75" width="3" height="10.5" rx="1.125"/><path d="M6.75 12h10.5M2.25 12h1.5m16.5 0h1.5"/></symbol>
+  <symbol id="vc-area-de-lazer" viewBox="0 0 24 24"><path d="M3.75 10.5a8.25 8.25 0 0 1 16.5 0H3.75ZM12 2.25c-2.071 0-3.75 3.694-3.75 8.25M12 2.25c2.071 0 3.75 3.694 3.75 8.25M12 10.5v9.75M7.5 20.25h9"/></symbol>
+  <symbol id="vc-bar" viewBox="0 0 24 24"><path d="M5.25 4.5h13.5L12 12 5.25 4.5ZM7.275 6.75h9.45M12 12v7.5M8.25 19.5h7.5"/></symbol>
+  <symbol id="vc-bar-na-piscina" viewBox="0 0 24 24"><path d="M7.5 4.5h9L12 9.75 7.5 4.5ZM12 9.75v4.5M9.75 14.25h4.5M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-biblioteca" viewBox="0 0 24 24"><rect x="3.75" y="4.5" width="3" height="15" rx=".75"/><rect x="8.25" y="6.75" width="3" height="12.75" rx=".75"/><rect x="12.75" y="6" width="3" height="13.5" rx=".75" transform="rotate(20 15.75 19.5)"/><path d="M2.25 19.5h19.5M3.75 7.5h3M8.25 9.75h3"/></symbol>
+  <symbol id="vc-bicicletario" viewBox="0 0 24 24"><circle cx="5.625" cy="15.375" r="3.375"/><circle cx="18.375" cy="15.375" r="3.375"/><path d="M5.625 15.375h5.625l4.5-7.125H9l-3.375 7.125ZM9 8.25l2.25 7.125M15.75 8.25l2.625 7.125M9 8.25 8.25 6M6.75 6h3M15.75 8.25 15 5.25h2.25"/></symbol>
+  <symbol id="vc-brinquedoteca" viewBox="0 0 24 24"><rect x="8.25" y="3.75" width="7.5" height="7.5" rx="1.125"/><rect x="3" y="12.75" width="7.5" height="7.5" rx="1.125"/><rect x="13.5" y="12.75" width="7.5" height="7.5" rx="1.125"/><circle cx="12" cy="7.5" r="1.5"/><path d="M6.75 14.625 8.625 18h-3.75l1.875-3.375ZM17.25 14.625v3.75M15.375 16.5h3.75"/></symbol>
+  <symbol id="vc-campo-de-golfe" viewBox="0 0 24 24"><ellipse cx="12" cy="18.75" rx="8.25" ry="2.25"/><circle cx="15.75" cy="14.625" r="1.125"/><path d="M9 18.75V3.75l7.5 3-7.5 3"/></symbol>
+  <symbol id="vc-casa-de-boneca" viewBox="0 0 24 24"><path d="M3.75 9.75 12 3.75l8.25 6M5.25 8.66v11.59h13.5V8.66M5.25 14.25h13.5M12 8.25v12M8.25 11.25h.008v.008H8.25v-.008ZM15.75 17.25h.008v.008h-.008v-.008Z"/></symbol>
+  <symbol id="vc-centro-de-estetica" viewBox="0 0 24 24"><rect x="7.5" y="10.5" width="8.25" height="10.5" rx="1.5"/><path d="M9.75 10.5V8.25h3.75v2.25M11.625 8.25v-3M9.375 5.25h4.5v1.5M7.5 14.25h8.25M18.75 9l.5 1.25 1.25.5-1.25.5-.5 1.25-.5-1.25-1.25-.5 1.25-.5.5-1.25Z"/></symbol>
+  <symbol id="vc-churrasqueira" viewBox="0 0 24 24"><path d="M3.75 9.75h16.5a8.25 6 0 0 1-16.5 0ZM7.5 14.75 5.25 21M16.5 14.75l2.25 6.25M12 15.75V21M9 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M12 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M15 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-complexo-multiuso" viewBox="0 0 24 24"><path d="M3 20.25v-9a9 9 0 0 1 18 0v9M2.25 20.25h19.5M9.75 20.25v-4.5h4.5v4.5M5.25 9.75h13.5"/></symbol>
+  <symbol id="vc-deck" viewBox="0 0 24 24"><path d="M2.25 12.75h19.5v3H2.25v-3ZM4.5 15.75v4.5M12 15.75v4.5M19.5 15.75v4.5M7.5 12.75v3M16.5 12.75v3M5.25 12.75 7.5 5.25M7.5 9h9.75v3.75"/></symbol>
+  <symbol id="vc-deck-molhado" viewBox="0 0 24 24"><path d="M5.25 14.25 7.5 6.75M7.5 10.5h9.75v3.75M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-espaco-gourmet" viewBox="0 0 24 24"><path d="M3.75 16.5a8.25 8.25 0 0 1 16.5 0M2.25 16.5h19.5M12 8.25v-1.5M10.5 6.75h3M5.25 19.5h13.5"/></symbol>
+  <symbol id="vc-espaco-zen" viewBox="0 0 24 24"><ellipse cx="12" cy="18.375" rx="6" ry="2.25"/><ellipse cx="12" cy="13.875" rx="4.5" ry="1.875"/><ellipse cx="12" cy="9.75" rx="3" ry="1.5"/><path d="M12 6.75c-1.5-1.5-1.5-3 0-4.5 1.5 1.5 1.5 3 0 4.5Z"/></symbol>
+  <symbol id="vc-fitness-ao-ar-livre" viewBox="0 0 24 24"><circle cx="12" cy="6.75" r="1.875"/><rect x="4.5" y="12" width="3" height="7.5" rx="1.125"/><rect x="16.5" y="12" width="3" height="7.5" rx="1.125"/><path d="M7.5 15.75h9M3 15.75h1.5M19.5 15.75H21M12 2.25v1.125M12 10.125v1.125M7.5 6.75h1.125M15.375 6.75H16.5M8.818 3.568l.795.795M14.386 9.136l.796.796M8.818 9.932l.795-.795M14.386 4.364l.796-.796"/></symbol>
+  <symbol id="vc-forno-de-pizza" viewBox="0 0 24 24"><path d="M2.25 19.5h19.5M3.75 19.5v-3a8.25 8.25 0 0 1 16.5 0v3M8.25 19.5v-2.25a3.75 3.75 0 0 1 7.5 0v2.25M15.75 9.15V4.5H18v6.34"/></symbol>
+  <symbol id="vc-hidromassagem" viewBox="0 0 24 24"><path d="M3 12h18v3a4.5 4.5 0 0 1-4.5 4.5h-9A4.5 4.5 0 0 1 3 15v-3Z"/><circle cx="8.25" cy="8.25" r="1.125"/><circle cx="12" cy="5.625" r="1.5"/><circle cx="15.75" cy="8.25" r="1.125"/></symbol>
+  <symbol id="vc-lazer-elevado" viewBox="0 0 24 24"><path d="M6 21V11.25h12V21M3.75 21h16.5M8.25 6.75a3.75 3.75 0 0 1 7.5 0H8.25ZM12 6.75v4.5M9 14.25h1.5M13.5 14.25H15M9 17.25h1.5M13.5 17.25H15"/></symbol>
+  <symbol id="vc-mini-quadra" viewBox="0 0 24 24"><rect x="4.5" y="6.75" width="15" height="10.5" rx="1.125"/><circle cx="12" cy="12" r="1.875"/><path d="M12 6.75v10.5M4.5 10.5h1.5v3H4.5M19.5 10.5H18v3h1.5"/></symbol>
+  <symbol id="vc-muro-de-escalada" viewBox="0 0 24 24"><path d="M3.75 21 8.25 3h12v18H3.75ZM17.25 3v18M10.5 6l1.5.75-.75 1.5-1.5-.75.75-1.5ZM13.125 10.125l1.125 1.875h-2.25l1.125-1.875ZM8.25 14.25h.008M8.25 14.25a1.125 1.125 0 1 0 2.25 0 1.125 1.125 0 0 0-2.25 0ZM12 17.25h2.25v1.5H12v-1.5Z"/></symbol>
+  <symbol id="vc-piscina" viewBox="0 0 24 24"><path d="M9 15V5.25a1.5 1.5 0 0 0-3 0M15 15V5.25a1.5 1.5 0 0 0-3 0M9 8.25h6M9 11.25h6M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-piscina-aquecida" viewBox="0 0 24 24"><path d="M10.5 11.45V4.5a1.5 1.5 0 0 1 3 0v6.95a2.25 2.25 0 1 1-3 0ZM12 12.75V7.5M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-piscina-coberta" viewBox="0 0 24 24"><path d="M2.25 9 12 3.75 21.75 9M4.5 7.8v6.45M19.5 7.8v6.45M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-piscina-infantil" viewBox="0 0 24 24"><circle cx="12" cy="9.75" r="4.5"/><path d="M7.5 9.75c3 1.5 6 1.5 9 0M12 5.25c-1.5 1.5-1.5 7.5 0 9M2.25 17.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-pista-de-cooper" viewBox="0 0 24 24"><path d="M8.25 6h7.5a6 6 0 0 1 0 12h-7.5a6 6 0 0 1 0-12ZM8.25 8.25h7.5a3.75 3.75 0 0 1 0 7.5h-7.5a3.75 3.75 0 0 1 0-7.5ZM12 6v2.25"/></symbol>
+  <symbol id="vc-pista-de-skate" viewBox="0 0 24 24"><path d="M2.25 9.75c0 .828.672 1.5 1.5 1.5h16.5c.828 0 1.5-.672 1.5-1.5M6.75 11.25v1.5M17.25 11.25v1.5"/><circle cx="6.75" cy="14.25" r="1.5"/><circle cx="17.25" cy="14.25" r="1.5"/><path d="M2.25 19.5h19.5"/></symbol>
+  <symbol id="vc-playground" viewBox="0 0 24 24"><path d="M6 4.5h12M6 4.5 3.75 20.25M18 4.5l2.25 15.75M9.75 4.5v9.75M14.25 4.5v9.75M9 14.25h6"/></symbol>
+  <symbol id="vc-quadra-futebol-de-salao" viewBox="0 0 24 24"><rect x="3" y="5.25" width="18" height="13.5" rx="1.5"/><circle cx="12" cy="12" r="2.25"/><path d="M12 5.25v13.5M3 9a3 3 0 0 1 0 6M21 9a3 3 0 0 0 0 6"/></symbol>
+  <symbol id="vc-quadra-de-squash" viewBox="0 0 24 24"><ellipse cx="9.75" cy="9.75" rx="4.5" ry="6" transform="rotate(-45 9.75 9.75)"/><circle cx="18.375" cy="5.625" r="1.5"/><path d="M14 14l6 6M7.629 7.629l4.242 4.242M6.568 12.932l6.364-6.364"/></symbol>
+  <symbol id="vc-quadra-de-tenis" viewBox="0 0 24 24"><rect x="3" y="5.25" width="18" height="13.5" rx="1.5"/><path d="M3 7.5h18M3 16.5h18M7.5 7.5v9M16.5 7.5v9M7.5 12h9M12 5.25v13.5"/></symbol>
+  <symbol id="vc-quadra-poliesportiva" viewBox="0 0 24 24"><rect x="3" y="5.25" width="18" height="13.5" rx="1.5"/><circle cx="12" cy="12" r="2.25"/><path d="M12 5.25v13.5M3 8.25h1.5a3.75 3.75 0 0 1 0 7.5H3M21 8.25h-1.5a3.75 3.75 0 0 0 0 7.5H21"/></symbol>
+  <symbol id="vc-redario" viewBox="0 0 24 24"><path d="M3.75 4.5v15.75M20.25 4.5v15.75M3.75 7.5C7.5 12 16.5 12 20.25 7.5M3.75 7.5C6.75 16.5 17.25 16.5 20.25 7.5M2.25 20.25h3M18.75 20.25h3"/></symbol>
+  <symbol id="vc-sala-de-massagem" viewBox="0 0 24 24"><circle cx="5.25" cy="10.875" r="1.875"/><rect x="8.25" y="10.5" width="12" height="3.75" rx="1.875"/><path d="M2.25 14.25h19.5M4.5 14.25v6M19.5 14.25v6M12 4.5c-.75.75-.75 1.5 0 2.25M15 4.5c-.75.75-.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-salao-de-jogos" viewBox="0 0 24 24"><rect x="3" y="9.75" width="9" height="9" rx="2.25"/><rect x="13.125" y="3" width="7.5" height="7.5" rx="1.875" transform="rotate(15 16.875 6.75)"/><path d="M5.625 12.375h.008v.008h-.008v-.008ZM7.5 14.25h.008v.008H7.5v-.008ZM9.375 16.125h.008v.008h-.008v-.008ZM16.875 6.75h.008v.008h-.008V6.75Z"/></symbol>
+  <symbol id="vc-sauna" viewBox="0 0 24 24"><path d="M5.25 11.25h10.5l-1.5 9h-7.5l-1.5-9ZM5.875 15h9.25M12 13.5l7.5-8.25M7.5 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M10.5 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-solarium" viewBox="0 0 24 24"><circle cx="6.75" cy="6.75" r="2.25"/><path d="M6.75 2.25V3M6.75 10.5v.75M2.25 6.75H3M10.5 6.75h.75M9.402 4.098l.53-.53M4.098 4.098l-.53-.53M9.402 9.402l.53.53M4.098 9.402l-.53.53M8.25 19.5l2.25-7.5M9.375 15.75h10.875v3.75M2.25 21h19.5"/></symbol>
+  <symbol id="vc-campo-de-futebol" viewBox="0 0 24 24"><rect x="3" y="5.25" width="18" height="13.5" rx="1.5"/><circle cx="12" cy="12" r="2.25"/><path d="M12 5.25v13.5M3 9.75h2.25v4.5H3M21 9.75h-2.25v4.5H21"/></symbol>
+  <symbol id="vc-cameras-de-seguranca" viewBox="0 0 24 24"><path d="M2.25 6h19.5M4.5 6v1.875C4.5 8.496 5.004 9 5.625 9h12.75c.621 0 1.125-.504 1.125-1.125V6M5.25 9a6.75 6.75 0 0 0 13.5 0"/><circle cx="12" cy="12" r="2.25"/></symbol>
+  <symbol id="vc-cerca" viewBox="0 0 24 24"><path d="M3 8.25 4.5 6 6 8.25v12H3v-12ZM8.25 8.25 9.75 6l1.5 2.25v12h-3v-12ZM13.5 8.25 15 6l1.5 2.25v12h-3v-12ZM18.75 8.25 20.25 6l1.5 2.25v12h-3v-12ZM6 11.25h2.25M11.25 11.25h2.25M16.5 11.25h2.25M6 16.5h2.25M11.25 16.5h2.25M16.5 16.5h2.25"/></symbol>
+  <symbol id="vc-fechadura-biometrica" viewBox="0 0 24 24"><path d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"/></symbol>
+  <symbol id="vc-guarita" viewBox="0 0 24 24"><path d="M2.25 7.5h9M3.75 7.5v12.75h6V7.5M5.25 9.75h3v3h-3v-3ZM9.75 13.5h12M12.75 13.5v-1.5M15.75 13.5V12M18.75 13.5V12M2.25 20.25h9"/></symbol>
+  <symbol id="vc-interfone" viewBox="0 0 24 24"><rect x="6.75" y="2.25" width="10.5" height="19.5" rx="2.25"/><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="17.25" r="1.5"/><path d="M9.75 10.5h4.5M9.75 12.75h4.5"/></symbol>
+  <symbol id="vc-portaria-24h" viewBox="0 0 24 24"><circle cx="9" cy="6.75" r="3"/><path d="M3 20.25a6 6 0 0 1 9.75-4.682"/><circle cx="17.25" cy="16.5" r="4.5"/><path d="M17.25 14.25v2.25l1.5 1.5"/></symbol>
+  <symbol id="vc-pulmao-pedestres" viewBox="0 0 24 24"><circle cx="12" cy="8.25" r="1.875"/><path d="M8.25 20.25v-3a3.75 3.75 0 0 1 7.5 0v3M2.25 4.5H6v15.75H2.25M4.125 4.5v15.75M21.75 4.5H18v15.75h3.75M19.875 4.5v15.75"/></symbol>
+  <symbol id="vc-pulmao-veiculos" viewBox="0 0 24 24"><rect x="7.5" y="12.75" width="9" height="4.5" rx="1.125"/><path d="M8.625 12.75 9.75 9h4.5l1.125 3.75M8.25 17.25v1.5M15.75 17.25v1.5M9.75 15h.008v.008H9.75V15ZM14.25 15h.008v.008h-.008V15ZM2.25 4.5H6v15.75H2.25M4.125 4.5v15.75M21.75 4.5H18v15.75h3.75M19.875 4.5v15.75"/></symbol>
+  <symbol id="vc-ronda-vigilancia" viewBox="0 0 24 24"><path d="M2.25 10.5h9v3h-9v-3ZM11.25 10.5l3-2.25v7.5l-3-2.25M16.5 9.75 21 7.5M16.5 12h4.5M16.5 14.25l4.5 2.25M5.25 12h.008v.008H5.25V12Z"/></symbol>
+  <symbol id="vc-seguranca-perimetral" viewBox="0 0 24 24"><rect x="2.25" y="2.25" width="19.5" height="19.5" rx="3" stroke-dasharray="2.25 2.25"/><path d="M7.5 12.75 12 8.25l4.5 4.5M8.625 11.625V16.5h6.75v-4.875"/></symbol>
+  <symbol id="vc-sistema-contra-incendio" viewBox="0 0 24 24"><rect x="8.25" y="8.25" width="7.5" height="13.5" rx="2.25"/><path d="M10.5 8.25V6h3v2.25M12 6V3.75M9.75 3.75h4.5M13.5 6c3 0 4.5 1.5 4.5 4.5v3M8.25 13.5h7.5"/></symbol>
+  <symbol id="vc-sistema-de-alarme" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/></symbol>
+  <symbol id="vc-caseiro" viewBox="0 0 24 24"><circle cx="12" cy="9.375" r="2.25"/><path d="M6.75 6.75h10.5M9 6.75l.75-3h4.5l.75 3M5.25 20.25a6.75 6.75 0 0 1 13.5 0"/></symbol>
+  <symbol id="vc-coffee-shop" viewBox="0 0 24 24"><path d="M5.25 9.75h10.5v4.5a4.5 4.5 0 0 1-4.5 4.5h-1.5a4.5 4.5 0 0 1-4.5-4.5v-4.5ZM15.75 11.25h1.125a2.25 2.25 0 0 1 0 4.5h-1.5M3.75 21h15M8.25 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M12.75 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-com-lojas-no-terreo" viewBox="0 0 24 24"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></symbol>
+  <symbol id="vc-coworking" viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="10.5" rx="1.5"/><circle cx="9.75" cy="8.25" r="1.125"/><circle cx="14.25" cy="8.25" r="1.125"/><path d="M7.5 12.75a2.25 2.25 0 0 1 4.5 0M12 12.75a2.25 2.25 0 0 1 4.5 0M2.25 18h19.5l-1.5 1.5H3.75L2.25 18Z"/></symbol>
+  <symbol id="vc-deposito-no-subsolo" viewBox="0 0 24 24"><rect x="6" y="12" width="12" height="8.25" rx="1.125"/><path d="M12 2.25v4.5m0 0-2.25-2.25M12 6.75l2.25-2.25M2.25 9h19.5M6 14.25h12M10.5 16.5h3"/></symbol>
+  <symbol id="vc-deposito-privativo" viewBox="0 0 24 24"><path d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125ZM10.5 13.5v-1.125a1.5 1.5 0 0 1 3 0V13.5"/><rect x="9.75" y="13.5" width="4.5" height="3.75" rx=".75"/></symbol>
+  <symbol id="vc-estacionamento-visitantes" viewBox="0 0 24 24"><rect x="3.75" y="2.25" width="16.5" height="19.5" rx="3"/><path d="M9.75 17.25V6.75h3a3 3 0 0 1 0 6h-3"/></symbol>
+  <symbol id="vc-lavanderia" viewBox="0 0 24 24"><rect x="4.5" y="2.25" width="15" height="19.5" rx="1.5"/><circle cx="12" cy="14.25" r="4.5"/><path d="M4.5 6.75h15M7.5 4.5h.008v.008H7.5V4.5ZM10.5 4.5h.008v.008H10.5V4.5ZM9.75 14.25c1.5 1.5 3-1.5 4.5 0"/></symbol>
+  <symbol id="vc-refeitorio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.25"/><circle cx="12" cy="12" r="3"/><path d="M3 6v3a1.5 1.5 0 0 0 3 0V6M4.5 6v12M19.5 18V6c1.5.75 2.25 2.25 2.25 4.5v2.25H19.5"/></symbol>
+  <symbol id="vc-restaurante" viewBox="0 0 24 24"><path d="M5.25 2.25V6a2.25 2.25 0 0 0 4.5 0V2.25M7.5 2.25v19.5M16.5 21.75V2.25c1.875 1.125 3 3.75 3 7.5v3.75h-3"/></symbol>
+  <symbol id="vc-vaga-de-moto" viewBox="0 0 24 24"><circle cx="5.25" cy="16.5" r="3"/><circle cx="18.75" cy="16.5" r="3"/><path d="M5.25 16.5 7.5 11.25M6 11.25h4.5M10.5 11.25 11.25 9h3.75l1.5 2.25H10.5ZM9 13.5h4.5v3H9v-3ZM15.375 8.25l3.375 8.25M14.25 7.5h2.25"/></symbol>
+  <symbol id="vc-vagas-determinadas" viewBox="0 0 24 24"><rect x="7.5" y="12.75" width="9" height="4.5" rx="1.125"/><path d="M8.625 12.75 9.75 9h4.5l1.125 3.75M8.25 17.25v1.5M15.75 17.25v1.5M9.75 15h.008v.008H9.75V15ZM14.25 15h.008v.008h-.008V15ZM3.75 21V9.75M20.25 21V9.75M10.5 2.25h3v4.5l-1.5-1.125-1.5 1.125v-4.5Z"/></symbol>
+  <symbol id="vc-vestiario" viewBox="0 0 24 24"><rect x="3.75" y="2.25" width="7.5" height="19.5" rx="1.125"/><rect x="12.75" y="2.25" width="7.5" height="19.5" rx="1.125"/><path d="M6 5.25h3M6 7.5h3M15 5.25h3M15 7.5h3M9 12v1.5M15 12v1.5"/></symbol>
+  <symbol id="vc-vestiario-para-diaristas" viewBox="0 0 24 24"><rect x="3" y="2.25" width="7.5" height="19.5" rx="1.125"/><path d="M5.25 5.25h3M5.25 7.5h3M8.25 12v1.5M17.25 2.25V13.5M14.25 13.5h6l.75 7.5h-7.5l.75-7.5ZM15.75 17.25V21M18.75 17.25V21"/></symbol>
+  <symbol id="vc-acessibilidade" viewBox="0 0 24 24"><circle cx="10.5" cy="4.125" r="1.5"/><path d="M10.5 7.5v5.25H15l2.25 5.25h2.25M10.5 9.75h3.75M6.413 12.038a5.25 5.25 0 1 0 8.259 6.337"/></symbol>
+  <symbol id="vc-acesso-asfaltado" viewBox="0 0 24 24"><path d="M3 21 9.75 3M21 21 14.25 3M12 4.5V6M12 9v2.25M12 14.25v3.75"/></symbol>
+  <symbol id="vc-antena-parabolica" viewBox="0 0 24 24"><path d="M3.75 8.25a12 12 0 0 0 12 12L3.75 8.25ZM9.75 14.25l3-3M15.75 5.25a3 3 0 0 1 3 3M15.75 2.25a6 6 0 0 1 6 6M7.26 16.74 6 21M3.75 21H9"/><circle cx="13.5" cy="10.5" r=".75"/></symbol>
+  <symbol id="vc-aquecedor" viewBox="0 0 24 24"><rect x="6" y="2.25" width="12" height="15" rx="1.5"/><path d="M12 5.25c1.875 2.188 3.125 4.063 3.125 5.625a3.125 3.125 0 0 1-6.25 0c0-1.562 1.25-3.437 3.125-5.625ZM12 10.5c.563.675 1.125 1.238 1.125 1.688a1.125 1.125 0 0 1-2.25 0c0-.45.563-1.013 1.125-1.688ZM9.75 17.25v4.5M14.25 17.25v4.5"/></symbol>
+  <symbol id="vc-aquecimento-central" viewBox="0 0 24 24"><rect x="4.5" y="6" width="2.625" height="12" rx="1.313"/><rect x="8.625" y="6" width="2.625" height="12" rx="1.313"/><rect x="12.75" y="6" width="2.625" height="12" rx="1.313"/><rect x="16.875" y="6" width="2.625" height="12" rx="1.313"/><path d="M2.25 9h2.25M19.5 9h2.25M6 18v2.25M18 18v2.25"/></symbol>
+  <symbol id="vc-aquecimento-solar-de-agua" viewBox="0 0 24 24"><circle cx="18" cy="5.25" r="1.5"/><path d="M5.25 9.75h15L18 17.25H3l2.25-7.5ZM4.125 13.5h15M10.25 9.75 8 17.25M15.25 9.75 13 17.25M10.5 17.25V21M7.5 21h6M18 2.25V3M18 7.5v.75M15 5.25h.75M20.25 5.25H21M19.59 3.66l.53-.53M16.41 3.66l-.53-.53M19.59 6.84l.53.53M16.41 6.84l-.53.53M6 2.25c1.125 1.406 1.688 2.25 1.688 2.953a1.688 1.688 0 0 1-3.375 0c0-.703.562-1.547 1.687-2.953Z"/></symbol>
+  <symbol id="vc-energia-solar" viewBox="0 0 24 24"><circle cx="18" cy="5.25" r="1.5"/><path d="M5.25 9.75h15L18 17.25H3l2.25-7.5ZM4.125 13.5h15M10.25 9.75 8 17.25M15.25 9.75 13 17.25M10.5 17.25V21M7.5 21h6M18 2.25V3M18 7.5v.75M15 5.25h.75M20.25 5.25H21M19.59 3.66l.53-.53M16.41 3.66l-.53-.53M19.59 6.84l.53.53M16.41 6.84l-.53.53M6.75 2.25 5.25 5.25H7.5L6 8.25"/></symbol>
+  <symbol id="vc-elevador" viewBox="0 0 24 24"><rect x="5.25" y="7.5" width="13.5" height="13.5" rx="1.125"/><path d="M12 7.5V21M8.25 5.25 9.75 3l1.5 2.25h-3ZM12.75 3h3l-1.5 2.25L12.75 3Z"/></symbol>
+  <symbol id="vc-gas-encanado" viewBox="0 0 24 24"><path d="M12 3c2.25 2.625 3.75 4.875 3.75 6.75a3.75 3.75 0 0 1-7.5 0C8.25 7.875 9.75 5.625 12 3ZM12 9.75c.75.9 1.5 1.65 1.5 2.25a1.5 1.5 0 0 1-3 0c0-.6.75-1.35 1.5-2.25ZM2.25 16.5h19.5M2.25 20.25h19.5M6.75 16.5v3.75M17.25 16.5v3.75"/></symbol>
+  <symbol id="vc-gerador" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M12.75 8.25 9.75 12h4.5l-3 3.75M6 18v2.25M18 18v2.25M16.5 6V3.75h2.25"/></symbol>
+  <symbol id="vc-ar-condicionado" viewBox="0 0 24 24"><rect x="2.25" y="4.5" width="19.5" height="7.5" rx="1.5"/><path d="M5.25 9.75h13.5M8.25 15c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M12 15c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M15.75 15c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-coleta-seletiva" viewBox="0 0 24 24"><path d="M3.75 8.25h7.5L10.5 21h-6L3.75 8.25ZM3 6.75h9M6.375 6.75v-1.5h2.25v1.5M12.75 8.25h7.5L19.5 21h-6l-.75-12.75ZM12 6.75h9M15.375 6.75v-1.5h2.25v1.5M7.5 11.25v6.75M16.5 11.25v6.75"/></symbol>
+  <symbol id="vc-medidor-de-agua" viewBox="0 0 24 24"><circle cx="12" cy="14.25" r="6.75"/><path d="M12 14.25l2.25-2.25M7.5 14.25H9M15 14.25h1.5M12 9.75v1.5M12 2.25c1.125 1.406 1.688 2.25 1.688 2.953a1.688 1.688 0 0 1-3.375 0c0-.703.562-1.547 1.687-2.953Z"/></symbol>
+  <symbol id="vc-poco-artesiano" viewBox="0 0 24 24"><path d="M3.75 8.25 12 3l8.25 5.25M6 6.82v8.93M18 6.82v8.93M12 6.75v3M10.5 9.75h3l-.375 2.25h-2.25l-.375-2.25ZM4.5 15.75h15V21h-15v-5.25ZM4.5 18.375h15"/></symbol>
+  <symbol id="vc-automacao-residencial" viewBox="0 0 24 24"><path d="M3.75 11.25 12 3.75l8.25 7.5M5.625 9.75v10.5h12.75V9.75M9.75 15a3.182 3.182 0 0 1 4.5 0M7.5 12.75a6.364 6.364 0 0 1 9 0M12 17.25h.008v.008H12v-.008Z"/></symbol>
+  <symbol id="vc-reuso-agua-da-chuva" viewBox="0 0 24 24"><path d="M6.75 11.25a2.25 2.25 0 0 1 0-4.5 4.5 4.5 0 0 1 8.25-1.5 3.375 3.375 0 0 1 2.25 6H6.75ZM8.25 13.5V15M12 13.5V15M15.75 13.5V15M6 17.25h12v4.5H6v-4.5Z"/></symbol>
+  <symbol id="vc-piso-frio" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></symbol>
+  <symbol id="vc-piso-de-madeira" viewBox="0 0 24 24"><path d="M2.25 18.75 6 6h12l3.75 12.75H2.25ZM9 6l-1.5 12.75M12 6v12.75M15 6l1.5 12.75M4.68 10.5h3.79M7.94 15H12M12 9h3.35M15.88 13.5h4.33"/></symbol>
+  <symbol id="vc-piso-laminado" viewBox="0 0 24 24"><path d="M2.25 18.75 6 6h12l3.75 12.75H2.25ZM9 6l-1.5 12.75M12 6v12.75M15 6l1.5 12.75M2.25 18.75V21h19.5v-2.25M2.25 19.875h19.5"/></symbol>
+  <symbol id="vc-carpete-de-madeira" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M7.5 3v18M12 3v18M16.5 3v18M3 9h4.5M7.5 15H12M12 7.5h4.5M16.5 13.5H21"/></symbol>
+  <symbol id="vc-carpete" viewBox="0 0 24 24"><circle cx="6" cy="15" r="3.75"/><circle cx="6" cy="15" r="1.5"/><path d="M6 11.25h15.75v7.5H6M12.75 15h5.25"/></symbol>
+  <symbol id="vc-piso-quente" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M8.25 7.5c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25-.75 1.5 0 2.25.75 1.5 0 2.25M12 7.5c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25-.75 1.5 0 2.25.75 1.5 0 2.25M15.75 7.5c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25-.75 1.5 0 2.25.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-piso-atenuador-de-ruido" viewBox="0 0 24 24"><rect x="2.25" y="14.25" width="19.5" height="6" rx="1.125"/><path d="M2.25 17.25l2.438-1.5 2.437 1.5 2.438-1.5 2.437 1.5 2.438-1.5 2.437 1.5 2.438-1.5 2.437 1.5M6.75 6h1.5l3-2.25v7.5l-3-2.25h-1.5V6ZM14.25 6l3 3M17.25 6l-3 3"/></symbol>
+  <symbol id="vc-varanda" viewBox="0 0 24 24"><path d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M14.25 13.5l-.75-3h4.5l-.75 3M15.75 10.5c0-2.25-1.5-3.75-3-4.5M15.75 10.5c0-2.25 1.5-4.5 3.75-4.5"/></symbol>
+  <symbol id="vc-varanda-gourmet" viewBox="0 0 24 24"><path d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M10.5 13.5a4.5 4.5 0 0 1 9 0M15 9V7.5M13.5 7.5h3"/></symbol>
+  <symbol id="vc-varanda-gourmet-com-churrasqueira" viewBox="0 0 24 24"><path d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M11.25 7.5h7.5a3.75 2.625 0 0 1-7.5 0ZM12.75 9.75l-.75 3.75M17.25 9.75l.75 3.75M13.5 2.25c-.375.375-.375.75 0 1.125s.375.75 0 1.125M16.5 2.25c-.375.375-.375.75 0 1.125s.375.75 0 1.125"/></symbol>
+  <symbol id="vc-terraco" viewBox="0 0 24 24"><path d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M10.5 9a4.5 4.5 0 0 1 9 0h-9ZM15 9v4.5"/></symbol>
+  <symbol id="vc-guarda-corpo-de-vidro" viewBox="0 0 24 24"><path d="M3.75 2.25v19.5M3.75 19.5h18M3.75 12.75h18v6.75M9 15l-1.5 3M12.75 15l-1.5 3"/></symbol>
+  <symbol id="vc-fogao" viewBox="0 0 24 24"><rect x="4.5" y="6" width="15" height="15.75" rx="1.125"/><rect x="6.75" y="11.25" width="10.5" height="7.5" rx=".75"/><path d="M7.5 3.75h3M13.5 3.75h3M9 13.5h6M7.5 8.25h.008v.008H7.5V8.25ZM10.5 8.25h.008v.008H10.5V8.25ZM13.5 8.25h.008v.008H13.5V8.25ZM16.5 8.25h.008v.008H16.5V8.25Z"/></symbol>
+  <symbol id="vc-freezer" viewBox="0 0 24 24"><rect x="6" y="2.25" width="12" height="19.5" rx="1.5"/><path d="M6 9h12M8.25 4.5v2.25M8.25 11.25v3M14.25 3.75v3.75M12.625 4.688l3.25 1.875M12.625 6.563l3.25-1.875"/></symbol>
+  <symbol id="vc-microondas" viewBox="0 0 24 24"><rect x="2.25" y="5.25" width="19.5" height="13.5" rx="1.5"/><rect x="4.5" y="7.5" width="10.5" height="9" rx=".75"/><path d="M18 8.25h.008v.008H18V8.25ZM18 10.5h.008v.008H18V10.5ZM17.25 14.25h1.5"/></symbol>
+  <symbol id="vc-armario-de-cozinha" viewBox="0 0 24 24"><path d="M3 3h18v6H3V3ZM12 3v6M10.5 6.75v.75M13.5 6.75v.75M2.25 13.5h19.5M3 13.5h18v7.5H3v-7.5ZM9 13.5V21M15 13.5V21M7.5 15.75v.75M10.5 15.75v.75M16.5 15.75v.75"/></symbol>
+  <symbol id="vc-cozinha-americana" viewBox="0 0 24 24"><path d="M2.25 11.25h12M3.75 11.25V21h9V11.25M9 2.25v3M6.75 7.5a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.5 14.25h4.5M18.75 14.25V21M17.25 21h3"/></symbol>
+  <symbol id="vc-cozinha-externa" viewBox="0 0 24 24"><path d="M2.25 12h19.5M3.75 12v9h16.5v-9M12 12v9M9.75 15.75v.75M14.25 15.75v.75M6.75 12V8.25a1.5 1.5 0 0 1 3 0v.75M18 2.25V3M18 7.5v.75M15 5.25h.75M20.25 5.25H21M19.59 3.66l.53-.53M16.41 3.66l-.53-.53M19.59 6.84l.53.53M16.41 6.84l-.53.53"/><circle cx="18" cy="5.25" r="1.5"/></symbol>
+  <symbol id="vc-copa" viewBox="0 0 24 24"><path d="M6 12h12M8.25 12v8.25M15.75 12v8.25M2.25 9.75v10.5M2.25 15H6v5.25M21.75 9.75v10.5M21.75 15H18v5.25M10.5 8.25h3V12h-3V8.25ZM13.5 9h.75a.75.75 0 0 1 0 1.5h-.75"/></symbol>
+  <symbol id="vc-despensa" viewBox="0 0 24 24"><rect x="3.75" y="2.25" width="16.5" height="19.5" rx="1.125"/><path d="M3.75 9h16.5M3.75 15.75h16.5M6.75 9V5.25h3V9M12.75 9V6h2.25v3M7.5 15.75V12h2.25v3.75M12.75 15.75v-3h3.75v3"/></symbol>
+  <symbol id="vc-armario-embutido" viewBox="0 0 24 24"><rect x="3.75" y="2.25" width="16.5" height="19.5" rx="1.125"/><path d="M3.75 5.25h16.5M9.25 5.25v16.5M14.75 5.25v16.5M7.875 12v1.5M10.625 12v1.5M16.125 12v1.5"/></symbol>
+  <symbol id="vc-closet" viewBox="0 0 24 24"><path d="M2.25 6h19.5M3 6V3.75M21 6V3.75M8.25 6v1.5M15.75 6v1.5M8.25 7.5 4.5 10.5H12L8.25 7.5ZM5.25 10.5v9.75h6V10.5M15.75 7.5 12.75 10.5h6l-3-3ZM13.5 10.5 12 20.25h7.5L18 10.5"/></symbol>
+  <symbol id="vc-suite-master-com-closet" viewBox="0 0 24 24"><circle cx="6" cy="13.875" r="1.875"/><path d="M2.25 20.25V10.5M2.25 16.5h19.5v3.75M21.75 16.5v-2.25a2.25 2.25 0 0 0-2.25-2.25h-9v4.5M17.25 2.25a1.125 1.125 0 0 1 1.125 1.125c0 .621-.504.75-1.125 1.125v.75M17.25 5.25 13.5 7.5h7.5l-3.75-2.25Z"/></symbol>
+  <symbol id="vc-adega" viewBox="0 0 24 24"><path d="M8.25 2.25h1.5V6c1.125.75 1.5 1.5 1.5 3v12h-4.5V9c0-1.5.375-2.25 1.5-3V2.25ZM6.75 13.5h4.5M14.25 9.75h4.5V12a2.25 2.25 0 0 1-4.5 0V9.75ZM16.5 14.25v6M14.25 21h4.5"/></symbol>
+  <symbol id="vc-area-de-servico" viewBox="0 0 24 24"><path d="M4.5 11.25h15v3a4.5 4.5 0 0 1-4.5 4.5H9a4.5 4.5 0 0 1-4.5-4.5v-3ZM12 11.25V8.25a1.5 1.5 0 0 1 1.5-1.5h1.5M8.25 18.75v3M15.75 18.75v3M2.25 3h19.5M5.25 3v3.75h3V3"/></symbol>
+  <symbol id="vc-banheiros-senhor-e-senhora" viewBox="0 0 24 24"><circle cx="6.75" cy="4.5" r="1.5"/><circle cx="17.25" cy="4.5" r="1.5"/><path d="M4.5 8.25H9V15H4.5V8.25ZM6 15v6M7.5 15v6M17.25 8.25l3 7.5h-6l3-7.5ZM16.5 15.75V21M18 15.75V21M12 2.25v19.5"/></symbol>
+  <symbol id="vc-quarto-de-empregada" viewBox="0 0 24 24"><circle cx="4.875" cy="14.625" r="1.125"/><path d="M2.25 20.25V12M2.25 16.5H13.5v3.75M13.5 16.5V15a1.5 1.5 0 0 0-1.5-1.5H7.5v3M18 2.25V13.5M15 13.5h6l.75 7.5h-7.5l.75-7.5ZM16.5 17.25V21M19.5 17.25V21"/></symbol>
+  <symbol id="vc-wc-para-empregados" viewBox="0 0 24 24"><path d="M3.75 3.75h4.5v7.5h-4.5v-7.5ZM3.75 11.25h10.5v1.5a4.5 4.5 0 0 1-4.5 4.5h-1.5a4.5 4.5 0 0 1-4.5-4.5v-1.5ZM6.75 17.25 6 21h5.25l-.75-3.75M19.5 6v8.25M17.625 14.25h3.75l.375 6.75h-4.5l.375-6.75Z"/></symbol>
+  <symbol id="vc-lavabo" viewBox="0 0 24 24"><ellipse cx="12" cy="5.25" rx="3" ry="3"/><path d="M5.25 11.25h13.5a6.75 3.75 0 0 1-13.5 0ZM10.5 14.85V21h3v-6.15M12 11.25V9.75h2.25"/></symbol>
+  <symbol id="vc-divisorias" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M12 3v6.75M12 13.5V21M3 12h5.25M12 12h3.75"/></symbol>
+  <symbol id="vc-edicula" viewBox="0 0 24 24"><path d="M2.25 12 8.25 6l6 6M3.75 10.5v9.75h9V10.5M14.25 15 18 11.25 21.75 15M15 14.25v6h6v-6M2.25 20.25h19.5M7.125 20.25v-3.75h2.25v3.75"/></symbol>
+  <symbol id="vc-entrada-de-servico" viewBox="0 0 24 24"><path d="M3.75 21V3.75H12V21M9.75 12.75h.008v.008H9.75v-.008ZM2.25 21h19.5M14.25 14.25h6V21h-6v-6.75ZM17.25 14.25v2.25"/></symbol>
+  <symbol id="vc-entrada-lateral" viewBox="0 0 24 24"><path d="M2.25 10.5 9 4.5l6.75 6M3.75 9.164V20.25h10.5V9.164M7.875 20.25v-4.5h2.25v4.5M19.5 21V9.75m0 0-1.5 1.5m1.5-1.5 1.5 1.5"/></symbol>
+  <symbol id="vc-escritorio" viewBox="0 0 24 24"><path d="M2.25 12.75h13.5M3.75 12.75V21M14.25 12.75V21M5.25 4.5h7.5v5.25h-7.5V4.5ZM9 9.75v3M17.25 9v6.75h4.5M21.75 15.75V21M17.25 15.75V21"/></symbol>
+  <symbol id="vc-geminada" viewBox="0 0 24 24"><path d="M2.25 11.25 7.125 6 12 11.25 16.875 6l4.875 5.25M3.75 9.6v10.65h16.5V9.6M12 11.25v9M6 20.25V16.5h2.25v3.75M15.75 20.25V16.5H18v3.75"/></symbol>
+  <symbol id="vc-hall-privativo" viewBox="0 0 24 24"><rect x="3" y="4.5" width="10.5" height="16.5" rx="1.125"/><rect x="15" y="12" width="6" height="5.25" rx=".75"/><path d="M8.25 4.5V21M16.5 12V9.75a1.5 1.5 0 0 1 3 0V12"/></symbol>
+  <symbol id="vc-lareira" viewBox="0 0 24 24"><path d="M2.25 6h19.5M3.75 6v15M20.25 6v15M2.25 21h19.5M8.25 6V2.25M15.75 6V2.25M7.5 21v-6a4.5 4.5 0 0 1 9 0v6M12 14.25c1.125 1.313 1.688 2.25 1.688 3a1.688 1.688 0 0 1-3.375 0c0-.75.562-1.687 1.687-3Z"/></symbol>
+  <symbol id="vc-luminarias" viewBox="0 0 24 24"><path d="M8.25 2.25v5.25M15.75 2.25v9M5.25 10.5a3 3 0 0 1 6 0h-6ZM12.75 14.25a3 3 0 0 1 6 0h-6ZM8.25 12.75v1.5M15.75 16.5V18M6 13.5l-.75.75M10.5 13.5l.75.75M13.5 17.25l-.75.75M18 17.25l.75.75"/></symbol>
+  <symbol id="vc-mezanino" viewBox="0 0 24 24"><path d="M3 3.75h18V21H3V3.75ZM12 12h9M12 9.75V12M16.5 9.75V12M4.5 21v-1.5H6V18h1.5v-1.5H9V15h1.5v-1.5H12V12"/></symbol>
+  <symbol id="vc-mobiliado" viewBox="0 0 24 24"><path d="M3.75 12V9.75A2.25 2.25 0 0 1 6 7.5h12a2.25 2.25 0 0 1 2.25 2.25V12M2.25 12.75a1.5 1.5 0 0 1 3 0v1.5h13.5v-1.5a1.5 1.5 0 0 1 3 0V18H2.25v-5.25ZM4.5 18v1.5M19.5 18v1.5"/></symbol>
+  <symbol id="vc-nivelamento-de-piso" viewBox="0 0 24 24"><rect x="3" y="9.75" width="18" height="4.5" rx="1.125"/><circle cx="12" cy="12" r=".75"/><path d="M10.125 9.75v4.5M13.875 9.75v4.5M2.25 18h19.5"/></symbol>
+  <symbol id="vc-pe-direito-elevado" viewBox="0 0 24 24"><circle cx="8.25" cy="14.25" r="1.5"/><path d="M6 21v-2.25a2.25 2.25 0 0 1 4.5 0V21M2.25 3h12M2.25 21h12M18 3v18m0-18-2.25 2.25M18 3l2.25 2.25M18 21l-2.25-2.25M18 21l2.25-2.25"/></symbol>
+  <symbol id="vc-permite-sala-ampliada" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="1.5"/><path d="M15 4.5v15" stroke-dasharray="1.5 2.25"/><path d="M6.75 12h11.25m0 0-2.25-2.25M18 12l-2.25 2.25"/></symbol>
+  <symbol id="vc-persianas-de-enrolar" viewBox="0 0 24 24"><path d="M3 3.75h18v3H3v-3ZM4.5 6.75V15h15V6.75M4.5 9.75h15M4.5 12.75h15M4.5 15v5.25h15V15M12 15v5.25"/></symbol>
+  <symbol id="vc-vista-panoramica" viewBox="0 0 24 24"><circle cx="16.5" cy="7.5" r="1.875"/><path d="M2.25 18.75 8.25 11.25l4.5 5.25 3-3 6 5.25M2.25 18.75h19.5"/></symbol>
+  <symbol id="vc-area-verde" viewBox="0 0 24 24"><path d="M12 2.25a5.25 5.25 0 0 0-5.12 6.41A4.5 4.5 0 0 0 8.25 17.25h7.5a4.5 4.5 0 0 0 1.37-8.59A5.25 5.25 0 0 0 12 2.25ZM12 21.75v-9M12 15l2.25-2.25M12 13.5l-2.25-2.25"/></symbol>
+  <symbol id="vc-arvores-frutiferas" viewBox="0 0 24 24"><path d="M12 2.25a5.25 5.25 0 0 0-5.12 6.41A4.5 4.5 0 0 0 8.25 17.25h7.5a4.5 4.5 0 0 0 1.37-8.59A5.25 5.25 0 0 0 12 2.25ZM12 21.75v-4.5"/><circle cx="9" cy="11.25" r="1.125"/><circle cx="15" cy="11.25" r="1.125"/><circle cx="12" cy="7.125" r="1.125"/></symbol>
+  <symbol id="vc-cachoeira" viewBox="0 0 24 24"><path d="M2.25 21V10.5h6V21M2.25 7.5h6a3 3 0 0 1 3 3v6.75M2.25 4.5h6a6 6 0 0 1 6 6v6.75M9 20.25q1.5-1.5 3 0t3 0 3 0 3 0"/></symbol>
+  <symbol id="vc-canil" viewBox="0 0 24 24"><path d="M3 11.25 12 4.5l9 6.75M4.5 10.125V20.25h15V10.125M9 20.25V16.5a3 3 0 0 1 6 0v3.75M2.25 20.25h19.5"/></symbol>
+  <symbol id="vc-casa-sede" viewBox="0 0 24 24"><path d="M2.25 10.5 12 3.75l9.75 6.75M3.75 9.46v10.79h16.5V9.46M3.75 14.25h16.5M7.5 14.25v6M16.5 14.25v6M10.5 20.25V16.5h3v3.75"/></symbol>
+  <symbol id="vc-celeiro" viewBox="0 0 24 24"><path d="M3 21V10.5L6 6l6-3 6 3 3 4.5V21H3ZM8.25 21v-7.5h7.5V21M8.25 13.5l7.5 7.5M15.75 13.5l-7.5 7.5M10.5 7.5h3v2.25h-3V7.5Z"/></symbol>
+  <symbol id="vc-curral" viewBox="0 0 24 24"><path d="M3.75 6v13.5M12 6v13.5M20.25 6v13.5M3.75 9h16.5M3.75 14.25h16.5M3.75 14.25 12 9M12 14.25 20.25 9M2.25 19.5h19.5"/></symbol>
+  <symbol id="vc-galpao" viewBox="0 0 24 24"><path d="M2.25 9 12 4.5l9.75 4.5M3.75 8.3V21h16.5V8.3M7.5 21v-8.25h9V21M7.5 15h9M7.5 17.25h9M7.5 19.5h9"/></symbol>
+  <symbol id="vc-jardim" viewBox="0 0 24 24"><path d="M6 6.75 7.125 8.625 8.25 6.75l1.125 1.875L10.5 6.75v1.5a2.25 2.25 0 0 1-4.5 0v-1.5ZM8.25 10.5V21M8.25 16.5c-2.25 0-3.75-1.5-3.75-3 2.25 0 3.75 1.5 3.75 3ZM13.5 9.75l1.125 1.875L15.75 9.75l1.125 1.875L18 9.75v1.5a2.25 2.25 0 0 1-4.5 0v-1.5ZM15.75 13.5V21M15.75 18c2.25 0 3.75-1.5 3.75-3-2.25 0-3.75 1.5-3.75 3ZM3 21h18"/></symbol>
+  <symbol id="vc-jardim-de-inverno" viewBox="0 0 24 24"><path d="M3.75 9 12 3.75 20.25 9v12H3.75V9ZM9.75 21l-.75-3.75h6l-.75 3.75M12 17.25c0-2.25-1.5-3.75-3.75-4.5M12 17.25c0-3 1.5-5.25 3.75-6M16.5 9.75l1.5-1.5M15.75 7.5l.75-.75"/></symbol>
+  <symbol id="vc-lago" viewBox="0 0 24 24"><ellipse cx="12" cy="15.75" rx="9.75" ry="4.5"/><path d="M8.25 15.75q1.125-1.125 2.25 0t2.25 0 2.25 0M5.25 12.5V9M7.5 11.6V9.75M5.25 9c-1.5-1.5-1.5-4.5 0-6 1.5 1.5 1.5 4.5 0 6ZM7.5 9.75c0-2.25 1.5-3.75 3-3.75 0 2.25-1.5 3.75-3 3.75Z"/></symbol>
+  <symbol id="vc-marina" viewBox="0 0 24 24"><path d="M12 3v12H5.25L12 3ZM12.75 6l4.5 9h-4.5M3.75 15.75h16.5l-2.25 3H6l-2.25-3ZM2.25 21q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-praca" viewBox="0 0 24 24"><circle cx="17.25" cy="9" r="3.75"/><path d="M17.25 12.75V21M2.25 15.75h10.5M3 12h9M4.5 12v3.75M10.5 12v3.75M3.75 15.75v3M11.25 15.75v3M2.25 21h19.5"/></symbol>
+  <symbol id="vc-quintal" viewBox="0 0 24 24"><path d="M2.25 11.25 6.75 6.75l4.5 4.5M3.375 10.125V21h6.75V10.125M13.5 21v-6l1.125-1.125L15.75 15v6M18 21v-6l1.125-1.125L20.25 15v6M15.75 17.25H18M2.25 21h19.5"/></symbol>
+  <symbol id="vc-de-esquina" viewBox="0 0 24 24"><path d="M2.25 15H15V2.25M2.25 18h2.25M7.5 18h2.25M12.75 18H15M18 2.25V4.5M18 7.5v2.25M18 12.75V15M4.5 9.75 8.25 6 12 9.75M5.625 8.625v3.75h5.25V8.625"/></symbol>
+  <symbol id="vc-frente-para-o-mar" viewBox="0 0 24 24"><path d="M7.5 12a4.5 4.5 0 0 1 9 0M2.25 12h19.5M12 3.75v1.5M6.697 5.947l1.06 1.06M17.303 5.947l-1.06 1.06M2.25 16.5q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0M2.25 20.25q1.625-1.5 3.25 0t3.25 0 3.25 0 3.25 0 3.25 0 3.25 0"/></symbol>
+  <symbol id="vc-minha-casa-minha-vida" viewBox="0 0 24 24"><circle cx="18" cy="12" r="2.25"/><path d="M2.25 11.25 9 4.5l6.75 6.75M3.75 9.75v10.5h10.5V9.75M7.5 20.25v-4.5h3v4.5M18 14.25v7.5M18 18h2.25M18 20.25h1.5"/></symbol>
+  <symbol id="vc-perto-de-escolas" viewBox="0 0 24 24"><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0ZM8.25 10.125 12 8.25l3.75 1.875L12 12l-3.75-1.875ZM9.75 10.875v1.5c0 .621 1.007 1.125 2.25 1.125s2.25-.504 2.25-1.125v-1.5"/></symbol>
+  <symbol id="vc-perto-de-hospital" viewBox="0 0 24 24"><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0ZM12 7.875v5.25M9.375 10.5h5.25"/></symbol>
+  <symbol id="vc-perto-de-metro" viewBox="0 0 24 24"><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0ZM9.75 7.5h4.5a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1-.75-.75V8.25a.75.75 0 0 1 .75-.75ZM9 10.125h6M10.5 12.75l-.75 1.125M13.5 12.75l.75 1.125"/></symbol>
+  <symbol id="vc-perto-de-parque" viewBox="0 0 24 24"><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0ZM12 6.75 9.375 11.25h5.25L12 6.75ZM12 11.25v2.25"/></symbol>
+  <symbol id="vc-rua-tranquila" viewBox="0 0 24 24"><path d="M4.5 21l5.25-9M19.5 21l-5.25-9M2.25 12h19.5M3 12V9l2.25-2.25L7.5 9v3M16.5 12V9l2.25-2.25L21 9v3M12.75 2.25a3.375 3.375 0 1 0 3 4.875 2.625 2.625 0 0 1-3-4.875Z"/></symbol>
+  <symbol id="vc-torre-unica" viewBox="0 0 24 24"><path d="M8.25 21.75V2.25h7.5v19.5M3.75 21.75h16.5M10.5 6h.75M12.75 6h.75M10.5 9.75h.75M12.75 9.75h.75M10.5 13.5h.75M12.75 13.5h.75M11.25 21.75V18h1.5v3.75"/></symbol>
+  <symbol id="vc-um-por-andar" viewBox="0 0 24 24"><path d="M6 21.75V2.25h12v19.5M3.75 21.75h16.5M6 7.125h12M6 12h12M6 16.875h12M8.25 4.125h7.5M8.25 9h7.5M8.25 13.875h7.5M8.25 18.75h7.5"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
+      <div>
+        <h1>Ícones de comodidades</h1>
+        <p>Biblioteca própria do ValeCasa na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+      </div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+    <div class="tools">
+      <label class="search" for="q"><svg class="ic"><use href="#ui-search"/></svg><input id="q" type="search" placeholder="Buscar: piscina, quadra, segurança…" autocomplete="off"></label>
+      <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+    </div>
+    <div id="list"></div>
+  </main>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<script>
+const DATA = {
+  "versao": "1.0",
+  "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, pontas e cantos arredondados, margem 2.25",
+  "categorias": [
+    { "id": "lazer", "nome": "Lazer e Esportes", "total": 39, "cobertos": 39 },
+    { "id": "seguranca", "nome": "Segurança", "total": 12, "cobertos": 12 },
+    { "id": "infraestrutura", "nome": "Infraestrutura e Sustentabilidade", "total": 19, "cobertos": 19 },
+    { "id": "servicos", "nome": "Comodidades e Serviços", "total": 16, "cobertos": 16 },
+    { "id": "imovel", "nome": "Características do Imóvel", "total": 50, "cobertos": 50 },
+    { "id": "natureza", "nome": "Áreas Externas e Natureza", "total": 15, "cobertos": 15 },
+    { "id": "localizacao", "nome": "Localização e Características do Projeto", "total": 13, "cobertos": 13 }
+  ],
+  "etiquetas": [
+    { "nome": "Alto padrão de acabamento", "categoria": "imovel", "motivo": "Conceito abstrato: funciona melhor como etiqueta de texto." },
+    { "nome": "Separação entre área social e íntima", "categoria": "imovel", "motivo": "Característica de planta, difícil de ler como desenho em 16 px." },
+    { "nome": "Tipo de parede exterior", "categoria": "imovel", "motivo": "É um campo de cadastro (alvenaria, madeira...), não uma comodidade." },
+    { "nome": "Estuda permuta", "categoria": "localizacao", "motivo": "Condição de negócio, não característica física: funciona melhor como etiqueta." },
+    { "nome": "Pensado p/ público Single", "categoria": "localizacao", "motivo": "Perfil de público, abstrato demais para um desenho." }
+  ],
+  "icones": [
+    { "id": "academia", "nome": "Academia", "categoria": "lazer", "aliases": ["Fitness/Sala de Ginástica"], "lote": 0 },
+    { "id": "area-de-lazer", "nome": "Ampla área de lazer", "categoria": "lazer", "aliases": ["Área de lazer"], "lote": 0 },
+    { "id": "bar", "nome": "Bar", "categoria": "lazer", "lote": 1 },
+    { "id": "bar-na-piscina", "nome": "Bar na piscina", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "biblioteca", "nome": "Biblioteca", "categoria": "lazer", "lote": 1 },
+    { "id": "bicicletario", "nome": "Bicicletário", "categoria": "lazer", "lote": 0 },
+    { "id": "brinquedoteca", "nome": "Brinquedoteca", "categoria": "lazer", "lote": 0 },
+    { "id": "campo-de-golfe", "nome": "Campo de golfe", "categoria": "lazer", "lote": 2 },
+    { "id": "casa-de-boneca", "nome": "Casa de boneca", "categoria": "lazer", "lote": 2 },
+    { "id": "centro-de-estetica", "nome": "Centro de estética", "categoria": "lazer", "lote": 2 },
+    { "id": "churrasqueira", "nome": "Churrasqueira", "categoria": "lazer", "lote": 0 },
+    { "id": "complexo-multiuso", "nome": "Complexo multiuso", "categoria": "lazer", "lote": 2 },
+    { "id": "deck", "nome": "Deck", "categoria": "lazer", "lote": 1 },
+    { "id": "deck-molhado", "nome": "Deck molhado na piscina", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "espaco-gourmet", "nome": "Espaço gourmet", "categoria": "lazer", "lote": 1 },
+    { "id": "espaco-zen", "nome": "Espaço zen", "categoria": "lazer", "lote": 2 },
+    { "id": "fitness-ao-ar-livre", "nome": "Fitness ao ar livre", "categoria": "lazer", "lote": 2 },
+    { "id": "forno-de-pizza", "nome": "Forno de pizza", "categoria": "lazer", "lote": 1 },
+    { "id": "hidromassagem", "nome": "Hidromassagem (SPA)", "categoria": "lazer", "aliases": ["SPA", "Ofurô"], "lote": 1 },
+    { "id": "lazer-elevado", "nome": "Lazer elevado acima do térreo", "categoria": "lazer", "aliases": ["Rooftop"], "lote": 2 },
+    { "id": "mini-quadra", "nome": "Mini quadra", "categoria": "lazer", "familia": "quadras", "lote": 1 },
+    { "id": "muro-de-escalada", "nome": "Muro de escalada", "categoria": "lazer", "lote": 2 },
+    { "id": "piscina", "nome": "Piscina", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "piscina-aquecida", "nome": "Piscina aquecida", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "piscina-coberta", "nome": "Piscina coberta", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "piscina-infantil", "nome": "Piscina infantil", "categoria": "lazer", "familia": "piscina", "lote": 1 },
+    { "id": "pista-de-cooper", "nome": "Pista de cooper", "categoria": "lazer", "aliases": ["Pista de caminhada"], "lote": 2 },
+    { "id": "pista-de-skate", "nome": "Pista de skate", "categoria": "lazer", "lote": 2 },
+    { "id": "playground", "nome": "Playground", "categoria": "lazer", "aliases": ["Parquinho"], "lote": 1 },
+    { "id": "quadra-futebol-de-salao", "nome": "Quadra de futebol de salão", "categoria": "lazer", "familia": "quadras", "aliases": ["Futsal"], "lote": 1 },
+    { "id": "quadra-de-squash", "nome": "Quadra de squash", "categoria": "lazer", "familia": "quadras", "lote": 1 },
+    { "id": "quadra-de-tenis", "nome": "Quadra de tênis", "categoria": "lazer", "familia": "quadras", "lote": 1 },
+    { "id": "quadra-poliesportiva", "nome": "Quadra poliesportiva", "categoria": "lazer", "familia": "quadras", "lote": 1 },
+    { "id": "redario", "nome": "Redário", "categoria": "lazer", "lote": 2 },
+    { "id": "sala-de-massagem", "nome": "Sala de massagem", "categoria": "lazer", "lote": 2 },
+    { "id": "salao-de-jogos", "nome": "Salão de jogos", "categoria": "lazer", "lote": 1 },
+    { "id": "sauna", "nome": "Sauna", "categoria": "lazer", "lote": 1 },
+    { "id": "solarium", "nome": "Solarium", "categoria": "lazer", "lote": 2 },
+    { "id": "campo-de-futebol", "nome": "Campo de futebol", "categoria": "lazer", "familia": "quadras", "extra": true, "lote": 0 },
+
+    { "id": "cameras-de-seguranca", "nome": "Câmeras de segurança", "categoria": "seguranca", "aliases": ["Câmeras internas", "CFTV"], "lote": 0 },
+    { "id": "cerca", "nome": "Cerca", "categoria": "seguranca", "aliases": ["Grade"], "lote": 3 },
+    { "id": "fechadura-biometrica", "nome": "Fechadura biométrica", "categoria": "seguranca", "aliases": ["Digital", "Biometria"], "origem": "Heroicons finger-print", "lote": 3 },
+    { "id": "guarita", "nome": "Guarita", "categoria": "seguranca", "aliases": ["Cancela"], "lote": 3 },
+    { "id": "interfone", "nome": "Interfone", "categoria": "seguranca", "aliases": ["Porteiro eletrônico"], "lote": 3 },
+    { "id": "portaria-24h", "nome": "Portaria 24h", "categoria": "seguranca", "aliases": ["Porteiro", "Concierge"], "lote": 3 },
+    { "id": "pulmao-pedestres", "nome": "Pulmão de segurança para pedestres", "categoria": "seguranca", "familia": "pulmao", "lote": 3 },
+    { "id": "pulmao-veiculos", "nome": "Pulmão de segurança para veículos", "categoria": "seguranca", "familia": "pulmao", "lote": 3 },
+    { "id": "ronda-vigilancia", "nome": "Ronda/Vigilância", "categoria": "seguranca", "aliases": ["Vigia", "Segurança noturna"], "lote": 3 },
+    { "id": "seguranca-perimetral", "nome": "Segurança perimetral", "categoria": "seguranca", "aliases": ["Cerca elétrica", "Muro"], "lote": 3 },
+    { "id": "sistema-contra-incendio", "nome": "Sistema contra incêndio", "categoria": "seguranca", "aliases": ["Extintor", "Hidrante"], "lote": 3 },
+    { "id": "sistema-de-alarme", "nome": "Sistema de alarme", "categoria": "seguranca", "origem": "Heroicons bell-alert", "lote": 3 },
+
+    { "id": "caseiro", "nome": "Caseiro", "categoria": "servicos", "aliases": ["Zelador"], "lote": 3 },
+    { "id": "coffee-shop", "nome": "Coffee shop", "categoria": "servicos", "aliases": ["Coffe shop", "Café", "Cafeteria"], "lote": 3 },
+    { "id": "com-lojas-no-terreo", "nome": "Com lojas no térreo", "categoria": "servicos", "aliases": ["Comércio", "Mall"], "origem": "Heroicons building-storefront", "lote": 3 },
+    { "id": "coworking", "nome": "Coworking", "categoria": "servicos", "aliases": ["Espaço de co-working", "Office Space", "Home office"], "lote": 3 },
+    { "id": "deposito-no-subsolo", "nome": "Depósito no subsolo", "categoria": "servicos", "familia": "deposito", "lote": 3 },
+    { "id": "deposito-privativo", "nome": "Depósito privativo", "categoria": "servicos", "familia": "deposito", "aliases": ["Box", "Hobby box"], "lote": 3 },
+    { "id": "estacionamento-visitantes", "nome": "Estacionamento para visitantes", "categoria": "servicos", "familia": "vagas", "aliases": ["Vagas para visitantes", "Estacionamento"], "lote": 3 },
+    { "id": "lavanderia", "nome": "Lavanderia", "categoria": "servicos", "aliases": ["Lavanderia coletiva"], "lote": 3 },
+    { "id": "refeitorio", "nome": "Refeitório", "categoria": "servicos", "lote": 3 },
+    { "id": "restaurante", "nome": "Restaurante", "categoria": "servicos", "lote": 3 },
+    { "id": "vaga-de-moto", "nome": "Vaga de moto", "categoria": "servicos", "familia": "vagas", "aliases": ["Motocicleta"], "lote": 3 },
+    { "id": "vagas-determinadas", "nome": "Vagas determinadas", "categoria": "servicos", "familia": "vagas", "aliases": ["Vaga demarcada", "Garagem"], "lote": 3 },
+    { "id": "vestiario", "nome": "Vestiário", "categoria": "servicos", "familia": "vestiario", "lote": 3 },
+    { "id": "vestiario-para-diaristas", "nome": "Vestiário para diaristas", "categoria": "servicos", "familia": "vestiario", "lote": 3 },
+    { "id": "acessibilidade", "nome": "Acessibilidade", "categoria": "infraestrutura", "aliases": ["Acesso para deficientes", "Acesso P/ Deficiente Físico", "Acesso para cadeirantes"], "lote": 0 },
+    { "id": "acesso-asfaltado", "nome": "Acesso asfaltado", "categoria": "infraestrutura", "aliases": ["Rua asfaltada", "Asfalto"], "lote": 4 },
+    { "id": "antena-parabolica", "nome": "Antena parabólica", "categoria": "infraestrutura", "aliases": ["TV a cabo", "Antena coletiva"], "lote": 4 },
+    { "id": "aquecedor", "nome": "Aquecedor", "categoria": "infraestrutura", "aliases": ["Aquecedor a gás", "Boiler"], "lote": 4 },
+    { "id": "aquecimento-central", "nome": "Aquecimento central", "categoria": "infraestrutura", "aliases": ["Aquecimento central de água", "Calefação"], "lote": 4 },
+    { "id": "aquecimento-solar-de-agua", "nome": "Aquecimento de água através de placas solares", "categoria": "infraestrutura", "familia": "solar", "aliases": ["Aquecimento solar"], "lote": 4 },
+    { "id": "energia-solar", "nome": "Energia solar (placas solares)", "categoria": "infraestrutura", "familia": "solar", "aliases": ["Placas fotovoltaicas", "Painel solar"], "lote": 4 },
+    { "id": "elevador", "nome": "Elevador", "categoria": "infraestrutura", "aliases": ["Quantidade de elevadores"], "lote": 4 },
+    { "id": "gas-encanado", "nome": "Gás encanado", "categoria": "infraestrutura", "aliases": ["Gás natural", "Gás central"], "lote": 4 },
+    { "id": "gerador", "nome": "Gerador", "categoria": "infraestrutura", "aliases": ["Gerador de energia"], "lote": 4 },
+    { "id": "ar-condicionado", "nome": "Infraestrutura para ar-condicionado", "categoria": "infraestrutura", "aliases": ["Ar condicionado", "Split"], "lote": 4 },
+    { "id": "coleta-seletiva", "nome": "Infraestrutura para coleta seletiva de lixo", "categoria": "infraestrutura", "aliases": ["Reciclagem", "Lixeiras"], "lote": 4 },
+    { "id": "medidor-de-agua", "nome": "Medidor individual de água entregue", "categoria": "infraestrutura", "aliases": ["Hidrômetro individual"], "lote": 4 },
+    { "id": "poco-artesiano", "nome": "Poço artesiano", "categoria": "infraestrutura", "aliases": ["Poço"], "lote": 4 },
+    { "id": "automacao-residencial", "nome": "Preparado para automação residencial", "categoria": "infraestrutura", "aliases": ["Casa inteligente", "Smart home"], "lote": 4 },
+    { "id": "reuso-agua-da-chuva", "nome": "Sistema de reuso de águas da chuva", "categoria": "infraestrutura", "aliases": ["Cisterna", "Captação de chuva"], "lote": 4 },
+    { "id": "piso-frio", "nome": "Piso frio", "categoria": "imovel", "familia": "pisos", "aliases": ["Cerâmica", "Porcelanato"], "lote": 5 },
+    { "id": "piso-de-madeira", "nome": "Piso de madeira", "categoria": "imovel", "familia": "pisos", "aliases": ["Assoalho", "Taco"], "lote": 5 },
+    { "id": "piso-laminado", "nome": "Piso laminado", "categoria": "imovel", "familia": "pisos", "lote": 5 },
+    { "id": "carpete-de-madeira", "nome": "Carpete de madeira", "categoria": "imovel", "familia": "pisos", "aliases": ["Piso vinílico"], "lote": 5 },
+    { "id": "carpete", "nome": "Carpete", "categoria": "imovel", "familia": "pisos", "lote": 5 },
+    { "id": "piso-quente", "nome": "Piso quente", "categoria": "imovel", "familia": "pisos", "aliases": ["Piso aquecido"], "lote": 5 },
+    { "id": "piso-atenuador-de-ruido", "nome": "Piso atenuador de ruídos", "categoria": "imovel", "familia": "pisos", "aliases": ["Isolamento acústico", "Manta acústica"], "lote": 5 },
+    { "id": "varanda", "nome": "Varanda", "categoria": "imovel", "familia": "varandas", "aliases": ["Sacada"], "lote": 5 },
+    { "id": "varanda-gourmet", "nome": "Varanda gourmet", "categoria": "imovel", "familia": "varandas", "lote": 5 },
+    { "id": "varanda-gourmet-com-churrasqueira", "nome": "Varanda gourmet com churrasqueira", "categoria": "imovel", "familia": "varandas", "lote": 5 },
+    { "id": "terraco", "nome": "Terraço", "categoria": "imovel", "familia": "varandas", "aliases": ["Cobertura"], "lote": 5 },
+    { "id": "guarda-corpo-de-vidro", "nome": "Guarda-corpo da varanda em vidro", "categoria": "imovel", "familia": "varandas", "aliases": ["Varanda envidraçada"], "lote": 5 },
+    { "id": "fogao", "nome": "Fogão", "categoria": "imovel", "familia": "cozinha", "aliases": ["Cooktop", "Forno"], "lote": 5 },
+    { "id": "freezer", "nome": "Freezer", "categoria": "imovel", "familia": "cozinha", "aliases": ["Geladeira"], "lote": 5 },
+    { "id": "microondas", "nome": "Micro-ondas", "categoria": "imovel", "familia": "cozinha", "aliases": ["Microondas"], "lote": 5 },
+    { "id": "armario-de-cozinha", "nome": "Armário de cozinha", "categoria": "imovel", "familia": "cozinha", "aliases": ["Cozinha planejada"], "lote": 5 },
+    { "id": "cozinha-americana", "nome": "Cozinha americana", "categoria": "imovel", "familia": "cozinha", "aliases": ["Cozinha integrada", "Ilha"], "lote": 5 },
+    { "id": "cozinha-externa", "nome": "Cozinha externa", "categoria": "imovel", "familia": "cozinha", "lote": 5 },
+    { "id": "copa", "nome": "Copa", "categoria": "imovel", "familia": "cozinha", "aliases": ["Sala de jantar"], "lote": 5 },
+    { "id": "despensa", "nome": "Despensa", "categoria": "imovel", "familia": "cozinha", "lote": 5 },
+    { "id": "armario-embutido", "nome": "Armário embutido", "categoria": "imovel", "aliases": ["Guarda-roupa"], "lote": 5 },
+    { "id": "closet", "nome": "Closet", "categoria": "imovel", "lote": 5 },
+    { "id": "suite-master-com-closet", "nome": "Suíte master com closet", "categoria": "imovel", "aliases": ["Suíte master"], "lote": 5 },
+    { "id": "adega", "nome": "Adega", "categoria": "imovel", "aliases": ["Adega climatizada"], "lote": 5 },
+    { "id": "area-de-servico", "nome": "Área de serviço", "categoria": "imovel", "aliases": ["Tanque", "Varal"], "lote": 6 },
+    { "id": "banheiros-senhor-e-senhora", "nome": "Banheiros Senhor e Senhora", "categoria": "imovel", "aliases": ["Banheiro masculino e feminino"], "lote": 6 },
+    { "id": "quarto-de-empregada", "nome": "Quarto de empregada", "categoria": "imovel", "familia": "servico-domestico", "aliases": ["Dependência de empregados", "Dependência de serviço"], "lote": 6 },
+    { "id": "wc-para-empregados", "nome": "WC para empregados", "categoria": "imovel", "familia": "servico-domestico", "aliases": ["Banheiro de serviço"], "lote": 6 },
+    { "id": "lavabo", "nome": "Lavabo", "categoria": "imovel", "lote": 6 },
+    { "id": "divisorias", "nome": "Divisórias", "categoria": "imovel", "aliases": ["Planta"], "lote": 6 },
+    { "id": "edicula", "nome": "Edícula", "categoria": "imovel", "lote": 6 },
+    { "id": "entrada-de-servico", "nome": "Entrada de serviço", "categoria": "imovel", "familia": "entradas", "lote": 6 },
+    { "id": "entrada-lateral", "nome": "Entrada lateral", "categoria": "imovel", "familia": "entradas", "aliases": ["Corredor lateral"], "lote": 6 },
+    { "id": "escritorio", "nome": "Escritório", "categoria": "imovel", "aliases": ["Home office"], "lote": 6 },
+    { "id": "geminada", "nome": "Geminada", "categoria": "imovel", "aliases": ["Casa geminada", "Sobrado geminado"], "lote": 6 },
+    { "id": "hall-privativo", "nome": "Hall privativo", "categoria": "imovel", "aliases": ["Elevador privativo"], "lote": 6 },
+    { "id": "lareira", "nome": "Lareira", "categoria": "imovel", "lote": 6 },
+    { "id": "luminarias", "nome": "Luminárias", "categoria": "imovel", "aliases": ["Iluminação", "Pendentes"], "lote": 6 },
+    { "id": "mezanino", "nome": "Mezanino", "categoria": "imovel", "lote": 6 },
+    { "id": "mobiliado", "nome": "Mobiliado", "categoria": "imovel", "aliases": ["Semimobiliado", "Móveis planejados"], "lote": 6 },
+    { "id": "nivelamento-de-piso", "nome": "Nivelamento de piso nas residências", "categoria": "imovel", "aliases": ["Piso nivelado", "Sem degraus"], "lote": 6 },
+    { "id": "pe-direito-elevado", "nome": "Pé direito elevado", "categoria": "imovel", "aliases": ["Pé-direito alto", "Pé-direito duplo"], "lote": 6 },
+    { "id": "permite-sala-ampliada", "nome": "Permite sala ampliada", "categoria": "imovel", "aliases": ["Planta flexível"], "lote": 6 },
+    { "id": "persianas-de-enrolar", "nome": "Persianas de enrolar", "categoria": "imovel", "aliases": ["Persiana", "Veneziana"], "lote": 6 },
+    { "id": "vista-panoramica", "nome": "Vista panorâmica", "categoria": "imovel", "aliases": ["Vista para a serra", "Vista livre"], "lote": 6 },
+
+    { "id": "area-verde", "nome": "Área verde", "categoria": "natureza", "lote": 0 },
+    { "id": "arvores-frutiferas", "nome": "Árvores frutíferas", "categoria": "natureza", "aliases": ["Pomar"], "lote": 7 },
+    { "id": "cachoeira", "nome": "Cachoeira", "categoria": "natureza", "lote": 7 },
+    { "id": "canil", "nome": "Canil", "categoria": "natureza", "aliases": ["Pet place", "Espaço pet"], "lote": 7 },
+    { "id": "casa-sede", "nome": "Casa sede", "categoria": "natureza", "familia": "rural", "aliases": ["Sede da fazenda"], "lote": 7 },
+    { "id": "celeiro", "nome": "Celeiro", "categoria": "natureza", "familia": "rural", "aliases": ["Paiol"], "lote": 7 },
+    { "id": "curral", "nome": "Curral", "categoria": "natureza", "familia": "rural", "aliases": ["Pasto", "Mangueiro"], "lote": 7 },
+    { "id": "galpao", "nome": "Galpão", "categoria": "natureza", "familia": "rural", "aliases": ["Barracão"], "lote": 7 },
+    { "id": "jardim", "nome": "Jardim", "categoria": "natureza", "aliases": ["Paisagismo"], "lote": 7 },
+    { "id": "jardim-de-inverno", "nome": "Jardim de inverno", "categoria": "natureza", "lote": 7 },
+    { "id": "lago", "nome": "Lago", "categoria": "natureza", "aliases": ["Represa", "Açude"], "lote": 7 },
+    { "id": "marina", "nome": "Marina", "categoria": "natureza", "aliases": ["Píer"], "lote": 7 },
+    { "id": "praca", "nome": "Praça", "categoria": "natureza", "lote": 7 },
+    { "id": "quintal", "nome": "Quintal", "categoria": "natureza", "lote": 7 },
+
+    { "id": "de-esquina", "nome": "De esquina", "categoria": "localizacao", "aliases": ["Esquina", "Terreno de esquina"], "lote": 7 },
+    { "id": "frente-para-o-mar", "nome": "Frente para o mar", "categoria": "localizacao", "aliases": ["Pé na areia", "Vista para o mar"], "lote": 7 },
+    { "id": "minha-casa-minha-vida", "nome": "Minha Casa Minha Vida", "categoria": "localizacao", "aliases": ["Programa habitacional", "MCMV", "Financiamento"], "nota": "Ícone genérico de casa com chave, sem imitar a marca do programa.", "lote": 7 },
+    { "id": "perto-de-escolas", "nome": "Perto de escolas ou faculdades", "categoria": "localizacao", "familia": "perto-de", "aliases": ["Escola", "Faculdade", "Universidade"], "lote": 7 },
+    { "id": "perto-de-hospital", "nome": "Perto de hospital", "categoria": "localizacao", "familia": "perto-de", "aliases": ["Hospital", "Saúde"], "lote": 7 },
+    { "id": "perto-de-metro", "nome": "Perto de metrô / trem", "categoria": "localizacao", "familia": "perto-de", "aliases": ["Próximo ao Metro", "Estação", "Trem"], "lote": 7 },
+    { "id": "perto-de-parque", "nome": "Perto de parque", "categoria": "localizacao", "familia": "perto-de", "aliases": ["Parque"], "lote": 7 },
+    { "id": "rua-tranquila", "nome": "Rua tranquila", "categoria": "localizacao", "aliases": ["Rua sem saída", "Silencioso"], "lote": 7 },
+    { "id": "torre-unica", "nome": "Torre única", "categoria": "localizacao", "lote": 7 },
+    { "id": "um-por-andar", "nome": "Um por andar", "categoria": "localizacao", "aliases": ["Apartamento por andar"], "lote": 7 }
+  ]
+};
+(function(){
+  const cats = DATA.categorias, icons = DATA.icones;
+  const byCat = id => icons.filter(i => i.categoria === id);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  let cat = 'todas', sel = icons[0] && icons[0].id;
+  try { const h = location.hash.slice(1); if (h && icons.some(i => i.id === h)) sel = h; } catch(e){}
+
+  // progresso
+  const tot = cats.reduce((a,c)=>a+c.total,0), cob = cats.reduce((a,c)=>a+c.cobertos,0);
+  document.getElementById('prog').innerHTML =
+    `<div class="prog-row"><span><b>${icons.length}</b> ícones desenhados</span><span>${cob} de ${tot} itens da planilha</span></div>
+     <div class="bar"><i style="width:${(cob/tot*100).toFixed(1)}%"></i></div>
+     <div class="prog-row"><span>Versão ${DATA.versao}</span><span>${cats.filter(c=>c.cobertos>=c.total).map(c=>c.nome).join(', ') || ''} ${cats.some(c=>c.cobertos>=c.total)?'completa':''}</span></div>`;
+
+  // filtros
+  const chips = document.getElementById('chips');
+  function drawChips(){
+    chips.innerHTML = '';
+    const mk = (id, label, n, done) => {
+      const b = document.createElement('button'); b.type='button'; b.className='chip'+(done?' done':'');
+      b.setAttribute('aria-pressed', String(cat===id)); b.innerHTML = `${label} <small>${n}</small>`;
+      b.onclick = () => { cat = id; drawChips(); drawList(); }; chips.appendChild(b);
+    };
+    mk('todas','Todas',icons.length,false);
+    cats.forEach(c => mk(c.id, c.nome, `${c.cobertos}/${c.total}`, c.cobertos>=c.total));
+  }
+
+  const q = document.getElementById('q');
+  q.addEventListener('input', drawList);
+  const list = document.getElementById('list');
+  function drawList(){
+    const t = norm(q.value.trim());
+    const match = i => !t || norm([i.nome, i.id, ...(i.aliases||[]), i.familia||''].join(' ')).includes(t);
+    list.innerHTML = '';
+    let any = false;
+    const tagsAll = DATA.etiquetas || [];
+    cats.filter(c => cat==='todas' || c.id===cat).forEach(c => {
+      const items = byCat(c.id).filter(match);
+      const tags = tagsAll.filter(e => e.categoria===c.id && (!t || norm(e.nome).includes(t)));
+      if (t && !items.length && !tags.length) return;
+      if (tags.length) any = true;
+      const sec = document.createElement('section'); sec.className='cat';
+      sec.innerHTML = `<h2>${c.nome} <small>${c.cobertos}/${c.total} itens</small></h2>`;
+      if (items.length){
+        any = true;
+        const g = document.createElement('div'); g.className='grid';
+        items.forEach(i => {
+          const b = document.createElement('button'); b.type='button'; b.className='tile';
+          b.setAttribute('aria-pressed', String(i.id===sel));
+          b.innerHTML = `<svg class="ic"><use href="#vc-${i.id}"/></svg><span>${i.nome}</span>`;
+          b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
+          g.appendChild(b);
+        });
+        sec.appendChild(g);
+      }
+      if (tags.length) {
+        const r = document.createElement('div'); r.className='tags';
+        r.innerHTML = '<span>Sem ícone, usar como etiqueta de texto:</span>' +
+          tags.map(e => `<span class="tag" title="${e.motivo}">${e.nome}</span>`).join('');
+        sec.appendChild(r);
+      }
+      if (!t && c.cobertos < c.total) {
+        const p = document.createElement('div'); p.className='pending';
+        p.textContent = `${c.total - c.cobertos} itens desta categoria ainda vão ser desenhados.`;
+        sec.appendChild(p);
+      }
+      list.appendChild(sec);
+    });
+    if (t && !any) list.innerHTML = `<p class="empty">Nenhum ícone para “${q.value}”. Tente outro nome, como “quadra” ou “piscina”.</p>`;
+  }
+
+  function svgSource(id){
+    const s = document.getElementById('vc-'+id);
+    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s.innerHTML.trim()}</svg>`;
+  }
+  const det = document.getElementById('detail');
+  function drawDetail(){
+    const i = icons.find(x => x.id===sel); if (!i) { det.hidden = true; return; }
+    const c = cats.find(x => x.id===i.categoria);
+    const u = `<use href="#vc-${i.id}"/>`;
+    det.innerHTML = `
+      <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
+      <div class="d-body">
+        <h3>${i.nome}</h3>
+        <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${i.familia?`<span class="pill fam">Família ${i.familia}</span>`:''}${i.extra?'<span class="pill">Extra</span>':''}</div>
+        ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
+        <div class="file">svg/${i.id}.svg</div>
+        <div class="sizes">
+          <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
+          <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
+          <div><svg class="ic" style="width:28px;height:28px">${u}</svg><small>28</small></div>
+          <div><svg class="ic" style="width:40px;height:40px">${u}</svg><small>40</small></div>
+        </div>
+        <div class="on-brand">
+          <div style="background:#4D00AF;color:#03FE9F"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#03FE9F;color:#4D00AF"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+        </div>
+        <div class="acts">
+          <button class="btn btn-primary" type="button" data-copy="svg">Copiar SVG</button>
+          <button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>
+        </div>
+        <div class="copied" id="copied"></div>
+        <p class="note">Os arquivos ficam na pasta <code>icones-comodidades</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).</p>
+      </div>`;
+    det.hidden = false;
+    det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
+      const txt = b.dataset.copy==='svg' ? svgSource(i.id)
+        : `<svg class="icon" width="24" height="24"><use href="comodidades-sprite.svg#vc-${i.id}"/></svg>`;
+      const out = det.querySelector('#copied');
+      const ok = () => out.textContent = b.dataset.copy==='svg' ? 'SVG copiado.' : 'Código copiado.';
+      const fail = () => { out.textContent = 'Não deu para copiar aqui. Selecione o código abaixo e use Ctrl+C.'; const pre=document.createElement('pre'); pre.className='file'; pre.textContent=txt; out.after(pre); };
+      try { navigator.clipboard.writeText(txt).then(ok, fail); } catch(e) { fail(); }
+    });
+  }
+  drawChips(); drawList(); drawDetail();
+})();
+</script>

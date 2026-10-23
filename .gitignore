@@ -1,0 +1,16 @@
+# Arquivos de design e arquivos pesados ficam no Drive, não no GitHub
+*.psd
+*.ai
+*.eps
+*.fig
+*.dng
+*.blend
+*.blend1
+*.zip
+*.rar
+
+# Arquivos do sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+.thumbnail

@@ -1,0 +1,1322 @@
+<title>ValeCasa Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: documentação em coluna única (máx. 1120px) com índice fixo à esquerda no desktop; cada seção mostra token → componente → regra de uso. */
+:root{
+  /* Marca */
+  --vc-green-50:#E6FFF5; --vc-green-100:#BDFFE6; --vc-green-300:#6BFFC8; --vc-green-500:#03FE9F; --vc-green-600:#1FCC8A; --vc-green-700:#007F50; --vc-green-ink:#00331F;
+  --vc-purple-50:#F3ECFF; --vc-purple-100:#E2C9F8; --vc-purple-400:#8A4DF0; --vc-purple-500:#6514D6; --vc-purple-600:#4D00AF; --vc-purple-700:#3D008C; --vc-purple-900:#22004F;
+  --vc-sun-50:#FBF3E7; --vc-sun-500:#FFDA00; --vc-sun-700:#E09200;
+  --vc-grad-purple:linear-gradient(135deg,#4D00AF,#6A00FF); --vc-grad-green:linear-gradient(135deg,#1FCC8A,#03FE9F); --vc-grad-lilac:linear-gradient(135deg,rgba(77,0,175,.45),rgba(3,254,159,.55));
+  --vc-coral:#E5483B; --vc-star:#F5B400; --vc-link:#1F6FE0; --vc-success:#16A34A; --vc-warning:#D97706; --vc-danger:#DC2626;
+  /* Neutros (levemente puxados para o violeta) */
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
+  --ink:#140E1B; --ink-2:#4E4A5E; --ink-3:#817C93;
+  --on-green:#00331F; --brand-text:#007F50; --purple-text:#4D00AF; --badge-rent-bg:#BDFFE6; --badge-rent-fg:#006B43; --logo-on-light:#4D00AF;
+  --photo-a:#9CC8EF; --photo-b:#CFE3F2; --photo-c:#7DAA62; --photo-d:#5B8A45;
+  --shadow-1:0 1px 2px rgba(27,24,37,.06),0 1px 1px rgba(27,24,37,.04);
+  --shadow-2:0 6px 24px -6px rgba(43,10,110,.18),0 2px 6px rgba(27,24,37,.06);
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r-xs:4px; --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3;
+  --brand-text:#03FE9F; --purple-text:#B48CFF; --badge-rent-bg:#00402A; --badge-rent-fg:#6BFFC8; --logo-on-light:#03FE9F;
+  --vc-coral:#FF6B5E; --vc-link:#6FA8FF;
+  --photo-a:#3E5B78; --photo-b:#4C6A86; --photo-c:#3D5A2F; --photo-d:#2E4724;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 28px -8px rgba(0,0,0,.6);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3;
+  --brand-text:#03FE9F; --purple-text:#B48CFF; --badge-rent-bg:#00402A; --badge-rent-fg:#6BFFC8; --logo-on-light:#03FE9F;
+  --vc-coral:#FF6B5E; --vc-link:#6FA8FF;
+  --photo-a:#3E5B78; --photo-b:#4C6A86; --photo-c:#3D5A2F; --photo-d:#2E4724;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 28px -8px rgba(0,0,0,.6);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 64px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0}.toc{display:none}}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+p{margin:0}
+a{color:var(--vc-link)}
+:focus-visible{outline:2px solid var(--vc-purple-400);outline-offset:2px}
+svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* topo da documentação */
+.masthead{background:linear-gradient(135deg,var(--vc-purple-900),var(--vc-purple-700) 60%,var(--vc-purple-600));color:#fff;padding-inline:20px;padding-block:40px 44px}
+.masthead-in{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between}
+.masthead .logo{font-size:40px}
+.masthead p{color:#DCCDFF;max-width:56ch;margin-top:10px}
+.masthead .meta{font-family:var(--mono);font-size:12px;color:#CDB8FF;display:flex;gap:16px;flex-wrap:wrap}
+.theme-tg{display:inline-flex;border:1px solid rgba(255,255,255,.3);border-radius:var(--r-pill);padding:3px;gap:2px}
+.theme-tg button{background:none;border:0;color:#E9DEFF;font:500 12px var(--font);padding:5px 12px;border-radius:var(--r-pill);cursor:pointer}
+.theme-tg button[aria-pressed="true"]{background:var(--vc-green-500);color:var(--vc-green-ink)}
+
+/* logo */
+.logo{display:inline-flex;color:var(--logo-on-light);line-height:0}
+.logo svg{height:1em;width:auto;aspect-ratio:667/118;display:block}
+.masthead .logo{color:var(--vc-green-500)}
+
+/* marca */
+.brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.brand-tile{border-radius:var(--r-md);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column}
+.brand-tile .stage{height:140px;display:grid;place-items:center;padding:24px}
+.brand-tile .stage svg{max-width:100%;height:auto;display:block}
+.brand-tile .stage .w{width:180px;aspect-ratio:667/118}
+.brand-tile .stage .m{width:64px;aspect-ratio:123/89}
+.brand-tile .cap{padding:10px 12px;background:var(--surface);display:flex;flex-direction:column;gap:2px;font-size:13px}
+.brand-tile .cap span{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.clearspace{display:grid;place-items:center;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md)}
+.clearspace .box{position:relative;padding:28px;outline:1.5px dashed var(--vc-coral);outline-offset:0;color:var(--logo-on-light)}
+.clearspace .box svg{width:220px;max-width:100%;aspect-ratio:667/118;display:block;outline:1px solid var(--line-strong)}
+.clearspace .tag{position:absolute;top:4px;left:6px;font-family:var(--mono);font-size:10px;color:var(--vc-coral)}
+
+.concept{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line)}
+@media (max-width:700px){.concept{grid-template-columns:minmax(0,1fr)}}
+.concept .art{background:var(--vc-purple-600);padding:28px;display:grid;place-items:center}
+.concept .art svg{width:100%;max-width:360px;height:auto;display:block}
+.concept .txt{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.concept .txt h3{font-size:20px;font-weight:700}
+.concept .txt p{color:var(--ink-2);font-size:14px;max-width:52ch}
+.concept .legend{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.concept .legend span{display:flex;align-items:center;gap:8px}
+.concept .legend i{width:14px;height:14px;border-radius:3px;flex:none}
+
+/* voz e tom */
+.persona{background:var(--vc-purple-600);color:#fff;border-radius:var(--r-md);padding:28px;display:flex;flex-direction:column;gap:14px}
+.persona q{font-size:clamp(20px,3vw,26px);font-weight:600;line-height:1.3;quotes:"“" "”";text-wrap:balance;max-width:40ch}
+.persona ul{margin:0;padding-left:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 24px;font-size:14px;color:#E2C9F8}
+.persona .who{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--vc-green-500);font-weight:600}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.pillar{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column;gap:10px}
+.pillar h3{font-size:16px;font-weight:700}
+.pillar h3 span{font-weight:400;color:var(--ink-3)}
+.pillar>p{font-size:13px;color:var(--ink-2)}
+.say{border-left:3px solid var(--vc-green-600);padding:4px 0 4px 12px;font-size:14px;font-weight:500}
+.say.no{border-left-color:var(--vc-danger);color:var(--ink-3);font-weight:400;text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--vc-danger) 50%,transparent)}
+.say small{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;font-weight:600;color:var(--ink-3);margin-bottom:2px}
+.dials{display:flex;flex-direction:column;gap:14px}
+.dial{display:grid;grid-template-columns:110px minmax(0,1fr) 130px;gap:12px;align-items:center;font-size:13px}
+.dial span:last-child{text-align:right;font-weight:600}
+.dial span:first-child{color:var(--ink-3)}
+.dial .track{position:relative;height:6px;border-radius:3px;background:var(--surface-2);border:1px solid var(--line)}
+.dial .track b{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--vc-purple-600);border:3px solid var(--surface);box-shadow:0 0 0 1px var(--vc-purple-600);transform:translate(-50%,-50%)}
+@media (max-width:520px){.dial{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.dial .track{grid-column:1/-1;grid-row:2}}
+.vocab{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag-w{font-size:13px;padding:4px 10px;border-radius:var(--r-pill);background:var(--badge-rent-bg);color:var(--badge-rent-fg)}
+.tag-x{font-size:13px;padding:4px 10px;border-radius:var(--r-pill);background:var(--surface-2);color:var(--ink-3);text-decoration:line-through}
+.micro{width:100%;border-collapse:collapse;font-size:13.5px}
+.micro th,.micro td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+.micro th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.micro td:nth-child(2){color:var(--ink-3)}
+.micro td:nth-child(3){font-weight:500}
+.micro td:first-child{white-space:nowrap;font-weight:600}
+.channels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.channel{border-top:3px solid var(--vc-purple-600);background:var(--surface);padding:14px 16px;border-radius:0 0 var(--r-sm) var(--r-sm);display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.channel b{color:var(--ink);font-size:14px}
+.channel.web{border-top-color:var(--vc-green-500)}
+
+/* comodidades de lançamentos */
+.launch{background:var(--vc-purple-600);color:#fff;border-radius:var(--r-lg);padding:28px;display:flex;flex-direction:column;gap:20px}
+.launch-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-end}
+.launch-head h3{font-size:24px;font-weight:700}
+.launch-head p{color:#E2C9F8;font-size:14px}
+.launch-head .badge{background:var(--vc-green-500);color:var(--vc-green-ink)}
+.amen{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.amen div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:10px;font-size:13.5px;font-weight:500;line-height:1.25}
+.amen svg{width:28px;height:28px;color:var(--vc-green-500)}
+.amen-list{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--ink-2)}
+.amen-list span{display:inline-flex;align-items:center;gap:6px}
+.amen-list svg{width:20px;height:20px;color:var(--purple-text)}
+.amen-spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.amen-spec .stage{display:flex;gap:18px;align-items:flex-end;padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);color:var(--ink)}
+.amen-spec .grid24{width:96px;height:96px;flex:none;position:relative;border:1px solid var(--line-strong);background:repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 4px)}
+.amen-spec .grid24::before{content:"";position:absolute;inset:8px;border:1px dashed var(--vc-coral)}
+.amen-spec .grid24 svg{position:absolute;inset:0;width:100%;height:100%}
+.amen-spec .sizes{display:flex;gap:14px;align-items:flex-end}
+.amen-spec .sizes svg{display:block}
+.amen-spec .sizes small{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-3);text-align:center;margin-top:4px}
+
+/* ilustração */
+.ilu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.ilu{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.ilu svg{width:160px;height:160px;max-width:100%}
+.ilu b{font-size:15px}
+.ilu span{font-size:13px;color:var(--ink-2);max-width:30ch}
+.ilu-rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.ilu-rules div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:4px}
+.ilu-rules b{font-size:14px}
+.ilu-rules span{font-size:13px;color:var(--ink-2)}
+.ilu-chips{display:flex;gap:6px}
+.ilu-chips i{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,.12)}
+
+/* ícones */
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.icon-cell{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.icon-cell svg{width:24px;height:24px}
+.icon-cell span{font-family:var(--mono);font-size:10px;color:var(--ink-3);word-break:break-word}
+.icon-cell.custom{border-style:dashed;border-color:var(--vc-purple-400)}
+
+.toc{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;padding-top:40px;display:flex;flex-direction:column;gap:2px}
+.toc b{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.toc a{color:var(--ink-2);text-decoration:none;font-size:14px;padding:5px 10px;border-radius:var(--r-sm)}
+.toc a:hover{background:var(--surface-2);color:var(--ink)}
+
+main{min-width:0}
+section{padding-top:56px;display:flex;flex-direction:column;gap:20px}
+.sec-head{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-text);font-weight:600}
+.sec-head h2{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.sec-head p{color:var(--ink-2);max-width:68ch}
+h3.sub{font-size:16px;font-weight:600;margin-top:12px}
+.note{font-size:13px;color:var(--ink-3);max-width:70ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:24px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+code,.mono{font-family:var(--mono);font-size:12px}
+
+/* cores */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface)}
+.sw i{display:block;height:64px}
+.sw div{padding:8px 10px;display:flex;flex-direction:column;gap:1px}
+.sw b{font-size:13px;font-weight:600}
+.sw span{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.ramp{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line)}
+.ramp div{height:56px;padding:6px 8px;font-family:var(--mono);font-size:10.5px;display:flex;align-items:flex-end}
+@media (max-width:560px){.ramp{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* tipografia */
+.type-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:baseline;padding-block:14px;border-bottom:1px dashed var(--line)}
+.type-row:last-child{border-bottom:0}
+.type-row .spec{font-family:var(--mono);font-size:11px;color:var(--ink-3);line-height:1.5}
+@media (max-width:560px){.type-row{grid-template-columns:minmax(0,1fr);gap:4px}}
+.t-display{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.t-h1{font-size:24px;font-weight:700;letter-spacing:-.01em}
+.t-h2{font-size:18px;font-weight:700}
+.t-h3{font-size:15px;font-weight:600}
+.t-price{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.t-body{font-size:14px;color:var(--ink-2)}
+.t-caption{font-size:12px;color:var(--ink-3)}
+.t-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.t-hood{font-size:12px;font-weight:500;color:var(--vc-coral)}
+
+/* espaçamento / raios / sombras */
+.space-list{display:flex;flex-direction:column;gap:8px}
+.space-list div{display:grid;grid-template-columns:70px 60px minmax(0,1fr);gap:12px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.space-list i{display:block;height:12px;background:var(--vc-green-500);border-radius:2px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.tile{background:var(--surface);border:1px solid var(--line);height:96px;display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;font-size:12px;color:var(--ink-2)}
+.tile b{font-size:13px;color:var(--ink)}
+
+/* ===== COMPONENTES ===== */
+.btn{font:600 14px/1 var(--font);border-radius:var(--r-pill);padding:11px 22px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,transform .1s;text-decoration:none;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--vc-green-500);color:var(--on-green)}
+.btn-primary:hover{background:var(--vc-green-300)}
+.btn-purple{background:var(--vc-purple-600);color:#fff;border-radius:var(--r-sm);text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+.btn-purple:hover{background:var(--vc-purple-700)}
+.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.btn-outline:hover{background:var(--surface-2)}
+.btn-ghost{background:none;color:var(--ink);padding-inline:10px}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-sm{font-size:12px;padding:7px 14px}
+.btn-lg{font-size:15px;padding:14px 28px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.icon-btn{width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;background:rgba(255,255,255,.92);color:#140E1B;border:0;cursor:pointer;box-shadow:var(--shadow-1)}
+.icon-btn[aria-pressed="true"]{color:var(--vc-coral)}
+.icon-btn[aria-pressed="true"] svg{fill:currentColor}
+.link{color:var(--vc-link);font-size:13px;text-decoration:none}
+.link:hover{text-decoration:underline}
+
+/* header */
+.site-header{display:flex;align-items:center;gap:16px;padding:12px 20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);flex-wrap:wrap}
+.site-header .logo{font-size:24px}
+.site-header .search-mini{flex:1;min-width:180px;max-width:320px;display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:var(--r-xs);padding:6px 10px;color:var(--ink-3);font-size:13px}
+.site-header nav{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* busca */
+.search{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.search-field{flex:1;min-width:240px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--line-strong);border-radius:var(--r-sm);padding:4px 4px 4px 14px;background:var(--surface)}
+.search-field:focus-within{border-color:var(--vc-purple-600)}
+.search-field input{flex:1;min-width:0;border:0;background:none;font:400 15px var(--font);color:var(--ink);outline:none;padding-block:8px}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:var(--r-sm);padding:3px;gap:2px}
+.seg button{border:0;background:none;font:500 12px var(--font);color:var(--ink-2);padding:7px 12px;border-radius:4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--vc-green-500);color:var(--on-green);font-weight:600}
+.btn-search{background:var(--vc-green-500);color:var(--on-green);border-radius:var(--r-sm);text-transform:uppercase;letter-spacing:.08em;font-size:12px;padding-inline:26px}
+
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-size:13px;font-weight:500}
+.input{font:400 14px var(--font);color:var(--ink);background:var(--surface);border:1.5px solid var(--line-strong);border-radius:var(--r-sm);padding:10px 12px;width:100%}
+.input:focus{outline:none;border-color:var(--vc-purple-600);box-shadow:0 0 0 3px var(--vc-purple-100)}
+.input.err{border-color:var(--vc-danger)}
+.field .hint{font-size:12px;color:var(--ink-3)}
+.field .hint.err{color:var(--vc-danger)}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+
+/* filtros */
+.chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:7px 12px 7px 16px;display:inline-flex;align-items:center;gap:18px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--badge-rent-bg);border-color:var(--vc-green-600);color:var(--ink);font-weight:600}
+.chip-clear{font:700 11px var(--font);letter-spacing:.06em;text-transform:uppercase;background:none;border:0;color:var(--ink);cursor:pointer;padding:8px}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:5px;font:700 10.5px/1 var(--font);letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;border-radius:var(--r-xs)}
+.b-rent{background:var(--badge-rent-bg);color:var(--badge-rent-fg)}
+.b-sale{background:var(--vc-purple-50);color:var(--vc-purple-700)}
+.b-launch{background:var(--vc-purple-600);color:#fff}
+.b-new{background:var(--vc-coral);color:#fff}
+.b-photo{background:rgba(255,255,255,.95);color:#140E1B;letter-spacing:0;font-weight:500;text-transform:none;font-size:11px}
+.b-owner{border:1px solid var(--ink);color:var(--ink);background:none;font-size:9.5px;padding:3px 6px;border-radius:2px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .b-sale{background:#2A1A55;color:#C9B2FF}}
+:root[data-theme="dark"] .b-sale{background:#2A1A55;color:#C9B2FF}
+
+/* foto placeholder */
+.photo{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:var(--r-sm);overflow:hidden;background:
+  linear-gradient(180deg,var(--photo-a) 0 42%,transparent 42%),
+  linear-gradient(180deg,transparent 40%,var(--photo-c) 40% 72%,var(--photo-d) 72%)}
+.photo::before{content:"";position:absolute;left:18%;right:22%;bottom:26%;height:34%;background:#F4EDE2;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.photo::after{content:"";position:absolute;left:14%;right:18%;bottom:58%;height:18%;background:#B5523F;clip-path:polygon(8% 100%,50% 0,92% 100%)}
+.photo.v2{background:linear-gradient(180deg,#D9D3C8 0 70%,#8B6B4E 70%)}
+.photo.v2::before{left:10%;right:50%;bottom:30%;height:40%;background:#4B5563;box-shadow:none}
+.photo.v2::after{left:58%;right:8%;bottom:10%;height:60%;top:auto;background:#F0E6D2;clip-path:none}
+.photo.v3{background:linear-gradient(180deg,var(--photo-a),var(--photo-b))}
+.photo.v3::before{left:30%;right:30%;bottom:0;height:88%;background:linear-gradient(90deg,#C7CCD6,#E8EAEF);box-shadow:none}
+.photo.v3::after{left:30%;right:30%;bottom:0;height:88%;top:auto;background:repeating-linear-gradient(180deg,transparent 0 9px,rgba(60,80,110,.35) 9px 11px);clip-path:none}
+.photo .tl{position:absolute;top:10px;left:10px;z-index:1}
+.photo .tr{position:absolute;top:8px;right:8px;z-index:1}
+.photo .bl{position:absolute;bottom:10px;left:10px;z-index:1;display:flex;gap:6px}
+.photo .br{position:absolute;bottom:8px;right:8px;z-index:1;width:40px;height:40px;border-radius:var(--r-xs);background:#fff;display:grid;place-items:center;font:800 9px var(--font);color:var(--vc-purple-700);box-shadow:var(--shadow-1)}
+
+/* card de imóvel */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}
+.card{display:flex;flex-direction:column;gap:4px;min-width:0;color:inherit;text-decoration:none}
+.card .photo{margin-bottom:6px;transition:filter .2s}
+.card:hover .photo{filter:brightness(1.05)}
+.card .hood{font-size:12px;color:var(--vc-coral);font-weight:500;display:flex;gap:4px;align-items:center}
+.card .price{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.card .price small{font-size:13px;font-weight:600}
+.card .breakdown{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.card .title{font-size:13px;font-weight:600;line-height:1.35;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .name{font-size:16px;font-weight:700}
+.specs{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;font-weight:600;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums}
+.specs span{display:inline-flex;align-items:center;gap:4px}
+.card .from{font-size:14px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.card .from b{color:var(--ink);font-size:16px}
+
+/* atributos do imóvel */
+.attrs{display:flex;flex-wrap:wrap;gap:10px}
+.attr{border:1px solid var(--line-strong);border-radius:var(--r-xs);padding:8px 14px;min-width:68px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--ink-3)}
+.attr b{font-size:18px;color:var(--ink);font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.attr span{font-size:11px}
+.attr-area{display:flex;flex-direction:column;align-items:center;border:1px solid var(--line-strong);border-radius:var(--r-xs);padding:4px 12px 8px}
+.attr-area>span{font-size:11px;color:var(--ink-3)}
+.attr-area>div{display:flex;gap:14px}
+.attr-area>div>div{display:flex;flex-direction:column;align-items:center}
+.attr-area>div>div+div{border-left:1px solid var(--line-strong);padding-left:14px}
+.attr-area b{font-size:18px;font-weight:700;color:var(--ink)}
+.attr-area small{font-size:11px;color:var(--ink-3)}
+
+/* card de contato */
+.two{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.contact{background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--shadow-2);overflow:hidden;border:1px solid var(--line)}
+.contact .total{display:flex;justify-content:space-between;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--line)}
+.contact .total span{font-weight:600}
+.contact .total b{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.agent-photo{height:120px;background:linear-gradient(160deg,#E9D9C3,#C9A27E);position:relative}
+.agent-photo::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:84px;height:100px;border-radius:42px 42px 0 0;background:radial-gradient(circle at 50% 30%,#8A5A3C 0 22px,transparent 23px),linear-gradient(#2B2B33,#2B2B33) bottom/100% 46% no-repeat}
+.contact .who{text-align:center;padding:12px 18px 4px}
+.contact .who b{font-size:14px;display:block}
+.contact .who span{font-size:12px;color:var(--ink-3)}
+.contact .acts{display:flex;flex-direction:column;gap:8px;padding:12px 24px 16px}
+.costs{border-top:1px solid var(--line);padding:12px 18px 16px;display:grid;grid-template-columns:1fr auto;gap:2px 12px;font-size:12.5px;font-variant-numeric:tabular-nums}
+.costs dt{color:var(--ink-2)}
+.costs dd{margin:0;text-align:right}
+.side-acts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.side-acts .btn{justify-content:flex-start}
+
+/* section heading da página de imóvel */
+.ph{display:flex;flex-direction:column;gap:2px}
+.ph .t{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600}
+.ph .d{font-size:12px;color:var(--ink-3)}
+.list3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 24px;font-size:13px;color:var(--ink-2);margin-top:12px}
+@media (max-width:480px){.list3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* bairros */
+.hoods{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.hood{aspect-ratio:3/4;max-width:100%;border-radius:var(--r-sm);position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:16px 10px;text-align:center;background:linear-gradient(180deg,#7DA0C4,#4C6A47)}
+.hood::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(77,0,175,.72),rgba(34,0,79,.88))}
+.hood>*{position:relative}
+.hood h4{margin:0;font-size:17px;font-weight:700;line-height:1.15}
+.hood span{font-size:11px;opacity:.85}
+.hood b{display:block;font-size:15px;font-variant-numeric:tabular-nums}
+
+/* corretores */
+.brokers{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:20px}
+.broker{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.broker .ph-cover{width:100%;aspect-ratio:1;max-width:100%;border-radius:var(--r-sm);background:linear-gradient(160deg,#E6DCCF,#B89A7A);position:relative;margin-bottom:-26px}
+.avatar{width:52px;height:52px;border-radius:50%;border:3px solid var(--surface);background:radial-gradient(circle at 50% 38%,#7A4E34 0 11px,transparent 12px),radial-gradient(circle at 50% 110%,#2F3542 0 22px,transparent 23px),#D8C6B0;position:relative}
+.broker b{font-size:14px;margin-top:6px}
+.broker .score{font-size:11px;color:var(--ink-3);display:flex;gap:3px;align-items:center}
+.agency{display:flex;flex-direction:column;align-items:center;gap:10px}
+.agency .mark{width:100%;height:64px;display:grid;place-items:center;font-weight:800;letter-spacing:-.02em;color:var(--vc-purple-700);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm)}
+.count-pill{font:600 11px var(--font);border:1px solid var(--vc-link);color:var(--vc-link);border-radius:var(--r-pill);padding:3px 12px}
+
+/* avaliação */
+.stars{display:inline-flex;gap:2px;color:var(--vc-star)}
+.stars svg{width:22px;height:22px;fill:currentColor;stroke:none}
+.stars.sm svg{width:12px;height:12px}
+.stars button{background:none;border:0;padding:0;color:inherit;cursor:pointer}
+.stars button.off{color:var(--line-strong)}
+.rate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+.rate-grid .lbl{font-size:13px;font-weight:600;display:block;margin-bottom:8px}
+
+/* passos */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;text-align:center}
+@media (max-width:560px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px}
+.blob{width:56px;height:56px;border-radius:60% 40% 55% 45%/50% 60% 40% 50%;background:var(--vc-purple-600);display:grid;place-items:center;color:var(--vc-green-300)}
+.blob svg{width:24px;height:24px}
+.step b{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.step p{font-size:12px;color:var(--ink-2);max-width:26ch}
+
+/* footer */
+.footer{background:linear-gradient(135deg,var(--vc-purple-600),var(--vc-purple-500));color:#fff;border-radius:var(--r-md);padding:36px 28px 18px;display:grid;grid-template-columns:minmax(0,1.2fr) repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:640px){.footer{grid-template-columns:minmax(0,1fr)}}
+.footer .logo{font-size:34px;color:var(--vc-green-500)}
+.footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.footer .social{display:flex;gap:10px;margin-top:20px}
+.footer .social span{width:30px;height:30px;border:1.5px solid #fff;border-radius:50%;display:grid;place-items:center}
+.footer .social svg{width:14px;height:14px}
+.footer small{grid-column:1/-1;font-size:11px;color:#CDB8FF;border-top:1px solid rgba(255,255,255,.18);padding-top:12px}
+
+/* tabela de regras */
+.rules{width:100%;border-collapse:collapse;font-size:13.5px}
+.rules th,.rules td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.rules th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.scroll{overflow-x:auto}
+
+/* tokens */
+.code{position:relative;background:#14111D;color:#E6E1F2;border-radius:var(--r-md);padding:20px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;margin:0}
+.code .c{color:#8C84A3}.code .k{color:#7BF0C7}.code .v{color:#C9B2FF}
+.copy{position:absolute;top:10px;right:10px}
+.code-wrap{position:relative}
+.do-dont{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.dd{border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px}
+.dd h4{margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.dd.do h4{color:var(--vc-success)}
+.dd.dont h4{color:var(--vc-danger)}
+.dd ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Marca oficial -->
+  <symbol id="logo-word" viewBox="0 0 667 118"><g fill="currentColor"><path d="M159.9 41.8C165.7 47.5 168.5 56.3 168.5 68.3V116H145V104C143.4 108.2 140.6 111.4 136.8 113.8C133 116.2 128.5 117.3 123.3 117.3C117.8 117.3 112.8 116.2 108.4 114C104 111.8 100.4 108.7 97.9 104.8C95.3 100.8 94 96.5 94 91.6C94 85.7 95.5 81 98.5 77.6C101.5 74.2 106.4 71.7 113.1 70.2C119.8 68.7 129 67.9 140.6 67.9H144.9V64.9C144.9 60.1 143.9 56.7 141.8 54.7C139.7 52.7 136.1 51.7 130.9 51.7C126.9 51.7 122.6 52.4 117.7 53.8C112.9 55.2 108.3 57.2 103.9 59.7L97.3 43.1C101.9 40.2 107.6 37.9 114.3 35.9C121 34 127.3 33 133.2 33C145.2 33.3 154.1 36.1 159.9 41.8ZM140.3 95.4C143.3 92.2 144.7 88 144.7 82.8V80H142C133.1 80 126.9 80.7 123.3 82.1C119.7 83.5 117.9 86.1 117.9 89.8C117.9 92.8 118.9 95.2 120.9 97.2C122.9 99.2 125.5 100.2 128.6 100.2C133.5 100.3 137.4 98.6 140.3 95.4Z"/><path d="M182 116.1V0H206.9V116.1H182Z"/><path d="M295.9 80.2996H243.2C244 86.7996 246.1 91.4996 249.5 94.3996C253 97.2996 257.9 98.7996 264.2 98.7996C268.4 98.7996 272.5 98.0996 276.6 96.6996C280.7 95.2996 284.5 93.3996 287.9 90.8996L294.5 107.5C290.5 110.6 285.7 113 280.1 114.7C274.4 116.5 268.8 117.3 263.1 117.3C249.5 117.3 238.8 113.5 230.9 106C223.1 98.4996 219.1 88.1996 219.1 75.2996C219.1 67.0996 220.8 59.7996 224.2 53.3996C227.6 46.9996 232.3 42.0996 238.4 38.4996C244.4 34.8996 251.3 33.0996 259 33.0996C270.3 33.0996 279.3 36.7996 285.9 44.0996C292.5 51.4996 295.9 61.3996 295.9 74.0996V80.2996ZM248.4 54.8996C245.6 57.8996 243.9 62.2996 243.2 67.9996H275C274.7 62.1996 273.2 57.7996 270.6 54.7996C268 51.7996 264.4 50.3996 259.7 50.3996C254.9 50.3996 251.2 51.8996 248.4 54.8996Z"/><path d="M346.699 106.2C339.099 98.7002 335.299 88.6002 335.299 75.7002C335.299 67.2002 337.099 59.8002 340.699 53.4002C344.299 47.0002 349.399 42.0002 355.999 38.5002C362.599 35.0002 370.199 33.2002 378.899 33.2002C384.799 33.2002 390.499 34.1002 395.999 35.9002C401.499 37.7002 405.899 40.2002 409.299 43.2002L402.699 60.2002C399.499 57.7002 395.999 55.7002 392.199 54.4002C388.399 53.0002 384.699 52.3002 381.099 52.3002C374.599 52.3002 369.599 54.2002 365.999 58.1002C362.399 61.9002 360.599 67.6002 360.599 75.2002C360.599 82.8002 362.399 88.5002 365.999 92.4002C369.599 96.3002 374.599 98.2002 381.099 98.2002C384.699 98.2002 388.399 97.5002 392.199 96.1002C395.999 94.7002 399.499 92.8002 402.699 90.3002L409.299 107.4C405.699 110.5 401.099 112.9 395.499 114.6C389.899 116.4 383.999 117.2 377.699 117.2C364.699 117.4 354.299 113.7 346.699 106.2Z"/><path d="M483.3 41.8C489.1 47.5 491.9 56.3 491.9 68.3V116H468.4V104C466.8 108.2 464 111.4 460.2 113.8C456.4 116.2 451.9 117.3 446.7 117.3C441.2 117.3 436.2 116.2 431.8 114C427.4 111.8 423.8 108.7 421.3 104.8C418.7 100.8 417.4 96.5 417.4 91.6C417.4 85.7 418.9 81 421.9 77.6C424.9 74.2 429.8 71.7 436.5 70.2C443.2 68.7 452.4 67.9 464 67.9H468.3V64.9C468.3 60.1 467.3 56.7 465.2 54.7C463.1 52.7 459.5 51.7 454.3 51.7C450.3 51.7 446 52.4 441.1 53.8C436.3 55.2 431.7 57.2 427.3 59.7L420.7 43.1C425.3 40.2 431 37.9 437.7 35.9C444.4 34 450.7 33 456.6 33C468.6 33.3 477.5 36.1 483.3 41.8ZM463.8 95.4C466.8 92.2 468.2 88 468.2 82.8V80H465.4C456.5 80 450.3 80.7 446.7 82.1C443.1 83.5 441.3 86.1 441.3 89.8C441.3 92.8 442.3 95.2 444.3 97.2C446.3 99.2 448.9 100.2 452 100.2C456.9 100.3 460.8 98.6 463.8 95.4Z"/><path d="M516.799 114.8C510.599 113.1 505.199 110.7 500.699 107.5L507.299 90.4002C511.699 93.4002 516.499 95.7002 521.799 97.3002C527.099 98.9002 532.399 99.8002 537.799 99.8002C541.599 99.8002 544.599 99.2002 546.799 97.9002C548.899 96.6002 549.999 94.9002 549.999 92.7002C549.999 90.7002 549.299 89.2002 547.799 88.1002C546.299 87.0002 543.499 86.0002 539.499 85.1002L526.299 82.1002C518.499 80.3002 512.799 77.6002 509.099 74.0002C505.399 70.3002 503.599 65.3002 503.599 58.9002C503.599 53.9002 505.099 49.4002 507.999 45.6002C510.899 41.8002 514.999 38.7002 520.299 36.5002C525.599 34.3002 531.699 33.2002 538.499 33.2002C544.299 33.2002 549.999 34.1002 555.499 35.8002C560.999 37.6002 565.899 40.0002 570.299 43.2002L563.699 59.7002C555.099 53.8002 546.699 50.8002 538.299 50.8002C534.499 50.8002 531.399 51.5002 529.199 52.8002C526.999 54.1002 525.899 56.0002 525.899 58.4002C525.899 60.2002 526.599 61.5002 527.899 62.5002C529.199 63.5002 531.499 64.4002 534.799 65.3002L548.499 68.4002C556.699 70.3002 562.699 73.1002 566.499 76.9002C570.299 80.7002 572.199 85.8002 572.199 92.3002C572.199 100.1 569.099 106.2 562.899 110.7C556.699 115.1 548.199 117.4 537.299 117.4C529.899 117.4 522.999 116.5 516.799 114.8Z"/><path d="M69.3015 35H93.7944L58.1158 116H36.9015L1.70508 35H27.6444L48.1837 86.5893L69.3015 35Z"/><path d="M597.385 116.8H572.65L608.681 35H630.105L665.649 116.8H639.454L618.711 64.7011L597.385 116.8Z"/></g></symbol>
+  <symbol id="logo-mark" viewBox="0 0 123 89"><g fill="currentColor"><path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z"/><path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z"/></g></symbol>
+  <!-- Heroicons v2.2 · outline 24 -->
+  <symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.090L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.750l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></symbol>
+  <symbol id="i-home-modern" viewBox="0 0 24 24"><path d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><path d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></symbol>
+  <symbol id="i-adjust" viewBox="0 0 24 24"><path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6l12 12"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></symbol>
+  <symbol id="i-photo" viewBox="0 0 24 24"><path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><path d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.250 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.880 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"/></symbol>
+  <!-- Heroicons v2.2 · solid 24 -->
+  <symbol id="i-star" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"/></symbol>
+  <!-- Ícones próprios (sem equivalente no Heroicons), desenhados no mesmo traço 1.5 -->
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18.75V5.25M3 13.5h18v5.25M21 13.5v-2.25a3 3 0 0 0-3-3h-6.75v5.25"/><circle cx="7.125" cy="10.5" r="1.875"/></symbol>
+  <symbol id="i-bath" viewBox="0 0 24 24"><path d="M3.75 12h16.5v1.5a5.25 5.25 0 0 1-5.25 5.25H9a5.25 5.25 0 0 1-5.25-5.25zM6 12V6a2.25 2.25 0 0 1 4.5 0M7.5 18.75 6.75 21M16.5 18.75l.75 2.25"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M4.5 15.75h15v-3.75l-2.25-5.25H6.75L4.5 12zM4.5 15.75v2.25M19.5 15.75v2.25M4.5 12h15"/><path d="M8.25 14.25h.008M15.75 14.25h.008"/></symbol>
+  <symbol id="i-area" viewBox="0 0 24 24"><path d="M3.75 20.25h16.5L3.75 3.75z"/><path d="M7.5 16.5h4.5V12"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M3.75 20.25 5 16.4A8.25 8.25 0 1 1 7.9 19.1z"/><path d="M9 9c0 3 3 6 6 6l.9-1.4-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.5"/><circle cx="12" cy="12" r="3.75"/><path d="M17.25 6.75h.008"/></symbol>
+  <!-- Comodidades de lançamentos (ValeCasa, grade Heroicons) -->
+  <symbol id="a-academia" viewBox="0 0 24 24"><rect x="3.75" y="6.75" width="3" height="10.5" rx="1.125"/><rect x="17.25" y="6.75" width="3" height="10.5" rx="1.125"/><path d="M6.75 12h10.5M2.25 12h1.5m16.5 0h1.5"/></symbol>
+  <symbol id="a-acessibilidade" viewBox="0 0 24 24"><circle cx="10.5" cy="4.125" r="1.5"/><path d="M10.5 7.5v5.25H15l2.25 5.25h2.25M10.5 9.75h3.75M6.413 12.038a5.25 5.25 0 1 0 8.259 6.337"/></symbol>
+  <symbol id="a-lazer" viewBox="0 0 24 24"><path d="M3.75 10.5a8.25 8.25 0 0 1 16.5 0H3.75ZM12 2.25c-2.071 0-3.75 3.694-3.75 8.25M12 2.25c2.071 0 3.75 3.694 3.75 8.25M12 10.5v9.75M7.5 20.25h9"/></symbol>
+  <symbol id="a-verde" viewBox="0 0 24 24"><path d="M12 2.25a5.25 5.25 0 0 0-5.12 6.41A4.5 4.5 0 0 0 8.25 17.25h7.5a4.5 4.5 0 0 0 1.37-8.59A5.25 5.25 0 0 0 12 2.25ZM12 21.75v-9M12 15l2.25-2.25M12 13.5l-2.25-2.25"/></symbol>
+  <symbol id="a-bicicletario" viewBox="0 0 24 24"><circle cx="5.625" cy="15.375" r="3.375"/><circle cx="18.375" cy="15.375" r="3.375"/><path d="M5.625 15.375h5.625l4.5-7.125H9l-3.375 7.125ZM9 8.25l2.25 7.125M15.75 8.25l2.625 7.125M9 8.25 8.25 6M6.75 6h3M15.75 8.25 15 5.25h2.25"/></symbol>
+  <symbol id="a-brinquedoteca" viewBox="0 0 24 24"><rect x="8.25" y="3.75" width="7.5" height="7.5" rx="1.125"/><rect x="3" y="12.75" width="7.5" height="7.5" rx="1.125"/><rect x="13.5" y="12.75" width="7.5" height="7.5" rx="1.125"/><circle cx="12" cy="7.5" r="1.5"/><path d="M6.75 14.625 8.625 18h-3.75l1.875-3.375ZM17.25 14.625v3.75M15.375 16.5h3.75"/></symbol>
+  <symbol id="a-cameras" viewBox="0 0 24 24"><path d="M2.25 6h19.5M4.5 6v1.875C4.5 8.496 5.004 9 5.625 9h12.75c.621 0 1.125-.504 1.125-1.125V6M5.25 9a6.75 6.75 0 0 0 13.5 0"/><circle cx="12" cy="12" r="2.25"/></symbol>
+  <symbol id="a-futebol" viewBox="0 0 24 24"><rect x="3" y="5.25" width="18" height="13.5" rx="1.5"/><circle cx="12" cy="12" r="2.25"/><path d="M12 5.25v13.5M3 9.75h2.25v4.5H3M21 9.75h-2.25v4.5H21"/></symbol>
+  <symbol id="a-churrasqueira" viewBox="0 0 24 24"><path d="M3.75 9.75h16.5a8.25 6 0 0 1-16.5 0ZM7.5 14.75 5.25 21M16.5 14.75l2.25 6.25M12 15.75V21M9 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M12 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M15 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+</svg>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div>
+      <span class="logo" role="img" aria-label="ValeCasa"><svg viewBox="0 0 667 118"><use href="#logo-word"/></svg></span>
+      <p>Design system do portal imobiliário ValeCasa. Marca, cores, tipografia, ícones e componentes do portal, com base nas telas de busca, home e detalhe do imóvel.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+      <div class="meta"><span>v1.1</span><span>out/2026</span><span>Geologica · Heroicons · 8pt grid</span></div>
+      <div class="theme-tg" role="group" aria-label="Tema">
+        <button type="button" data-t="system" aria-pressed="true">Sistema</button>
+        <button type="button" data-t="light" aria-pressed="false">Claro</button>
+        <button type="button" data-t="dark" aria-pressed="false">Escuro</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Seções">
+    <b>Fundamentos</b>
+    <a href="#marca">Marca</a>
+    <a href="#voz">Voz e tom</a>
+    <a href="#cores">Cores</a>
+    <a href="#tipografia">Tipografia</a>
+    <a href="#icones">Ícones</a>
+    <a href="#ilustracao">Ilustração</a>
+    <a href="#espacos">Espaço, raio e sombra</a>
+    <b style="margin-top:16px">Componentes</b>
+    <a href="#botoes">Botões</a>
+    <a href="#busca">Busca e formulários</a>
+    <a href="#badges">Badges e filtros</a>
+    <a href="#cards">Cards de imóvel</a>
+    <a href="#comodidades">Comodidades</a>
+    <a href="#detalhe">Página do imóvel</a>
+    <a href="#descoberta">Bairros e corretores</a>
+    <a href="#navegacao">Header e footer</a>
+    <b style="margin-top:16px">Código</b>
+    <a href="#tokens">Tokens CSS</a>
+  </nav>
+
+  <main>
+    <!-- MARCA -->
+    <section id="marca">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Marca</h2>
+        <p>Duas peças oficiais: o logotipo "vale casa" e o símbolo VA. Ambos existem em verde, roxo, branco e preto.</p>
+      </div>
+      <div class="concept">
+        <div class="art">
+          <svg viewBox="-60 -34 250 150" role="img" aria-label="Símbolo VA: o V representa quem vende, o A em forma de seta representa quem compra, e os dois se encontram no centro">
+            <path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z" fill="#03FE9F"/>
+            <path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z" fill="#FFFFFF"/>
+            <circle cx="38" cy="66.6" r="4" fill="#4D00AF" stroke="#03FE9F" stroke-width="2"/>
+            <circle cx="85" cy="22.3" r="4" fill="#4D00AF" stroke="#FFFFFF" stroke-width="2"/>
+            <path d="M38 66.6 L85 22.3" stroke="#E2C9F8" stroke-width="1.2" stroke-dasharray="3 3" fill="none"/>
+            <text x="-6" y="-14" fill="#03FE9F" font-family="Geologica, sans-serif" font-size="11" font-weight="600">V · quem vende</text>
+            <text x="74" y="108" fill="#FFFFFF" font-family="Geologica, sans-serif" font-size="11" font-weight="600">A · quem compra</text>
+            <path d="M84.4 2 L84.4 12" stroke="#FFFFFF" stroke-width="1.2" fill="none"/>
+            <path d="M80.4 6 L84.4 1.5 L88.4 6" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="txt">
+          <span class="eyebrow">Conceito do símbolo</span>
+          <h3>Dois pontos que se conectam</h3>
+          <p>O V e o A se encaixam para unir quem vende a quem compra. O A não tem a barra do meio e funciona como uma seta: aponta para frente, para o próximo passo de quem está procurando casa.</p>
+          <div class="legend">
+            <span><i style="background:#03FE9F"></i>V: o anunciante, corretor ou imobiliária</span>
+            <span><i style="background:#FFFFFF;border:1px solid var(--line-strong)"></i>A: quem busca o imóvel, com a seta indicando avanço</span>
+            <span><i style="background:repeating-linear-gradient(90deg,var(--vc-purple-400) 0 3px,transparent 3px 6px)"></i>O ponto de encontro: o papel do ValeCasa</span>
+          </div>
+          <p class="note">A mesma ideia aparece no logotipo: o último A de "casa" repete a seta sem barra e fecha a palavra apontando para cima.</p>
+        </div>
+      </div>
+      <div class="brand-grid">
+        <div class="brand-tile"><div class="stage" style="background:#4D00AF;color:#03FE9F"><svg class="w" viewBox="0 0 667 118"><use href="#logo-word"/></svg></div><div class="cap"><b>Principal</b><span>Banner Text.svg · verde sobre roxo</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#FFFFFF;color:#4D00AF"><svg class="w" viewBox="0 0 667 118"><use href="#logo-word"/></svg></div><div class="cap"><b>Sobre fundo claro</b><span>Header Text.svg · roxo</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#22004F;color:#FFFFFF"><svg class="w" viewBox="0 0 667 118"><use href="#logo-word"/></svg></div><div class="cap"><b>Negativo</b><span>Logo Text.svg · branco</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#FFFFFF;color:#000000"><svg class="w" viewBox="0 0 667 118"><use href="#logo-word"/></svg></div><div class="cap"><b>Monocromático</b><span>Logo-3.svg · preto</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#4D00AF;color:#03FE9F"><svg class="m" viewBox="0 0 123 89"><use href="#logo-mark"/></svg></div><div class="cap"><b>Símbolo</b><span>Logo.svg · verde</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#FFFFFF;color:#4D00AF"><svg class="m" viewBox="0 0 123 89"><use href="#logo-mark"/></svg></div><div class="cap"><b>Símbolo claro</b><span>Logo-1.svg · roxo</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#03FE9F;color:#4D00AF"><svg class="m" viewBox="0 0 123 89"><use href="#logo-mark"/></svg></div><div class="cap"><b>Símbolo invertido</b><span>Logo-1.svg sobre verde</span></div></div>
+        <div class="brand-tile"><div class="stage" style="background:#22004F;color:#FFFFFF"><svg class="m" viewBox="0 0 123 89"><use href="#logo-mark"/></svg></div><div class="cap"><b>Símbolo negativo</b><span>Logo-2.svg · branco</span></div></div>
+      </div>
+      <div class="two" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+        <div class="clearspace"><div class="box"><span class="tag">x = altura do "l"</span><svg viewBox="0 0 667 118"><use href="#logo-word"/></svg></div></div>
+        <div class="dd" style="justify-content:center">
+          <h4 style="color:var(--ink-3)">Uso do logo</h4>
+          <ul>
+            <li>Área de respiro mínima: metade da altura do logotipo em todos os lados.</li>
+            <li>Tamanho mínimo: 96 px de largura para o logotipo e 24 px para o símbolo.</li>
+            <li>Verde #03FE9F só sobre roxo ou fundos escuros. Em fundo branco use a versão roxa.</li>
+            <li>O símbolo VA substitui o logotipo em favicon, avatar de rede social e ícone de app.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOZ E TOM -->
+    <section id="voz">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Voz e tom</h2>
+        <p>O ValeCasa existe para tornar a busca por casa leve de novo, longe dos portais frios e cansativos. A comunicação segue o mesmo propósito: quem usa o portal deve se sentir na casa de um amigo que conhece Guará de cor.</p>
+      </div>
+      <div class="persona">
+        <span class="who">Arquétipo · o amigo que entende do assunto</span>
+        <q>Trabalha com imóveis há anos, conhece a cidade de cor e te ajuda sem enrolar e sem vender peixe.</q>
+        <ul>
+          <li>Fala com propriedade, sem soar como especialista distante.</li>
+          <li>É direto porque respeita o seu tempo, não porque é seco.</li>
+          <li>Tem opinião sobre o que não presta no mercado.</li>
+          <li>Fala dos lugares como quem mora ali.</li>
+        </ul>
+      </div>
+
+      <h3 class="sub">Os 4 pilares</h3>
+      <div class="pillars">
+        <div class="pillar">
+          <h3>Acolhedor, <span>mas não piegas</span></h3>
+          <p>Reconhece a ansiedade de procurar imóvel, sem clichê emocional nem excesso de exclamação.</p>
+          <div class="say"><small>Diga</small>Sabemos que decidir morar em outro lugar não é fácil. A gente ajuda a simplificar.</div>
+          <div class="say no"><small>Evite</small>Realize o sonho da casa própria nessa jornada incrível!</div>
+        </div>
+        <div class="pillar">
+          <h3>Direto, <span>mas não seco</span></h3>
+          <p>Frases curtas, sem enrolação corporativa.</p>
+          <div class="say"><small>Diga</small>3 imóveis novos no seu bairro esta semana.</div>
+          <div class="say no"><small>Evite</small>Estamos muito felizes em compartilhar novidades incríveis do nosso portfólio.</div>
+        </div>
+        <div class="pillar">
+          <h3>Ousado, <span>mas não arrogante</span></h3>
+          <p>Diz o que os outros portais não dizem, sem se gabar de ser "o melhor".</p>
+          <div class="say"><small>Diga</small>Chega de portal cansativo. Aqui é só Guaratinguetá, do jeito que devia ser.</div>
+          <div class="say no"><small>Evite</small>Somos o portal imobiliário mais completo e revolucionário do mercado.</div>
+        </div>
+        <div class="pillar">
+          <h3>Local, <span>de verdade</span></h3>
+          <p>Usa os apelidos da cidade e cita referências reais: Buriti Shopping, Dutra, nomes de bairros.</p>
+          <div class="say"><small>Diga</small>Procurando imóvel em Guará? Entra lá no ValeCasa.</div>
+          <div class="say no"><small>Evite</small>Encontre imóveis na cidade de Guaratinguetá e região.</div>
+        </div>
+      </div>
+
+      <h3 class="sub">Dial de tom</h3>
+      <div class="panel dials">
+        <div class="dial"><span>Formal</span><div class="track"><b style="left:68%"></b></div><span>Descontraído</span></div>
+        <div class="dial"><span>Técnico</span><div class="track"><b style="left:82%"></b></div><span>Simples</span></div>
+        <div class="dial"><span>Reservado</span><div class="track"><b style="left:72%"></b></div><span>Caloroso</span></div>
+        <div class="dial"><span>Genérico</span><div class="track"><b style="left:92%"></b></div><span>Específico / Local</span></div>
+        <div class="dial"><span>Educado</span><div class="track"><b style="left:62%"></b></div><span>Ousado</span></div>
+      </div>
+
+      <h3 class="sub">Vocabulário</h3>
+      <div class="vocab">
+        <div class="pillar">
+          <h3>Use</h3>
+          <div class="tags"><span class="tag-w">cantinho</span><span class="tag-w">bairro</span><span class="tag-w">casa</span><span class="tag-w">sem enrolação</span><span class="tag-w">direto ao ponto</span><span class="tag-w">Guará</span><span class="tag-w">Buriti Shopping</span><span class="tag-w">Dutra</span><span class="tag-w">encontra</span><span class="tag-w">filtra</span><span class="tag-w">mora</span></div>
+        </div>
+        <div class="pillar">
+          <h3>Evite</h3>
+          <div class="tags"><span class="tag-x">jornada patrimonial</span><span class="tag-x">sinergia</span><span class="tag-x">soluções imobiliárias</span><span class="tag-x">excelência</span><span class="tag-x">o melhor</span><span class="tag-x">o número 1</span><span class="tag-x">gíria forçada</span></div>
+        </div>
+      </div>
+
+      <h3 class="sub">Microcopy do portal</h3>
+      <p class="note">No site, o público principal são casais por volta dos 47 anos tomando uma decisão grande. O tom fica entre o institucional e o das redes: direto e acolhedor, sem gíria como "entra lá".</p>
+      <div class="panel scroll" style="padding:0">
+        <table class="micro">
+          <thead><tr><th>Momento</th><th>Hoje</th><th>Na voz ValeCasa</th></tr></thead>
+          <tbody>
+            <tr><td>Hero da home</td><td>Descubra um novo lugar pra morar</td><td>Procurando casa em Guará? Começa pelo bairro.</td></tr>
+            <tr><td>Busca sem resultado</td><td>Nenhum resultado encontrado.</td><td>Nada no Campo do Galvão com esses filtros. Tira o filtro de preço ou olha os bairros vizinhos.</td></tr>
+            <tr><td>Erro no telefone</td><td>Campo inválido.</td><td>Faltou o DDD. Digite os 11 números, como (12) 98123-4567.</td></tr>
+            <tr><td>Contato enviado</td><td>Mensagem enviada com sucesso!</td><td>Pronto, a Márcia recebeu sua mensagem e vai te chamar no WhatsApp.</td></tr>
+            <tr><td>Denunciar anúncio</td><td>Algo de errado com este anúncio? Nos informe</td><td>Viu algo errado neste anúncio? Avisa a gente.</td></tr>
+            <tr><td>Alerta por e-mail</td><td>Confira as novidades do nosso portfólio</td><td>3 imóveis novos no seu bairro esta semana.</td></tr>
+            <tr><td>CTA para anunciantes</td><td>Anuncie no ValeCasa</td><td>Aqui o destaque é de quem faz o melhor anúncio, não de quem paga mais.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub">Por canal</h3>
+      <div class="channels">
+        <div class="channel web"><b>Portal e app</b>Direto e acolhedor. Frases curtas, sem gíria, sempre com o próximo passo claro.</div>
+        <div class="channel"><b>Outdoor e institucional</b>Direto e local. Assinatura fixa: "O jeito certo de procurar imóveis."</div>
+        <div class="channel"><b>Redes sociais</b>O mais acolhedor. Série de cantinhos e CTAs casuais como "Entra lá no ValeCasa".</div>
+        <div class="channel"><b>Corretores e imobiliárias</b>O pilar ousado pesa mais: retorno real, sem pagar caro por destaque.</div>
+      </div>
+    </section>
+
+    <!-- CORES -->
+    <section id="cores">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Cores</h2>
+        <p>As duas cores oficiais vêm dos arquivos da marca: verde neon #03FE9F e roxo #4D00AF. O verde é a cor de ação (CTAs, busca, seleção ativa). O roxo é a cor institucional (logo em fundo claro, footer, hero, selo de lançamento). O amarelo terciário (#FFDA00) é cor de destaque e de ilustração: aparece em fundos e detalhes, nunca como texto sobre branco. O coral é a cor oficial de localização: usado só no nome do bairro e na categoria do imóvel. Os tons de apoio e os três degradês vêm do manual da marca. Os degradês ficam reservados para fundos amplos, como hero, banners e abas de destaque.</p>
+      </div>
+      <div class="swatches">
+        <div class="sw"><i style="background:#03FE9F"></i><div><b>Verde marca</b><span>--vc-green-500 · #03FE9F</span></div></div>
+        <div class="sw"><i style="background:#007F50"></i><div><b>Verde texto</b><span>--vc-green-700 · #007F50</span></div></div>
+        <div class="sw"><i style="background:#4D00AF"></i><div><b>Roxo marca</b><span>--vc-purple-600 · #4D00AF</span></div></div>
+        <div class="sw"><i style="background:#22004F"></i><div><b>Roxo noite</b><span>--vc-purple-900 · #22004F</span></div></div>
+        <div class="sw"><i style="background:#FFDA00"></i><div><b>Amarelo terciário</b><span>--vc-sun-500 · #FFDA00</span></div></div>
+        <div class="sw"><i style="background:#E5483B"></i><div><b>Coral localização</b><span>--vc-coral · #E5483B</span></div></div>
+        <div class="sw"><i style="background:#F5B400"></i><div><b>Estrela</b><span>--vc-star · #F5B400</span></div></div>
+        <div class="sw"><i style="background:#1F6FE0"></i><div><b>Link</b><span>--vc-link · #1F6FE0</span></div></div>
+        <div class="sw"><i style="background:#140E1B"></i><div><b>Tinta</b><span>--ink · #140E1B</span></div></div>
+      </div>
+      <h3 class="sub">Escalas</h3>
+      <div class="ramp">
+        <div style="background:#E6FFF5;color:#00331F">50</div><div style="background:#BDFFE6;color:#00331F">100</div><div style="background:#6BFFC8;color:#00331F">300</div><div style="background:#03FE9F;color:#00331F">500 ★</div><div style="background:#1FCC8A;color:#00331F">600</div><div style="background:#007F50;color:#fff">700</div>
+      </div>
+      <div class="ramp">
+        <div style="background:#F3ECFF;color:#22004F">50</div><div style="background:#E2C9F8;color:#22004F">100</div><div style="background:#8A4DF0;color:#fff">400</div><div style="background:#4D00AF;color:#fff">600 ★</div><div style="background:#3D008C;color:#fff">700</div><div style="background:#22004F;color:#fff">900</div>
+      </div>
+      <div class="ramp" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div style="background:#FBF3E7;color:#140E1B">sun-50 · creme</div><div style="background:#FFDA00;color:#140E1B">sun-500 ★</div><div style="background:#E09200;color:#140E1B">sun-700 · âmbar</div>
+      </div>
+      <div class="ramp" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div style="background:linear-gradient(135deg,#4D00AF,#6A00FF);color:#fff">grad-purple</div><div style="background:linear-gradient(135deg,#1FCC8A,#03FE9F);color:#00331F">grad-green</div><div style="background:linear-gradient(135deg,rgba(77,0,175,.45),rgba(3,254,159,.55));color:#140E1B">grad-lilac</div>
+      </div>
+      <div class="ramp">
+        <div style="background:#F7F6FB;color:#140E1B">bg</div><div style="background:#F1EFF7;color:#140E1B">surface-2</div><div style="background:#E3E0EC;color:#140E1B">line</div><div style="background:#817C93;color:#fff">ink-3</div><div style="background:#4E4A5E;color:#fff">ink-2</div><div style="background:#140E1B;color:#fff">ink</div>
+      </div>
+      <p class="note">★ cor oficial dos arquivos da marca. Contraste: texto sobre o verde 500 é sempre <code>--vc-green-ink</code> (#00331F), nunca branco (branco sobre #03FE9F fica em 1,3:1). Para texto verde sobre fundo branco use o 700 (#007F50, 4,9:1). Branco sobre o roxo #4D00AF passa com folga (11:1). O verde 600 (#1FCC8A) e o amarelo (#FFDA00) ficam abaixo de 2,1:1 sobre branco: servem só para fundo e ilustração, e o texto sobre eles é sempre escuro (#140E1B).</p>
+    </section>
+
+    <!-- TIPOGRAFIA -->
+    <section id="tipografia">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Tipografia</h2>
+        <p>Geologica em todo o portal, com hierarquia feita por peso e tamanho. A família tem 9 pesos (Thin 100 a Black 900); o portal usa de Light 300 a ExtraBold 800. Preços sempre em bold com números tabulares, para alinhar nas listagens.</p>
+      </div>
+      <div class="panel" style="display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline">
+        <span style="font-size:44px;font-weight:300;line-height:1">Aa</span>
+        <span style="font-size:44px;font-weight:400;line-height:1">Aa</span>
+        <span style="font-size:44px;font-weight:500;line-height:1">Aa</span>
+        <span style="font-size:44px;font-weight:600;line-height:1">Aa</span>
+        <span style="font-size:44px;font-weight:700;line-height:1">Aa</span>
+        <span style="font-size:44px;font-weight:800;line-height:1;color:var(--purple-text)">Aa</span>
+        <span class="note" style="flex-basis:100%">300 Light · 400 Regular · 500 Medium · 600 SemiBold · 700 Bold · 800 ExtraBold. As variações Geologica Auto e Cursive mudam o desenho de algumas letras; o padrão do portal é a Geologica comum.</span>
+      </div>
+      <div class="panel" style="padding-block:6px">
+        <div class="type-row"><div class="spec">Display<br>34/1.15 · 700</div><div class="t-display">Descubra um novo lugar pra morar</div></div>
+        <div class="type-row"><div class="spec">H1 · título do anúncio<br>24 · 700</div><div class="t-h1">Ótima localização, casa recém reformada</div></div>
+        <div class="type-row"><div class="spec">H2 · seção<br>18 · 700</div><div class="t-h2">Mais imóveis em Clube dos 500</div></div>
+        <div class="type-row"><div class="spec">H3 · bloco<br>15 · 600</div><div class="t-h3">Comodidades</div></div>
+        <div class="type-row"><div class="spec">Preço<br>18 · 700 · tnum</div><div class="t-price">R$ 2.150/total</div></div>
+        <div class="type-row"><div class="spec">Corpo<br>14/1.55 · 400</div><div class="t-body">Casa com garagem coberta para 2 carros, 3 suítes, sala 2 ambientes, escritório e cozinha integrada com armários.</div></div>
+        <div class="type-row"><div class="spec">Bairro<br>12 · 500 · coral</div><div class="t-hood">Jardim Padroeira</div></div>
+        <div class="type-row"><div class="spec">Legenda<br>12 · 400</div><div class="t-caption">Aluguel R$ 1.850 + Cond. R$ 300</div></div>
+        <div class="type-row"><div class="spec">Label<br>11 · 600 · caps +6%</div><div class="t-label">Venda · Casa</div></div>
+      </div>
+    </section>
+
+    <!-- ÍCONES -->
+    <section id="icones">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Ícones</h2>
+        <p>Biblioteca Heroicons v2, estilo outline 24 px, traço 1.5 e cor herdada do texto (<code>currentColor</code>). Estrelas de avaliação usam a versão solid. Use 16 px em linhas de atributos e botões, 20 px em títulos de bloco e 24 px em ações isoladas.</p>
+      </div>
+      <div class="icon-grid">
+        <div class="icon-cell"><svg class="i"><use href="#i-search"/></svg><span>magnifying-glass</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-heart"/></svg><span>heart</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-share"/></svg><span>share</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-pin"/></svg><span>map-pin</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-map"/></svg><span>map</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-camera"/></svg><span>camera</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-photo"/></svg><span>photo</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-expand"/></svg><span>arrows-pointing-out</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-home"/></svg><span>home</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-home-modern"/></svg><span>home-modern</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-building"/></svg><span>building-office-2</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-sparkle"/></svg><span>sparkles</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-key"/></svg><span>key</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-calendar"/></svg><span>calendar</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-adjust"/></svg><span>adjustments-horizontal</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-grid"/></svg><span>squares-2x2</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-chat"/></svg><span>chat-bubble-left</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-mail"/></svg><span>envelope</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-phone"/></svg><span>phone</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-user"/></svg><span>user</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-flag"/></svg><span>flag</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-chev"/></svg><span>chevron-down</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-arrow"/></svg><span>arrow-right</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-menu"/></svg><span>bars-3</span></div>
+        <div class="icon-cell"><svg class="i"><use href="#i-x"/></svg><span>x-mark</span></div>
+        <div class="icon-cell"><svg class="i" style="color:var(--vc-success)"><use href="#i-check"/></svg><span>check-circle</span></div>
+        <div class="icon-cell"><svg class="i" style="color:var(--vc-warning)"><use href="#i-warn"/></svg><span>exclamation-triangle</span></div>
+        <div class="icon-cell"><svg class="i" style="color:var(--vc-link)"><use href="#i-info"/></svg><span>information-circle</span></div>
+        <div class="icon-cell"><svg style="width:24px;height:24px;fill:var(--vc-star)"><use href="#i-star"/></svg><span>star (solid)</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-bed"/></svg><span>bed · próprio</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-bath"/></svg><span>bath · próprio</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-car"/></svg><span>car · próprio</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-area"/></svg><span>area · próprio</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-wa"/></svg><span>whatsapp · próprio</span></div>
+        <div class="icon-cell custom"><svg class="i"><use href="#i-ig"/></svg><span>instagram · próprio</span></div>
+      </div>
+      <p class="note">Os de borda tracejada não existem no Heroicons (quarto, banheiro, vaga, área, WhatsApp, Instagram). Eles foram desenhados no mesmo grid de 24 px e traço 1.5 para conviver com a biblioteca. Para WhatsApp e Instagram, vale trocar pelos logos oficiais de cada rede.</p>
+    </section>
+
+    <!-- ILUSTRAÇÃO -->
+    <section id="ilustracao">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Ilustração</h2>
+        <p>Uma linguagem só: pictograma geométrico e local para conceitos, estados e lugares, e fotografia sempre que a peça precisar mostrar pessoas. É a gramática dos marcos de Guaratinguetá e da skyline da marca. As cenas com pessoas no estilo flat saem conforme as telas forem refeitas.</p>
+      </div>
+      <h3 class="sub">Piloto: estados do site</h3>
+      <div class="ilu-grid">
+        <div class="ilu"><svg role="img" aria-label="Porta fechada com tábuas cruzadas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<path fill="#4D00AF" d="M126 22c36 2 72 22 86 58 14 35 2 70-20 96-22 26-55 44-90 40-35-4-66-26-80-58-14-31-8-68 12-94 20-27 56-44 92-42Z"/>
+<rect x="84" y="62" width="72" height="126" rx="4" fill="#E2C9F8"/>
+<rect x="92" y="70" width="56" height="118" rx="2" fill="#03FE9F"/>
+<rect x="100" y="104" width="40" height="28" rx="2" fill="#1FCC8A"/>
+<rect x="100" y="140" width="40" height="36" rx="2" fill="#1FCC8A"/>
+<rect x="106" y="80" width="28" height="14" rx="3" fill="#FFDA00"/>
+<path d="M112 87h4M118 87h4M124 87h4" stroke="#140E1B" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="139" cy="134" r="3.5" fill="#4D00AF"/>
+<rect x="66" y="112" width="108" height="14" rx="3" fill="#E2C9F8" transform="rotate(-14 120 119)"/>
+<rect x="66" y="140" width="108" height="14" rx="3" fill="#E2C9F8" transform="rotate(12 120 147)"/>
+<circle cx="75" cy="128" r="2.5" fill="#4D00AF"/><circle cx="165" cy="106" r="2.5" fill="#4D00AF"/>
+<circle cx="75" cy="139" r="2.5" fill="#4D00AF"/><circle cx="165" cy="158" r="2.5" fill="#4D00AF"/>
+<path d="M28 188h184" stroke="#03FE9F" stroke-width="4" stroke-linecap="round"/>
+</svg><b>Página não encontrada</b><span>Essa página não existe mais. Que tal voltar para a busca?</span></div>
+        <div class="ilu"><svg role="img" aria-label="Lupa sobre rua sem imóveis" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<path fill="#4D00AF" d="M126 22c36 2 72 22 86 58 14 35 2 70-20 96-22 26-55 44-90 40-35-4-66-26-80-58-14-31-8-68 12-94 20-27 56-44 92-42Z"/>
+<path fill="#E2C9F8" d="M44 188v-34l18-16 18 16v34H44ZM88 188v-74h28v74H88ZM168 188v-30l16-14 16 14v30h-32Z"/>
+<path d="M95 124h4M105 124h4M95 136h4M105 136h4M95 148h4M105 148h4M95 160h4M105 160h4" stroke="#4D00AF" stroke-width="3" stroke-linecap="round"/>
+<circle cx="146" cy="104" r="34" fill="#6514D6" stroke="#03FE9F" stroke-width="10"/>
+<path d="M128 112h36" stroke="#E2C9F8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+<path d="M171 129l24 24" stroke="#FFDA00" stroke-width="12" stroke-linecap="round"/>
+<path d="M28 188h184" stroke="#03FE9F" stroke-width="4" stroke-linecap="round"/>
+</svg><b>Busca sem resultado</b><span>Nada com esses filtros no bairro. Tira o filtro de preço ou olha os bairros vizinhos.</span></div>
+        <div class="ilu"><svg role="img" aria-label="Moldura de foto com casa e câmera" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+<path fill="#4D00AF" d="M126 22c36 2 72 22 86 58 14 35 2 70-20 96-22 26-55 44-90 40-35-4-66-26-80-58-14-31-8-68 12-94 20-27 56-44 92-42Z"/>
+<rect x="56" y="54" width="128" height="120" rx="10" fill="#FFFFFF"/>
+<rect x="68" y="66" width="104" height="72" rx="4" fill="#BDFFE6"/>
+<path fill="#03FE9F" d="M120 80l26 22h-8v28h-36v-28h-8l26-22Z"/>
+<rect x="114" y="112" width="12" height="18" rx="1" fill="#1FCC8A"/>
+<path d="M68 148h64M68 160h40" stroke="#E2C9F8" stroke-width="6" stroke-linecap="round"/>
+<circle cx="180" cy="62" r="20" fill="#FFDA00"/>
+<path d="M170 58.5c0-1.4 1.1-2.5 2.5-2.5h2.2l1.8-2.6h7l1.8 2.6h2.2c1.4 0 2.5 1.1 2.5 2.5v9c0 1.4-1.1 2.5-2.5 2.5h-15c-1.4 0-2.5-1.1-2.5-2.5v-9Z" fill="#140E1B"/>
+<circle cx="180" cy="62.5" r="3.6" fill="#FFDA00"/>
+<path d="M28 188h184" stroke="#03FE9F" stroke-width="4" stroke-linecap="round"/>
+</svg><b>Imóvel sem foto</b><span>Sem fotos ainda. O anunciante vai enviar em breve.</span></div>
+      </div>
+      <h3 class="sub">Regras</h3>
+      <div class="ilu-rules">
+        <div><b>Paleta restrita</b><div class="ilu-chips"><i style="background:#4D00AF"></i><i style="background:#E2C9F8"></i><i style="background:#03FE9F"></i><i style="background:#BDFFE6"></i><i style="background:#1FCC8A"></i><i style="background:#FFDA00"></i></div><span>No máximo três cores por objeto. O amarelo aparece uma vez por peça, como destaque.</span></div>
+        <div><b>Forma</b><span>Geometria reta com cantos levemente arredondados. Cores chapadas, sem contorno preto e sem degradê nos objetos.</span></div>
+        <div><b>Fundo e chão</b><span>O Elemento orgânico da marca em roxo 600 atrás do objeto, e uma linha de chão verde que passa das bordas dele.</span></div>
+        <div><b>Tamanhos</b><span>64 px em avisos curtos, 120 a 160 px em estados vazios e 240 px ou mais em seções e banners.</span></div>
+        <div><b>Pessoas</b><span>Sempre em fotografia, como na série "cantinho em Guará". Sem rostos ilustrados.</span></div>
+        <div><b>Local</b><span>Sempre que der, um marco real da cidade: EEAR, Casa Frei Galvão, Monumento das Garças, Estação Ferroviária.</span></div>
+      </div>
+      <p class="note">Arquivos em <code>ilustracoes/piloto/</code>. A forma de fundo do piloto é provisória: será trocada pelo vetor oficial do Elemento da marca.</p>
+    </section>
+
+    <!-- ESPAÇOS -->
+    <section id="espacos">
+      <div class="sec-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Espaço, raio e sombra</h2>
+        <p>Grid de 4/8 px. Raios pequenos para fotos e campos, pílula para todo botão de ação. A sombra elevada fica reservada ao card de contato fixo e aos menus suspensos.</p>
+      </div>
+      <div class="panel space-list">
+        <div><span>--sp-1</span><span>4px</span><i style="width:4px"></i></div>
+        <div><span>--sp-2</span><span>8px</span><i style="width:8px"></i></div>
+        <div><span>--sp-3</span><span>12px</span><i style="width:12px"></i></div>
+        <div><span>--sp-4</span><span>16px</span><i style="width:16px"></i></div>
+        <div><span>--sp-6</span><span>24px</span><i style="width:24px"></i></div>
+        <div><span>--sp-8</span><span>32px</span><i style="width:32px"></i></div>
+        <div><span>--sp-12</span><span>48px</span><i style="width:48px"></i></div>
+        <div><span>--sp-16</span><span>64px</span><i style="width:64px"></i></div>
+      </div>
+      <div class="tiles">
+        <div class="tile" style="border-radius:4px"><b>--r-xs · 4px</b>badges, atributos, campo de busca do header</div>
+        <div class="tile" style="border-radius:6px"><b>--r-sm · 6px</b>fotos, inputs, card de contato</div>
+        <div class="tile" style="border-radius:16px"><b>--r-lg · 16px</b>hero da página do imóvel, banners</div>
+        <div class="tile" style="border-radius:28px"><b>--r-pill</b>botões, filtros, toggles</div>
+        <div class="tile" style="border-radius:6px;box-shadow:var(--shadow-1)"><b>--shadow-1</b>botões flutuantes na foto</div>
+        <div class="tile" style="border-radius:6px;box-shadow:var(--shadow-2)"><b>--shadow-2</b>card de contato, dropdown</div>
+      </div>
+    </section>
+
+    <!-- BOTÕES -->
+    <section id="botoes">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Botões</h2>
+        <p>O botão verde em pílula é a ação principal de cada tela e aparece uma vez por contexto: "Anunciar imóvel" no header, "Entrar em contato" no card do corretor. O contorno escuro é a ação secundária. O roxo quadrado fica para buscas em áreas de marca.</p>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:20px">
+        <div class="row">
+          <button class="btn btn-primary">Anunciar imóvel</button>
+          <button class="btn btn-primary">Entrar em contato <svg class="i"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-outline"><svg class="i"><use href="#i-wa"/></svg> Chamar no WhatsApp</button>
+          <button class="btn btn-purple">Buscar</button>
+          <button class="btn btn-ghost">Entrar</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary btn-sm">Enviar</button>
+          <button class="btn btn-primary">Contatar anunciante</button>
+          <button class="btn btn-primary btn-lg">Anunciar imóvel</button>
+          <button class="btn btn-primary" disabled>Indisponível</button>
+          <button class="btn btn-outline btn-sm"><svg class="i"><use href="#i-share"/></svg> Enviar para alguém</button>
+        </div>
+        <div class="row">
+          <button class="icon-btn" aria-label="Salvar imóvel" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button>
+          <button class="icon-btn" aria-label="Imóvel salvo" aria-pressed="true" data-fav><svg class="i"><use href="#i-heart"/></svg></button>
+          <a class="link" href="#botoes">Viu algo errado neste anúncio? Avisa a gente.</a>
+          <a class="link" href="#botoes" style="color:var(--ink);font-weight:600">Pesquisa avançada →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUSCA -->
+    <section id="busca">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Busca e formulários</h2>
+        <p>A barra de busca combina campo livre, alternância Comprar/Alugar e botão em caixa-alta. Campos de formulário recebem foco roxo.</p>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:16px">
+        <h3 class="t-h2">Explore e encontre sua futura casa no <span style="color:var(--brand-text)">ValeCasa</span></h3>
+        <form class="search" id="search-demo">
+          <div class="search-field">
+            <svg class="i" style="color:var(--ink-3)"><use href="#i-search"/></svg>
+            <input id="q" type="text" value="Campo do Galvão" aria-label="Bairro, cidade ou condomínio">
+            <div class="seg" role="group" aria-label="Finalidade">
+              <button type="button" aria-pressed="true">Comprar</button>
+              <button type="button" aria-pressed="false">Alugar</button>
+            </div>
+          </div>
+          <button class="btn btn-search" type="submit">Buscar</button>
+        </form>
+        <div class="form-grid" style="margin-top:8px">
+          <div class="field"><label for="f-name">Nome</label><input class="input" id="f-name" value="Ana Ribeiro"><span class="hint">Como o corretor vai te chamar</span></div>
+          <div class="field"><label for="f-phone">Telefone</label><input class="input err" id="f-phone" value="(12) 9812"><span class="hint err">Informe o DDD e os 9 dígitos do celular</span></div>
+          <div class="field"><label for="f-obs">Observação</label><input class="input" id="f-obs" placeholder="Ex.: fotos ruins, poucas informações…"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BADGES -->
+    <section id="badges">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Badges e filtros</h2>
+        <p>Badges ficam no canto superior esquerdo da foto e indicam o tipo de negócio. Filtros são pílulas com seta; o filtro aplicado ganha fundo menta.</p>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:20px">
+        <div class="row">
+          <span class="badge b-rent">Aluguel</span>
+          <span class="badge b-sale">Venda</span>
+          <span class="badge b-launch">Lançamento</span>
+          <span class="badge b-new">Novo</span>
+          <span class="badge b-owner">Proprietário</span>
+          <span class="badge b-photo" style="border:1px solid var(--line)"><svg class="i" style="width:12px;height:12px"><use href="#i-camera"/></svg> 54</span>
+        </div>
+        <div class="row" id="chips">
+          <button class="chip" aria-pressed="false">Tipo de imóvel <svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="chip" aria-pressed="false">Preço <svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="chip" aria-pressed="true">Quartos e banheiros <svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="chip" aria-pressed="false">Área (m²) <svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="chip" aria-pressed="false">Fase da obra <svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="chip-clear" type="button">Limpar filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section id="cards">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Cards de imóvel</h2>
+        <p>Cards sem borda nem fundo: a foto é o contêiner. A ordem do texto é fixa em todas as listagens: bairro (coral), preço total, composição do preço, título em duas linhas no máximo e a linha de atributos.</p>
+      </div>
+      <h3 class="sub">Aluguel / venda</h3>
+      <div class="cards">
+        <a class="card" href="#cards">
+          <div class="photo"><span class="tl badge b-rent">Aluguel</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
+          <span class="hood">Jardim Padroeira</span>
+          <span class="price">R$ 2.150<small>/total</small></span>
+          <span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span>
+          <span class="title">Kitnet com cozinha compartilhada e área de serviço</span>
+          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>2</span><span><svg class="i"><use href="#i-bath"/></svg>3</span><span><svg class="i"><use href="#i-car"/></svg>2</span><span><svg class="i"><use href="#i-area"/></svg>78m²</span></div>
+        </a>
+        <a class="card" href="#cards">
+          <div class="photo v2"><span class="tl badge b-rent">Aluguel</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
+          <span class="hood">Pedregulho</span>
+          <span class="price">R$ 2.150<small>/total</small></span>
+          <span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span>
+          <span class="title">Excelente casa em rua tradicional no Pedregulho</span>
+          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>2</span><span><svg class="i"><use href="#i-bath"/></svg>3</span><span><svg class="i"><use href="#i-car"/></svg>2</span><span><svg class="i"><use href="#i-area"/></svg>78m²</span></div>
+        </a>
+        <a class="card" href="#cards">
+          <div class="photo"><span class="tl badge b-sale">Venda</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="true" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
+          <span class="hood">Colônia</span>
+          <span class="price">R$ 500.000</span>
+          <span class="breakdown">Cond. R$ 320 · IPTU R$ 665/ano</span>
+          <span class="title">Chácara com piscina na estrada asfaltada</span>
+          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>3</span><span><svg class="i"><use href="#i-bath"/></svg>2</span><span><svg class="i"><use href="#i-car"/></svg>4</span><span><svg class="i"><use href="#i-area"/></svg>187m²</span></div>
+        </a>
+      </div>
+      <h3 class="sub">Lançamento</h3>
+      <div class="cards">
+        <a class="card" href="#cards">
+          <div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="br">TP</span></div>
+          <span class="hood"><svg class="i" style="width:12px;height:12px"><use href="#i-pin"/></svg>Vila Paraíba · Guaratinguetá</span>
+          <span class="name">Village Tulipa</span>
+          <div class="specs" style="margin-top:0;font-weight:500;color:var(--ink-2)"><span><svg class="i"><use href="#i-bed"/></svg>3 e 4</span><span><svg class="i"><use href="#i-car"/></svg>2 vagas</span><span><svg class="i"><use href="#i-area"/></svg>45 e 67m²</span></div>
+          <span class="from">A partir de <b>R$ 799.000</b></span>
+        </a>
+        <a class="card" href="#cards">
+          <div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="br">AP</span></div>
+          <span class="hood"><svg class="i" style="width:12px;height:12px"><use href="#i-pin"/></svg>Centro · Guaratinguetá</span>
+          <span class="name">Jardim das Figueiras</span>
+          <div class="specs" style="margin-top:0;font-weight:500;color:var(--ink-2)"><span><svg class="i"><use href="#i-bed"/></svg>2 e 3</span><span><svg class="i"><use href="#i-car"/></svg>1 vaga</span><span><svg class="i"><use href="#i-area"/></svg>52 e 74m²</span></div>
+          <span class="from">A partir de <b>R$ 412.000</b></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- COMODIDADES -->
+    <section id="comodidades">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes · Lançamentos</span>
+        <h2>Comodidades do condomínio</h2>
+        <p>Ícones próprios do ValeCasa para a área de lançamentos, desenhados na mesma grade do Heroicons: 24×24 px, traço 1.5, pontas e cantos arredondados, margem de 2.25 px e cor herdada do texto. Convivem com os ícones da biblioteca sem diferença de peso.</p>
+      </div>
+
+      <div class="launch">
+        <div class="launch-head">
+          <div>
+            <span class="badge">Lançamento</span>
+            <h3 style="margin-top:10px">Village Tulipa</h3>
+            <p>Vila Paraíba · Guaratinguetá · Entrega em dez/2027</p>
+          </div>
+          <button class="btn btn-primary btn-sm">Ver plantas <svg class="i"><use href="#i-arrow"/></svg></button>
+        </div>
+        <div class="amen">
+          <div><svg class="i"><use href="#a-academia"/></svg>Academia</div>
+          <div><svg class="i"><use href="#a-acessibilidade"/></svg>Acesso para cadeirantes</div>
+          <div><svg class="i"><use href="#a-lazer"/></svg>Área de lazer</div>
+          <div><svg class="i"><use href="#a-verde"/></svg>Área verde</div>
+          <div><svg class="i"><use href="#a-bicicletario"/></svg>Bicicletário</div>
+          <div><svg class="i"><use href="#a-brinquedoteca"/></svg>Brinquedoteca</div>
+          <div><svg class="i"><use href="#a-cameras"/></svg>Câmeras internas</div>
+          <div><svg class="i"><use href="#a-futebol"/></svg>Campo de futebol</div>
+          <div><svg class="i"><use href="#a-churrasqueira"/></svg>Churrasqueira</div>
+        </div>
+      </div>
+
+      <h3 class="sub">Versão compacta, para o card do lançamento</h3>
+      <div class="panel amen-list">
+        <span><svg class="i"><use href="#a-lazer"/></svg>Área de lazer</span>
+        <span><svg class="i"><use href="#a-academia"/></svg>Academia</span>
+        <span><svg class="i"><use href="#a-churrasqueira"/></svg>Churrasqueira</span>
+        <span><svg class="i"><use href="#a-brinquedoteca"/></svg>Brinquedoteca</span>
+        <span style="color:var(--ink-3)">+5 comodidades</span>
+      </div>
+
+      <h3 class="sub">Construção</h3>
+      <div class="amen-spec">
+        <div class="stage">
+          <div class="grid24"><svg class="i"><use href="#a-churrasqueira"/></svg></div>
+          <p class="note" style="font-size:12px">Grade de 24 px. A linha tracejada marca a margem de 2.25 px: nenhum traço passa dela.</p>
+        </div>
+        <div class="stage">
+          <div class="sizes">
+            <div><svg class="i" style="width:16px;height:16px"><use href="#a-futebol"/></svg><small>16</small></div>
+            <div><svg class="i" style="width:20px;height:20px"><use href="#a-futebol"/></svg><small>20</small></div>
+            <div><svg class="i" style="width:28px;height:28px"><use href="#a-futebol"/></svg><small>28</small></div>
+            <div><svg class="i" style="width:40px;height:40px"><use href="#a-futebol"/></svg><small>40</small></div>
+          </div>
+          <p class="note" style="font-size:12px">16 px em listas, 20 px no card compacto, 28 px nos blocos da página do lançamento.</p>
+        </div>
+      </div>
+      <div class="panel" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:4px;min-width:0;max-width:60ch">
+          <b style="font-size:15px">Catálogo completo de comodidades</b>
+          <span class="note">Todos os ícones de condomínio com busca, filtro por categoria, nomes alternativos e botão para copiar o SVG. Os arquivos ficam em <code>icones-comodidades/svg/</code>, com sprite, índice <code>comodidades.json</code> e .zip em <code>icones-comodidades/dist/</code>.</span>
+        </div>
+        <a class="btn btn-primary" href="https://claude.ai/artifact/LbbLdiCUxZ2LRcUp8PR74M">Abrir catálogo <svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+    </section>
+
+    <!-- DETALHE -->
+    <section id="detalhe">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Página do imóvel</h2>
+        <p>Atributos em caixas com contorno fino, blocos de conteúdo com ícone + título + descrição curta, e um card de contato com sombra que fica fixo na lateral.</p>
+      </div>
+      <div class="two">
+        <div style="display:flex;flex-direction:column;gap:28px;min-width:0">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span class="t-hood" style="font-size:11px">Casa · venda</span>
+            <h3 class="t-h1">Ótima localização, casa recém reformada</h3>
+            <span class="t-caption">Guaratinguetá, Centro</span>
+          </div>
+          <div class="attrs">
+            <div class="attr"><svg class="i"><use href="#i-bed"/></svg><b>2</b><span>Quartos</span></div>
+            <div class="attr"><svg class="i"><use href="#i-bed"/></svg><b>1</b><span>Suíte</span></div>
+            <div class="attr"><svg class="i"><use href="#i-bath"/></svg><b>3</b><span>Banheiros</span></div>
+            <div class="attr"><svg class="i"><use href="#i-car"/></svg><b>1</b><span>Vaga</span></div>
+            <div class="attr-area"><span>Área</span><div><div><b>78m²</b><small>Construída</small></div><div><b>187m²</b><small>Total</small></div></div></div>
+          </div>
+          <div>
+            <div class="ph"><span class="t"><svg class="i"><use href="#i-home"/></svg>Espaços</span><span class="d">Os cômodos e áreas relevantes</span></div>
+            <div class="list3"><span>Piso frio</span><span>Bar</span><span>Piso frio</span><span>Laje</span><span>Cerca elétrica</span><span>Laje</span><span>Forro</span><span>Lareira</span><span>Forro</span><span>Sistema de alarme</span><span>Mobiliado</span><span>Sistema de alarme</span></div>
+          </div>
+          <div>
+            <div class="ph"><span class="t"><svg class="i"><use href="#i-sparkle"/></svg>Comodidades</span><span class="d">Os itens que dão conforto e praticidade</span></div>
+            <div class="list3"><span>Aquecimento solar</span><span>Piscina</span><span>Churrasqueira</span><span>Ar-condicionado</span><span>Portão eletrônico</span><span>Despensa</span></div>
+          </div>
+          <div>
+            <div class="ph"><span class="t"><svg class="i"><use href="#i-star"/></svg>Avalie o anúncio</span></div>
+            <div class="rate-grid" style="margin-top:12px">
+              <div><span class="lbl">Qualidade do anúncio</span><div class="stars" data-rate="5"></div></div>
+              <div><span class="lbl">O imóvel</span><div class="stars" data-rate="4"></div></div>
+            </div>
+          </div>
+        </div>
+        <aside>
+          <div class="contact">
+            <div class="total"><span>Total:</span><b>R$ 1.200/mês</b></div>
+            <div class="agent-photo" aria-hidden="true"></div>
+            <div class="who"><b>Márcia Chagas Albotelli</b><span>Corretora · Creci 739736-1</span></div>
+            <div class="acts">
+              <button class="btn btn-primary">Entrar em contato <svg class="i"><use href="#i-arrow"/></svg></button>
+              <button class="btn btn-outline btn-sm"><svg class="i"><use href="#i-wa"/></svg> Chamar no WhatsApp</button>
+            </div>
+            <dl class="costs">
+              <dt>Aluguel</dt><dd>R$ 880</dd>
+              <dt>Condomínio</dt><dd>R$ 250</dd>
+              <dt>IPTU/ano</dt><dd>R$ 69</dd>
+              <dt>Seguro incêndio</dt><dd>R$ 69</dd>
+              <dt>Fiador online</dt><dd>R$ 69</dd>
+            </dl>
+          </div>
+          <div class="side-acts">
+            <button class="btn btn-outline btn-sm"><svg class="i"><use href="#i-heart"/></svg> Salvar imóvel</button>
+            <button class="btn btn-outline btn-sm"><svg class="i"><use href="#i-share"/></svg> Compartilhar</button>
+            <a class="link" href="#detalhe" style="text-align:center;font-size:12px">Viu algo errado neste anúncio? Avisa a gente.</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- DESCOBERTA -->
+    <section id="descoberta">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Bairros e corretores</h2>
+        <p>Blocos de descoberta da home. O tile de bairro usa a foto sob um véu roxo e mostra o preço médio. Corretores e imobiliárias aparecem em grade com avatar sobreposto e contagem de imóveis.</p>
+      </div>
+      <div class="hoods">
+        <div class="hood"><h4>Clube dos 500</h4><div><span>Média</span><b>R$ 875.000</b></div></div>
+        <div class="hood"><h4>Jardim Bela Vista</h4><div><span>Média</span><b>R$ 600.000</b></div></div>
+        <div class="hood"><h4>Engenheiro Neiva</h4><div><span>Média</span><b>R$ 380.000</b></div></div>
+        <div class="hood"><h4>International Park</h4><div><span>Média</span><b>R$ 1.320.000</b></div></div>
+        <div class="hood"><h4>Vila São José</h4><div><span>Média</span><b>R$ 280.000</b></div></div>
+      </div>
+      <div class="brokers">
+        <div class="broker"><div class="ph-cover"></div><div class="avatar"></div><b>João Carlos</b><span class="score"><span class="stars sm"><svg><use href="#i-star"/></svg></span>4,9</span></div>
+        <div class="broker"><div class="ph-cover" style="background:linear-gradient(160deg,#D7DDE4,#8C9AA8)"></div><div class="avatar"></div><b>Cecília Mendes</b><span class="score"><span class="stars sm"><svg><use href="#i-star"/></svg></span>4,8</span></div>
+        <div class="broker"><div class="ph-cover" style="background:linear-gradient(160deg,#EDE3D4,#A98F6C)"></div><div class="avatar"></div><b>Suzana Garcia</b><span class="score"><span class="stars sm"><svg><use href="#i-star"/></svg></span>4,8</span></div>
+        <div class="agency"><div class="mark">VALE MAIS</div><span class="count-pill">32 imóveis</span></div>
+        <div class="agency"><div class="mark" style="color:var(--vc-coral)">FARIA &amp; SILVA</div><span class="count-pill">107 imóveis</span></div>
+      </div>
+      <div class="panel">
+        <div class="steps">
+          <div class="step"><span class="blob"><svg class="i"><use href="#i-search"/></svg></span><b>Pesquise</b><p>Por bairro, preço ou tipo de imóvel, com filtros rápidos.</p></div>
+          <div class="step"><span class="blob"><svg class="i"><use href="#i-chat"/></svg></span><b>Entre em contato</b><p>Fale com o anunciante pelo site ou pelo WhatsApp.</p></div>
+          <div class="step"><span class="blob"><svg class="i"><use href="#i-key"/></svg></span><b>Vida nova</b><p>Feche negócio e pegue as chaves da sua casa nova.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVEGAÇÃO -->
+    <section id="navegacao">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Header e footer</h2>
+        <p>Header branco e enxuto: logo, busca curta, CTA verde e acesso à conta. O footer é o maior bloco roxo do site e fecha todas as páginas.</p>
+      </div>
+      <div class="site-header">
+        <span class="logo" role="img" aria-label="ValeCasa"><svg viewBox="0 0 667 118"><use href="#logo-word"/></svg></span>
+        <div class="search-mini"><svg class="i"><use href="#i-search"/></svg>Digite um bairro</div>
+        <nav><button class="btn btn-primary btn-sm">Anunciar imóvel</button><button class="btn btn-ghost btn-sm">Entrar</button><button class="btn btn-ghost btn-sm">Criar conta</button></nav>
+      </div>
+      <footer class="footer">
+        <div>
+          <span class="logo" role="img" aria-label="ValeCasa"><svg viewBox="0 0 667 118"><use href="#logo-word"/></svg></span>
+          <div class="social"><span><svg class="i"><use href="#i-wa"/></svg></span><span><svg class="i"><use href="#i-mail"/></svg></span><span><svg class="i"><use href="#i-ig"/></svg></span><span><svg class="i"><use href="#i-phone"/></svg></span></div>
+        </div>
+        <ul><li>Página inicial</li><li>Quem somos nós</li><li>Políticas de privacidade</li><li style="margin-top:14px">Mídia Kit</li><li>Publicidade</li></ul>
+        <ul><li>Imóveis novos</li><li>Residencial</li><li>Comercial</li><li>Rural</li><li style="margin-top:14px">Ajuda</li><li>Fale conosco</li></ul>
+        <small><b style="color:#fff;font-weight:600">O jeito certo de procurar imóveis.</b> · Copyright 2020 · Vale Casa buscador de imóveis. Todos os direitos reservados.</small>
+      </footer>
+    </section>
+
+    <!-- REGRAS -->
+    <section id="regras">
+      <div class="sec-head">
+        <span class="eyebrow">Diretrizes</span>
+        <h2>Regras de uso</h2>
+      </div>
+      <div class="do-dont">
+        <div class="dd do"><h4>Faça</h4><ul>
+          <li>Um único botão verde em pílula por bloco de decisão.</li>
+          <li>Preço sempre no formato "R$ 2.150/total" com a composição logo abaixo.</li>
+          <li>Bairro em coral acima do preço, em todos os cards.</li>
+          <li>Roxo em áreas de marca: hero, footer, lançamentos, banners institucionais.</li>
+        </ul></div>
+        <div class="dd dont"><h4>Evite</h4><ul>
+          <li>Texto branco sobre o verde menta.</li>
+          <li>Coral em botões ou alertas; ele é reservado a bairro e categoria.</li>
+          <li>Bordas e sombras nos cards da listagem; a foto já delimita o card.</li>
+          <li>Misturar raio pílula e raio reto no mesmo grupo de botões.</li>
+        </ul></div>
+      </div>
+      <div class="panel scroll" style="padding:0">
+        <table class="rules">
+          <thead><tr><th>Elemento</th><th>Cor</th><th>Raio</th><th>Onde aparece</th></tr></thead>
+          <tbody>
+            <tr><td>CTA principal</td><td>green-500 / ink verde</td><td>pill</td><td>Anunciar imóvel, Entrar em contato, Contatar anunciante</td></tr>
+            <tr><td>CTA secundário</td><td>surface / borda ink</td><td>pill</td><td>WhatsApp, Salvar, Compartilhar, Enviar para alguém</td></tr>
+            <tr><td>Busca em área de marca</td><td>purple-600 / branco</td><td>sm</td><td>Busca de corretores, hero da home</td></tr>
+            <tr><td>Badge Lançamento</td><td>purple-600 / branco</td><td>xs</td><td>Cards de empreendimentos</td></tr>
+            <tr><td>Badge Aluguel</td><td>green-100 / green-700</td><td>xs</td><td>Fotos de anúncios de locação</td></tr>
+            <tr><td>Links de ajuda</td><td>link azul</td><td>n/a</td><td>Denúncia de anúncio, "Ver todos"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TOKENS -->
+    <section id="tokens">
+      <div class="sec-head">
+        <span class="eyebrow">Código</span>
+        <h2>Tokens CSS</h2>
+        <p>Cole no CSS global do portal. Os nomes seguem o prefixo <code>--vc-</code> para cores de marca e nomes semânticos para neutros.</p>
+      </div>
+      <div class="code-wrap">
+<pre class="code" id="tokens-code"><span class="c">/* ValeCasa · tokens v1.2 · paleta conciliada com o manual da marca */</span>
+<span class="c">/* Fonte: &lt;link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300..800&amp;display=swap" rel="stylesheet"&gt; */</span>
+:root {
+  <span class="c">/* Marca · verde (ação) · oficial = 500 */</span>
+  <span class="k">--vc-green-50</span>: <span class="v">#E6FFF5</span>;  <span class="k">--vc-green-100</span>: <span class="v">#BDFFE6</span>;
+  <span class="k">--vc-green-300</span>: <span class="v">#6BFFC8</span>; <span class="k">--vc-green-500</span>: <span class="v">#03FE9F</span>;
+  <span class="k">--vc-green-600</span>: <span class="v">#1FCC8A</span>; <span class="k">--vc-green-700</span>: <span class="v">#007F50</span>;
+  <span class="k">--vc-green-ink</span>: <span class="v">#00331F</span>;
+
+  <span class="c">/* Marca · roxo (institucional) · oficial = 600 */</span>
+  <span class="k">--vc-purple-50</span>: <span class="v">#F3ECFF</span>;  <span class="k">--vc-purple-100</span>: <span class="v">#E2C9F8</span>;
+  <span class="k">--vc-purple-400</span>: <span class="v">#8A4DF0</span>; <span class="k">--vc-purple-500</span>: <span class="v">#6514D6</span>;
+  <span class="k">--vc-purple-600</span>: <span class="v">#4D00AF</span>; <span class="k">--vc-purple-700</span>: <span class="v">#3D008C</span>;
+  <span class="k">--vc-purple-900</span>: <span class="v">#22004F</span>;
+
+  <span class="c">/* Apoio */</span>
+  <span class="k">--vc-sun-50</span>: <span class="v">#FBF3E7</span>; <span class="k">--vc-sun-500</span>: <span class="v">#FFDA00</span>; <span class="k">--vc-sun-700</span>: <span class="v">#E09200</span>;
+  <span class="k">--vc-grad-purple</span>: <span class="v">linear-gradient(135deg, #4D00AF, #6A00FF)</span>;
+  <span class="k">--vc-grad-green</span>: <span class="v">linear-gradient(135deg, #1FCC8A, #03FE9F)</span>;
+  <span class="k">--vc-coral</span>: <span class="v">#E5483B</span>;  <span class="k">--vc-star</span>: <span class="v">#F5B400</span>;  <span class="k">--vc-link</span>: <span class="v">#1F6FE0</span>;
+  <span class="k">--vc-success</span>: <span class="v">#16A34A</span>; <span class="k">--vc-warning</span>: <span class="v">#D97706</span>; <span class="k">--vc-danger</span>: <span class="v">#DC2626</span>;
+
+  <span class="c">/* Neutros */</span>
+  <span class="k">--bg</span>: <span class="v">#F7F6FB</span>; <span class="k">--surface</span>: <span class="v">#FFFFFF</span>; <span class="k">--surface-2</span>: <span class="v">#F1EFF7</span>;
+  <span class="k">--line</span>: <span class="v">#E3E0EC</span>; <span class="k">--line-strong</span>: <span class="v">#C9C5D6</span>;
+  <span class="k">--ink</span>: <span class="v">#140E1B</span>; <span class="k">--ink-2</span>: <span class="v">#4E4A5E</span>; <span class="k">--ink-3</span>: <span class="v">#817C93</span>;
+
+  <span class="c">/* Tipografia */</span>
+  <span class="k">--font</span>: <span class="v">"Geologica", ui-sans-serif, "Segoe UI", system-ui, sans-serif</span>;
+  <span class="k">--icon-stroke</span>: <span class="v">1.5</span>; <span class="c">/* Heroicons v2 outline */</span>
+  <span class="k">--fs-display</span>: <span class="v">34px</span>; <span class="k">--fs-h1</span>: <span class="v">24px</span>; <span class="k">--fs-h2</span>: <span class="v">18px</span>; <span class="k">--fs-h3</span>: <span class="v">15px</span>;
+  <span class="k">--fs-body</span>: <span class="v">14px</span>; <span class="k">--fs-caption</span>: <span class="v">12px</span>; <span class="k">--fs-label</span>: <span class="v">11px</span>;
+
+  <span class="c">/* Espaço · raio · sombra */</span>
+  <span class="k">--sp-1</span>: <span class="v">4px</span>; <span class="k">--sp-2</span>: <span class="v">8px</span>; <span class="k">--sp-3</span>: <span class="v">12px</span>; <span class="k">--sp-4</span>: <span class="v">16px</span>;
+  <span class="k">--sp-6</span>: <span class="v">24px</span>; <span class="k">--sp-8</span>: <span class="v">32px</span>; <span class="k">--sp-12</span>: <span class="v">48px</span>; <span class="k">--sp-16</span>: <span class="v">64px</span>;
+  <span class="k">--r-xs</span>: <span class="v">4px</span>; <span class="k">--r-sm</span>: <span class="v">6px</span>; <span class="k">--r-md</span>: <span class="v">10px</span>; <span class="k">--r-lg</span>: <span class="v">16px</span>; <span class="k">--r-pill</span>: <span class="v">999px</span>;
+  <span class="k">--shadow-1</span>: <span class="v">0 1px 2px rgba(27,24,37,.06), 0 1px 1px rgba(27,24,37,.04)</span>;
+  <span class="k">--shadow-2</span>: <span class="v">0 6px 24px -6px rgba(43,10,110,.18), 0 2px 6px rgba(27,24,37,.06)</span>;
+}</pre>
+        <button class="btn btn-primary btn-sm copy" id="copy-btn" type="button">Copiar</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  // tema
+  var root=document.documentElement, tg=document.querySelectorAll('.theme-tg button');
+  function setTheme(t){
+    if(t==='system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme',t);
+    tg.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.t===t))});
+    try{localStorage.setItem('vc-theme',t)}catch(e){}
+  }
+  tg.forEach(function(b){b.addEventListener('click',function(){setTheme(b.dataset.t)})});
+  try{var s=localStorage.getItem('vc-theme'); if(s) setTheme(s)}catch(e){}
+
+  // toggles
+  document.querySelectorAll('[data-fav]').forEach(function(b){
+    b.addEventListener('click',function(e){e.preventDefault();b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'))});
+  });
+  document.querySelectorAll('.seg').forEach(function(g){
+    g.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){
+      g.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+    })});
+  });
+  var chips=document.querySelectorAll('#chips .chip');
+  chips.forEach(function(c){c.addEventListener('click',function(){c.setAttribute('aria-pressed',String(c.getAttribute('aria-pressed')!=='true'))})});
+  document.querySelector('.chip-clear').addEventListener('click',function(){chips.forEach(function(c){c.setAttribute('aria-pressed','false')})});
+  document.getElementById('search-demo').addEventListener('submit',function(e){e.preventDefault()});
+
+  // estrelas interativas
+  document.querySelectorAll('.stars[data-rate]').forEach(function(el){
+    var val=+el.dataset.rate;
+    function draw(){
+      el.innerHTML='';
+      for(var i=1;i<=5;i++){(function(n){
+        var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label',n+' de 5');
+        if(n>val) b.className='off';
+        b.innerHTML='<svg viewBox="0 0 24 24"><use href="#i-star"/></svg>';
+        b.addEventListener('click',function(){val=n;draw()});
+        el.appendChild(b);
+      })(i)}
+    }
+    draw();
+  });
+
+  // copiar tokens
+  var btn=document.getElementById('copy-btn'), code=document.getElementById('tokens-code');
+  btn.addEventListener('click',function(){
+    var txt=code.innerText;
+    function ok(){btn.textContent='Copiado';setTimeout(function(){btn.textContent='Copiar'},1600)}
+    function fallback(){var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selecionado, use Ctrl+C'}
+    try{navigator.clipboard.writeText(txt).then(ok,fallback)}catch(e){fallback()}
+  });
+})();
+</script>
