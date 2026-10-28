@@ -1,0 +1,723 @@
+<title>ValeCasa Espaços</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: catálogo de consulta. Barra roxa de marca, busca + filtros por categoria, grade de ícones e painel de detalhe fixo à direita (abaixo no celular). */
+:root{
+  --vc-green-500:#03FE9F; --vc-green-ink:#00331F; --vc-green-700:#007F50;
+  --vc-purple-600:#4D00AF; --vc-purple-500:#6514D6; --vc-purple-100:#E2D2FF; --vc-purple-50:#F3ECFF; --vc-purple-900:#22004F;
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
+  --ink:#1B1825; --ink-2:#4E4A5E; --ink-3:#817C93; --purple-text:#4D00AF; --sel:#F3ECFF; --coral:#E5483B;
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;margin:0}
+:focus-visible{outline:2px solid var(--vc-purple-500);outline-offset:2px}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.top{background:linear-gradient(135deg,var(--vc-purple-900),var(--vc-purple-600) 70%,var(--vc-purple-500));color:#fff;padding-inline:20px;padding-block:28px 32px}
+.top-in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:46px;height:auto;color:var(--vc-green-500)}
+.brand h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.brand p{margin:4px 0 0;color:#E2D2FF;font-size:14px}
+.prog{display:flex;flex-direction:column;gap:8px;min-width:240px;flex:0 1 360px}
+.prog-row{display:flex;justify-content:space-between;font-size:13px;color:#E2D2FF;font-variant-numeric:tabular-nums}
+.prog-row b{color:#fff;font-size:22px;font-weight:700}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--vc-green-500);border-radius:4px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:24px 64px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line-strong);border-radius:6px;padding:0 12px}
+.search:focus-within{border-color:var(--vc-purple-500)}
+.search input{flex:1;min-width:0;border:0;background:none;font:400 15px var(--font);color:var(--ink);padding:11px 0;outline:none}
+.search .ic{width:20px;height:20px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--vc-green-500);border-color:var(--vc-green-500);color:var(--vc-green-ink);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--vc-green-ink)}
+.chip.done::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--vc-green-700)}
+
+.cat{margin-top:22px}
+.cat h2{font-size:15px;font-weight:600;margin:0 0 10px;display:flex;align-items:baseline;gap:10px}
+.cat h2 small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--ink);font:inherit;text-align:center;min-width:0}
+.tile:hover{border-color:var(--line-strong)}
+.tile[aria-pressed="true"]{background:var(--sel);border-color:var(--vc-purple-600);color:var(--purple-text)}
+.tile .ic{width:28px;height:28px}
+.tile span{font-size:12px;line-height:1.25;color:var(--ink-2);overflow-wrap:anywhere}
+.tile[aria-pressed="true"] span{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.tags>span:first-child{font-size:12px;color:var(--ink-3)}
+.tag{font-size:12.5px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:4px;padding:3px 10px;cursor:help}
+.pending{border:1px dashed var(--line-strong);border-radius:8px;padding:14px;font-size:13px;color:var(--ink-3)}
+.empty{padding:40px 0;color:var(--ink-3);font-size:14px}
+
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stage{background:var(--surface-2);display:grid;place-items:center;padding:24px;position:relative}
+.g24{width:168px;height:168px;position:relative;border:1px solid var(--line-strong);background:var(--surface);
+  background-image:repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 7px),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 7px);color:var(--ink)}
+.g24::before{content:"";position:absolute;inset:15px;border:1px dashed var(--coral);opacity:.7}
+.g24 .ic{position:absolute;inset:0;width:100%;height:100%}
+.d-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.d-body h3{margin:0;font-size:18px;font-weight:700;line-height:1.25}
+.d-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.pill{border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--ink-2)}
+.pill.fam{background:var(--vc-purple-50);color:var(--vc-purple-600)}
+.file{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+.alias{font-size:13px;color:var(--ink-2)}
+.alias b{font-weight:600;color:var(--ink)}
+.sizes{display:flex;gap:16px;align-items:flex-end;color:var(--ink)}
+.sizes div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sizes small{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.on-brand{display:flex;gap:8px}
+.on-brand div{flex:1;border-radius:8px;display:grid;place-items:center;padding:12px}
+.acts{display:flex;flex-direction:column;gap:8px}
+.btn{font:600 13px/1 var(--font);border-radius:999px;padding:10px 16px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--vc-green-500);color:var(--vc-green-ink)}
+.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.copied{font-size:12px;color:var(--vc-green-700);min-height:18px}
+.note{font-size:12px;color:var(--ink-3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo-mark" viewBox="0 0 123 89"><g fill="currentColor"><path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z"/><path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z"/></g></symbol>
+  <symbol id="ui-search" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></symbol>
+  <symbol id="vc-esp-hall-de-entrada" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5M6 21V3.75h9V21M6 3.75l4.5 2.25v15M8.625 13.5h.008v.008H8.625V13.5ZM21 12.75h-3.75m0 0 1.5-1.5m-1.5 1.5 1.5 1.5"/></symbol>
+  <symbol id="vc-esp-sala-de-espera" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 1 1 7.5 0ZM12 4.125V6h1.5M4.875 12h4.5a1.125 1.125 0 0 1 1.125 1.125v2.25a1.125 1.125 0 0 1-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-2.25a1.125 1.125 0 0 1 1.125-1.125ZM14.625 12h4.5a1.125 1.125 0 0 1 1.125 1.125v2.25a1.125 1.125 0 0 1-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-2.25a1.125 1.125 0 0 1 1.125-1.125ZM3 18.75h18M4.5 18.75V21M19.5 18.75V21M12 18.75V21"/></symbol>
+  <symbol id="vc-esp-recepcao" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 1 1 4.5 0ZM7.5 14.25a4.5 4.5 0 0 1 9 0M2.25 14.25h19.5M3.75 14.25V21h16.5v-6.75M8.25 17.625h7.5"/></symbol>
+  <symbol id="vc-esp-sacada" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 12.75V6.75a3.75 3.75 0 0 1 7.5 0v6M12 3v9.75M3.75 12.75h16.5M3.75 12.75V18M7.875 12.75V18M12 12.75V18M16.125 12.75V18M20.25 12.75V18M3 18h18M5.25 18v2.25M18.75 18v2.25"/></symbol>
+  <symbol id="vc-esp-varanda" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M14.25 13.5l-.75-3h4.5l-.75 3M15.75 10.5c0-2.25-1.5-3.75-3-4.5M15.75 10.5c0-2.25 1.5-4.5 3.75-4.5"/></symbol>
+  <symbol id="vc-esp-varanda-com-churrasqueira" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M11.25 7.5h7.5a3.75 2.625 0 0 1-7.5 0ZM12.75 9.75l-.75 3.75M17.25 9.75l.75 3.75M13.5 2.25c-.375.375-.375.75 0 1.125s.375.75 0 1.125M16.5 2.25c-.375.375-.375.75 0 1.125s.375.75 0 1.125"/></symbol>
+  <symbol id="vc-esp-varanda-gourmet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M10.5 13.5a4.5 4.5 0 0 1 9 0M15 9V7.5M13.5 7.5h3"/></symbol>
+  <symbol id="vc-esp-terraco" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 2.25v19.5M3.75 19.5h18M3.75 13.5h18M8.25 13.5v6M12.75 13.5v6M17.25 13.5v6M21.75 13.5v6M10.5 9a4.5 4.5 0 0 1 9 0h-9ZM15 9v4.5"/></symbol>
+  <symbol id="vc-esp-mezanino" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3.75h18V21H3V3.75ZM12 12h9M12 9.75V12M16.5 9.75V12M4.5 21v-1.5H6V18h1.5v-1.5H9V15h1.5v-1.5H12V12"/></symbol>
+  <symbol id="vc-esp-area-de-luz" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2.25L12 3.375M15.182 3.568L14.387 4.364M16.5 6.75L15.375 6.75M15.182 9.932L14.387 9.137M12 10.125L12 11.25M9.614 9.137L8.818 9.932M8.625 6.75L7.5 6.75M9.614 4.364L8.818 3.568M13.875 6.75A1.875 1.875 0 1 1 10.125 6.75A1.875 1.875 0 0 1 13.875 6.75ZM3.75 21v-8.25h4.5V21M15.75 21v-8.25h4.5V21M2.25 21h19.5M6 15v.75M6 18v.75M18 15v.75M18 18v.75"/></symbol>
+  <symbol id="vc-esp-academia" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.875 6.75h.75a1.125 1.125 0 0 1 1.125 1.125v8.25a1.125 1.125 0 0 1-1.125 1.125h-.75a1.125 1.125 0 0 1-1.125-1.125v-8.25a1.125 1.125 0 0 1 1.125-1.125ZM18.375 6.75h.75a1.125 1.125 0 0 1 1.125 1.125v8.25a1.125 1.125 0 0 1-1.125 1.125h-.75a1.125 1.125 0 0 1-1.125-1.125v-8.25a1.125 1.125 0 0 1 1.125-1.125ZM6.75 12h10.5M2.25 12h1.5m16.5 0h1.5"/></symbol>
+  <symbol id="vc-esp-area-gourmet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 16.5a8.25 8.25 0 0 1 16.5 0M2.25 16.5h19.5M12 8.25v-1.5M10.5 6.75h3M5.25 19.5h13.5"/></symbol>
+  <symbol id="vc-esp-playground" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4.5h12M6 4.5 3.75 20.25M18 4.5l2.25 15.75M9.75 4.5v9.75M14.25 4.5v9.75M9 14.25h6"/></symbol>
+  <symbol id="vc-esp-quadra-de-tenis" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15a1.5 1.5 0 0 1-1.5-1.5v-10.5a1.5 1.5 0 0 1 1.5-1.5ZM3 7.5h18M3 16.5h18M7.5 7.5v9M16.5 7.5v9M7.5 12h9M12 5.25v13.5"/></symbol>
+  <symbol id="vc-esp-quadra-poliesportiva" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15a1.5 1.5 0 0 1-1.5-1.5v-10.5a1.5 1.5 0 0 1 1.5-1.5ZM14.25 12a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 1 1 4.5 0ZM12 5.25v13.5M3 8.25h1.5a3.75 3.75 0 0 1 0 7.5H3M21 8.25h-1.5a3.75 3.75 0 0 0 0 7.5H21"/></symbol>
+  <symbol id="vc-esp-salao-de-festas" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75-1.5.75a3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 0-3 0 3.354 3.354 0 0 1-3 0L3 16.5m15-3.379a48.474 48.474 0 0 0-6-.371c-2.032 0-4.034.126-6 .371m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.169c0 .621-.504 1.125-1.125 1.125H4.125A1.125 1.125 0 0 1 3 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 0 1 6 13.12M12.265 3.11a.375.375 0 1 1-.53 0L12 2.845l.265.265Zm-3 0a.375.375 0 1 1-.53 0L9 2.845l.265.265Zm6 0a.375.375 0 1 1-.53 0L15 2.845l.265.265Z"/></symbol>
+  <symbol id="vc-esp-salao-de-jogos" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 9.75h4.5a2.25 2.25 0 0 1 2.25 2.25v4.5a2.25 2.25 0 0 1-2.25 2.25h-4.5a2.25 2.25 0 0 1-2.25-2.25v-4.5a2.25 2.25 0 0 1 2.25-2.25ZM16.034 2.642l3.622 .971a1.875 1.875 15 0 1 1.326 2.296l-.971 3.622a1.875 1.875 15 0 1-2.296 1.326l-3.622-.971a1.875 1.875 15 0 1-1.326-2.296l.971-3.622a1.875 1.875 15 0 1 2.296-1.326ZM5.625 12.375h.008v.008h-.008v-.008ZM7.5 14.25h.008v.008H7.5v-.008ZM9.375 16.125h.008v.008h-.008v-.008ZM16.875 6.75h.008v.008h-.008V6.75Z"/></symbol>
+  <symbol id="vc-esp-sauna" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 11.25h10.5l-1.5 9h-7.5l-1.5-9ZM5.875 15h9.25M12 13.5l7.5-8.25M7.5 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M10.5 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-esp-quarto" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V8.25a1.5 1.5 0 0 1 1.5-1.5h9a1.5 1.5 0 0 1 1.5 1.5V13.5M5.625 13.5h12.75a1.125 1.125 0 0 1 1.125 1.125v1.5a1.125 1.125 0 0 1-1.125 1.125h-12.75a1.125 1.125 0 0 1-1.125-1.125v-1.5a1.125 1.125 0 0 1 1.125-1.125ZM6 17.25v2.25M18 17.25v2.25M10.5 11.25h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75Z"/></symbol>
+  <symbol id="vc-esp-quarto-casal" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5V8.25a1.5 1.5 0 0 1 1.5-1.5h13.5a1.5 1.5 0 0 1 1.5 1.5V13.5M3.375 13.5h17.25a1.125 1.125 0 0 1 1.125 1.125v1.5a1.125 1.125 0 0 1-1.125 1.125h-17.25a1.125 1.125 0 0 1-1.125-1.125v-1.5a1.125 1.125 0 0 1 1.125-1.125ZM3.75 17.25v2.25M20.25 17.25v2.25M7.5 11.25h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75ZM13.5 11.25h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75Z"/></symbol>
+  <symbol id="vc-esp-quarto-infantil" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5V20.25M20.25 7.5V20.25M3.75 9.75h16.5M3.75 17.25h16.5M7.875 9.75v7.5M12 9.75v7.5M16.125 9.75v7.5M4.875 5.625a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0ZM21.375 5.625a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0Z"/></symbol>
+  <symbol id="vc-esp-suite-casal" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 15.75V10.5a1.5 1.5 0 0 1 1.5-1.5h7.5a1.5 1.5 0 0 1 1.5 1.5V15.75M3.375 15.75h11.25a1.125 1.125 0 0 1 1.125 1.125v1.5a1.125 1.125 0 0 1-1.125 1.125h-11.25a1.125 1.125 0 0 1-1.125-1.125v-1.5a1.125 1.125 0 0 1 1.125-1.125ZM3.75 19.5v2.25M14.25 19.5v2.25M4.5 13.5h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75ZM10.5 13.5h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75ZM21.75 2.25h-3.75v1.5M15.75 6.75a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.5 9v.75M18 9v1.5M19.5 9v.75"/></symbol>
+  <symbol id="vc-esp-suite-solteiro" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 15.75V10.5a1.5 1.5 0 0 1 1.5-1.5h7.5a1.5 1.5 0 0 1 1.5 1.5V15.75M3.375 15.75h11.25a1.125 1.125 0 0 1 1.125 1.125v1.5a1.125 1.125 0 0 1-1.125 1.125h-11.25a1.125 1.125 0 0 1-1.125-1.125v-1.5a1.125 1.125 0 0 1 1.125-1.125ZM3.75 19.5v2.25M14.25 19.5v2.25M7.5 13.5h3a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-3a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75ZM21.75 2.25h-3.75v1.5M15.75 6.75a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.5 9v.75M18 9v1.5M19.5 9v.75"/></symbol>
+  <symbol id="vc-esp-closet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6h19.5M3 6V3.75M21 6V3.75M8.25 6v1.5M15.75 6v1.5M8.25 7.5 4.5 10.5H12L8.25 7.5ZM5.25 10.5v9.75h6V10.5M15.75 7.5 12.75 10.5h6l-3-3ZM13.5 10.5 12 20.25h7.5L18 10.5"/></symbol>
+  <symbol id="vc-esp-banheiro-adaptado" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3.75L6.75 3.75L6.75 11.25L2.25 11.25L2.25 3.75ZM2.25 11.25L12.75 11.25L12.75 12.75A4.5 4.5 0 0 1 8.25 17.25L6.75 17.25A4.5 4.5 0 0 1 2.25 12.75L2.25 11.25ZM5.25 17.25L4.5 21L9.75 21L9 17.25M17.25 11.145A.9 .9 0 1 1 15.45 11.145A.9 .9 0 1 1 17.25 11.145ZM16.35 13.17L16.35 16.32L19.05 16.32L20.4 19.47L21.75 19.47M16.35 14.52L18.6 14.52M13.898 15.893A3.15 3.15 0 1 0 18.853 19.695"/></symbol>
+  <symbol id="vc-esp-banheiro-feminino-e-masculino" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0ZM18.75 4.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0ZM4.5 8.25H9V15H4.5V8.25ZM6 15v6M7.5 15v6M17.25 8.25l3 7.5h-6l3-7.5ZM16.5 15.75V21M18 15.75V21M12 2.25v19.5"/></symbol>
+  <symbol id="vc-esp-lavabo" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5.25a3 3 0 1 1-6 0a3 3 0 1 1 6 0ZM5.25 11.25h13.5a6.75 3.75 0 0 1-13.5 0ZM10.5 14.85V21h3v-6.15M12 11.25V9.75h2.25"/></symbol>
+  <symbol id="vc-esp-vestiario" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.875 2.25h5.25a1.125 1.125 0 0 1 1.125 1.125v17.25a1.125 1.125 0 0 1-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-17.25a1.125 1.125 0 0 1 1.125-1.125ZM13.875 2.25h5.25a1.125 1.125 0 0 1 1.125 1.125v17.25a1.125 1.125 0 0 1-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-17.25a1.125 1.125 0 0 1 1.125-1.125ZM6 5.25h3M6 7.5h3M15 5.25h3M15 7.5h3M9 12v1.5M15 12v1.5"/></symbol>
+  <symbol id="vc-esp-adega" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 2.25h1.5V6c1.125.75 1.5 1.5 1.5 3v12h-4.5V9c0-1.5.375-2.25 1.5-3V2.25ZM6.75 13.5h4.5M14.25 9.75h4.5V12a2.25 2.25 0 0 1-4.5 0V9.75ZM16.5 14.25v6M14.25 21h4.5"/></symbol>
+  <symbol id="vc-esp-copa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12h12M8.25 12v8.25M15.75 12v8.25M2.25 9.75v10.5M2.25 15H6v5.25M21.75 9.75v10.5M21.75 15H18v5.25M10.5 8.25h3V12h-3V8.25ZM13.5 9h.75a.75.75 0 0 1 0 1.5h-.75"/></symbol>
+  <symbol id="vc-esp-cozinha" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 11.25h13.5v6a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-6ZM5.25 13.5H3M18.75 13.5H21M4.5 11.25h15M10.5 9h3M9.75 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25M14.25 2.25c-.75.75-.75 1.5 0 2.25s.75 1.5 0 2.25"/></symbol>
+  <symbol id="vc-esp-cozinha-americana" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 11.25h12M3.75 11.25V21h9V11.25M9 2.25v3M6.75 7.5a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.5 14.25h4.5M18.75 14.25V21M17.25 21h3"/></symbol>
+  <symbol id="vc-esp-cozinha-convencional" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.25v3M13.5 2.25v3M6.75 8.25l3-3h4.5l3 3h-10.5ZM2.25 12.75h19.5M3.75 12.75V21h16.5v-8.25M9.75 12.75V10.5h4.5v2.25M8.25 15.75h7.5a.75 .75 0 0 1 .75 .75v.75a.75 .75 0 0 1-.75 .75h-7.5a.75 .75 0 0 1-.75-.75v-.75a.75 .75 0 0 1 .75-.75Z"/></symbol>
+  <symbol id="vc-esp-cozinha-externa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12h19.5M3.75 12v9h16.5v-9M12 12v9M9.75 15.75v.75M14.25 15.75v.75M6.75 12V8.25a1.5 1.5 0 0 1 3 0v.75M18 2.25V3M18 7.5v.75M15 5.25h.75M20.25 5.25H21M19.59 3.66l.53-.53M16.41 3.66l-.53-.53M19.59 6.84l.53.53M16.41 6.84l-.53.53M19.5 5.25a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0Z"/></symbol>
+  <symbol id="vc-esp-refeitorio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 12a5.25 5.25 0 1 1-10.5 0a5.25 5.25 0 1 1 10.5 0ZM15 12a3 3 0 1 1-6 0a3 3 0 1 1 6 0ZM3 6v3a1.5 1.5 0 0 0 3 0V6M4.5 6v12M19.5 18V6c1.5.75 2.25 2.25 2.25 4.5v2.25H19.5"/></symbol>
+  <symbol id="vc-esp-area-de-servico" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 11.25h15v3a4.5 4.5 0 0 1-4.5 4.5H9a4.5 4.5 0 0 1-4.5-4.5v-3ZM12 11.25V8.25a1.5 1.5 0 0 1 1.5-1.5h1.5M8.25 18.75v3M15.75 18.75v3M2.25 3h19.5M5.25 3v3.75h3V3"/></symbol>
+  <symbol id="vc-esp-despensa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.875 2.25h14.25a1.125 1.125 0 0 1 1.125 1.125v17.25a1.125 1.125 0 0 1-1.125 1.125h-14.25a1.125 1.125 0 0 1-1.125-1.125v-17.25a1.125 1.125 0 0 1 1.125-1.125ZM3.75 9h16.5M3.75 15.75h16.5M6.75 9V5.25h3V9M12.75 9V6h2.25v3M7.5 15.75V12h2.25v3.75M12.75 15.75v-3h3.75v3"/></symbol>
+  <symbol id="vc-esp-lavanderia" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 2.25h12a1.5 1.5 0 0 1 1.5 1.5v16.5a1.5 1.5 0 0 1-1.5 1.5h-12a1.5 1.5 0 0 1-1.5-1.5v-16.5a1.5 1.5 0 0 1 1.5-1.5ZM16.5 14.25a4.5 4.5 0 1 1-9 0a4.5 4.5 0 1 1 9 0ZM4.5 6.75h15M7.5 4.5h.008v.008H7.5V4.5ZM10.5 4.5h.008v.008H10.5V4.5ZM9.75 14.25c1.5 1.5 3-1.5 4.5 0"/></symbol>
+  <symbol id="vc-esp-dependencia-de-servico" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 11.25h9l-1.125 9.75h-6.75L3.75 11.25ZM4.5 11.25a3.75 3.75 0 0 1 7.5 0M4.125 14.625h8.25M18 2.25V13.5M15 13.5h6l.75 7.5h-7.5l.75-7.5ZM16.5 17.25V21M19.5 17.25V21"/></symbol>
+  <symbol id="vc-esp-quarto-de-empregada" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 14.625a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0ZM2.25 20.25V12M2.25 16.5H13.5v3.75M13.5 16.5V15a1.5 1.5 0 0 0-1.5-1.5H7.5v3M18 2.25V13.5M15 13.5h6l.75 7.5h-7.5l.75-7.5ZM16.5 17.25V21M19.5 17.25V21"/></symbol>
+  <symbol id="vc-esp-auditorio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.375 2.25h11.25a1.125 1.125 0 0 1 1.125 1.125v5.25a1.125 1.125 0 0 1-1.125 1.125h-11.25a1.125 1.125 0 0 1-1.125-1.125v-5.25a1.125 1.125 0 0 1 1.125-1.125ZM7.5 14.25a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0ZM13.5 14.25a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0ZM19.5 14.25a1.5 1.5 0 1 1-3 0a1.5 1.5 0 1 1 3 0ZM3.75 19.5a2.25 2.25 0 0 1 4.5 0M9.75 19.5a2.25 2.25 0 0 1 4.5 0M15.75 19.5a2.25 2.25 0 0 1 4.5 0"/></symbol>
+  <symbol id="vc-esp-centro-de-convencoes" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 11.25a13.5 13.5 0 0 1 19.5 0M3.75 9.99V21M20.25 9.99V21M2.25 21h19.5M9 21v-4.5h6V21M12 16.5V21M12 7.09V3h3l-.75 1.125.75 1.125h-3M6.75 13.5h.008v.008H6.75V13.5ZM17.25 13.5h.008v.008h-.008V13.5Z"/></symbol>
+  <symbol id="vc-esp-sala-de-reunioes" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 4.5h4.5a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5h-4.5a1.5 1.5 0 0 1-1.5-1.5v-12a1.5 1.5 0 0 1 1.5-1.5ZM3 7.5h1.5a.75 .75 0 0 1 .75 .75v1.5a.75 .75 0 0 1-.75 .75h-1.5a.75 .75 0 0 1-.75-.75v-1.5a.75 .75 0 0 1 .75-.75ZM3 13.5h1.5a.75 .75 0 0 1 .75 .75v1.5a.75 .75 0 0 1-.75 .75h-1.5a.75 .75 0 0 1-.75-.75v-1.5a.75 .75 0 0 1 .75-.75ZM19.5 7.5h1.5a.75 .75 0 0 1 .75 .75v1.5a.75 .75 0 0 1-.75 .75h-1.5a.75 .75 0 0 1-.75-.75v-1.5a.75 .75 0 0 1 .75-.75ZM19.5 13.5h1.5a.75 .75 0 0 1 .75 .75v1.5a.75 .75 0 0 1-.75 .75h-1.5a.75 .75 0 0 1-.75-.75v-1.5a.75 .75 0 0 1 .75-.75Z"/></symbol>
+  <symbol id="vc-esp-escritorio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75h13.5M3.75 12.75V21M14.25 12.75V21M5.25 4.5h7.5v5.25h-7.5V4.5ZM9 9.75v3M17.25 9v6.75h4.5M21.75 15.75V21M17.25 15.75V21"/></symbol>
+  <symbol id="vc-esp-divisorias" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 3h15a1.5 1.5 0 0 1 1.5 1.5v15a1.5 1.5 0 0 1-1.5 1.5h-15a1.5 1.5 0 0 1-1.5-1.5v-15a1.5 1.5 0 0 1 1.5-1.5ZM12 3v6.75M12 13.5V21M3 12h5.25M12 12h3.75"/></symbol>
+  <symbol id="vc-esp-bicicletario" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15.375a3.375 3.375 0 1 1-6.75 0a3.375 3.375 0 1 1 6.75 0ZM21.75 15.375a3.375 3.375 0 1 1-6.75 0a3.375 3.375 0 1 1 6.75 0ZM5.625 15.375h5.625l4.5-7.125H9l-3.375 7.125ZM9 8.25l2.25 7.125M15.75 8.25l2.625 7.125M9 8.25 8.25 6M6.75 6h3M15.75 8.25 15 5.25h2.25"/></symbol>
+  <symbol id="vc-esp-elevadores" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.375 7.5h11.25a1.125 1.125 0 0 1 1.125 1.125v11.25a1.125 1.125 0 0 1-1.125 1.125h-11.25a1.125 1.125 0 0 1-1.125-1.125v-11.25a1.125 1.125 0 0 1 1.125-1.125ZM12 7.5V21M8.25 5.25 9.75 3l1.5 2.25h-3ZM12.75 3h3l-1.5 2.25L12.75 3Z"/></symbol>
+  <symbol id="vc-esp-estacionamento" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.25h10.5a3 3 0 0 1 3 3v13.5a3 3 0 0 1-3 3h-10.5a3 3 0 0 1-3-3v-13.5a3 3 0 0 1 3-3ZM9.75 17.25V6.75h3a3 3 0 0 1 0 6h-3"/></symbol>
+  <symbol id="vc-esp-guarita" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.5h9M3.75 7.5v12.75h6V7.5M5.25 9.75h3v3h-3v-3ZM9.75 13.5h12M12.75 13.5v-1.5M15.75 13.5V12M18.75 13.5V12M2.25 20.25h9"/></symbol>
+  <symbol id="vc-esp-heliponto" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 12a9.75 9.75 0 1 1-19.5 0a9.75 9.75 0 1 1 19.5 0ZM9 7.5v9M15 7.5v9M9 12h6"/></symbol>
+  <symbol id="vc-esp-jardim" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6.75 7.125 8.625 8.25 6.75l1.125 1.875L10.5 6.75v1.5a2.25 2.25 0 0 1-4.5 0v-1.5ZM8.25 10.5V21M8.25 16.5c-2.25 0-3.75-1.5-3.75-3 2.25 0 3.75 1.5 3.75 3ZM13.5 9.75l1.125 1.875L15.75 9.75l1.125 1.875L18 9.75v1.5a2.25 2.25 0 0 1-4.5 0v-1.5ZM15.75 13.5V21M15.75 18c2.25 0 3.75-1.5 3.75-3-2.25 0-3.75 1.5-3.75 3ZM3 21h18"/></symbol>
+  <symbol id="vc-esp-jardim-de-inverno" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9 12 3.75 20.25 9v12H3.75V9ZM9.75 21l-.75-3.75h6l-.75 3.75M12 17.25c0-2.25-1.5-3.75-3.75-4.5M12 17.25c0-3 1.5-5.25 3.75-6M16.5 9.75l1.5-1.5M15.75 7.5l.75-.75"/></symbol>
+  <symbol id="vc-esp-quintal" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 11.25 6.75 6.75l4.5 4.5M3.375 10.125V21h6.75V10.125M13.5 21v-6l1.125-1.125L15.75 15v6M18 21v-6l1.125-1.125L20.25 15v6M15.75 17.25H18M2.25 21h19.5"/></symbol>
+  <symbol id="vc-esp-pomar" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2.25a5.25 5.25 0 0 0-5.12 6.41A4.5 4.5 0 0 0 8.25 17.25h7.5a4.5 4.5 0 0 0 1.37-8.59A5.25 5.25 0 0 0 12 2.25ZM12 21.75v-4.5M10.125 11.25a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0ZM16.125 11.25a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0ZM13.125 7.125a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 1 1 2.25 0Z"/></symbol>
+  <symbol id="vc-esp-casa-de-caseiro" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75V21h15V9.75M13.35 14.475A1.35 1.35 0 1 1 10.65 14.475A1.35 1.35 0 1 1 13.35 14.475ZM8.85 12.9L15.15 12.9M10.2 12.9L10.65 11.1L13.35 11.1L13.8 12.9M7.95 21A4.05 4.05 0 0 1 16.05 21"/></symbol>
+  <symbol id="vc-esp-celeiro" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21V10.5L6 6l6-3 6 3 3 4.5V21H3ZM8.25 21v-7.5h7.5V21M8.25 13.5l7.5 7.5M15.75 13.5l-7.5 7.5M10.5 7.5h3v2.25h-3V7.5Z"/></symbol>
+  <symbol id="vc-esp-galpao" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 9 12 4.5l9.75 4.5M3.75 8.3V21h16.5V8.3M7.5 21v-8.25h9V21M7.5 15h9M7.5 17.25h9M7.5 19.5h9"/></symbol>
+  <symbol id="vc-esp-poleiro" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6.375a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 1 1 4.5 0ZM6 6.375 4.5 7.125 6.15 7.5M7.125 3.75l.375-1.125.75.75.75-.75.375 1.125M6.75 8.25v3a6 6 0 0 0 6 6h1.5a5.25 5.25 0 0 0 5.25-5.25V5.25l-3.75 4.5h-3.375M10.5 12.75c1.5 1.5 3.75 1.5 5.25 0M11.25 17.25v3M15 17.25v3M2.25 20.25h19.5"/></symbol>
+  <symbol id="vc-esp-balanca" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 1 1 7.5 0ZM12 6l1.5-1.5M12 9.75v3.75M3.75 13.5h16.5M3.75 13.5v4.5M20.25 13.5v4.5M8.25 13.5v4.5M15.75 13.5v4.5M2.25 18h19.5M4.5 18v2.25M19.5 18v2.25"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
+      <div>
+        <h1>Ícones de espaços</h1>
+        <p>Cômodos e espaços dos lançamentos e imóveis, na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+      </div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+    <div class="tools">
+      <label class="search" for="q"><svg class="ic"><use href="#ui-search"/></svg><input id="q" type="search" placeholder="Buscar: quarto, cozinha, varanda…" autocomplete="off"></label>
+      <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+    </div>
+    <div id="list"></div>
+  </main>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<script>
+const DATA = {
+ "versao": "1.0",
+ "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
+ "categorias": [
+  {
+   "id": "social",
+   "nome": "Áreas Sociais e de Convivência",
+   "total": 10,
+   "cobertos": 10
+  },
+  {
+   "id": "lazer",
+   "nome": "Lazer e Esportes",
+   "total": 8,
+   "cobertos": 8
+  },
+  {
+   "id": "intimas",
+   "nome": "Áreas Íntimas e Dormitórios",
+   "total": 6,
+   "cobertos": 6
+  },
+  {
+   "id": "banheiros",
+   "nome": "Banheiros",
+   "total": 4,
+   "cobertos": 4
+  },
+  {
+   "id": "cozinha",
+   "nome": "Cozinha e Alimentação",
+   "total": 7,
+   "cobertos": 7
+  },
+  {
+   "id": "servicos",
+   "nome": "Serviços e Apoio Doméstico",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "comercial",
+   "nome": "Comercial e Corporativo",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "infraestrutura",
+   "nome": "Infraestrutura e Acesso",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "natureza",
+   "nome": "Natureza e Rural",
+   "total": 9,
+   "cobertos": 9
+  }
+ ],
+ "etiquetas": [],
+ "icones": [
+  {
+   "id": "hall-de-entrada",
+   "nome": "Hall de Entrada",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "sala-de-espera",
+   "nome": "Sala de Espera",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "recepcao",
+   "nome": "Recepção",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "sacada",
+   "nome": "Sacada",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "varanda",
+   "nome": "Varanda",
+   "categoria": "social",
+   "origem": "comodidade:varanda"
+  },
+  {
+   "id": "varanda-com-churrasqueira",
+   "nome": "Varanda com Churrasqueira",
+   "categoria": "social",
+   "origem": "comodidade:varanda-gourmet-com-churrasqueira"
+  },
+  {
+   "id": "varanda-gourmet",
+   "nome": "Varanda Gourmet",
+   "categoria": "social",
+   "origem": "comodidade:varanda-gourmet"
+  },
+  {
+   "id": "terraco",
+   "nome": "Terraço",
+   "categoria": "social",
+   "origem": "comodidade:terraco"
+  },
+  {
+   "id": "mezanino",
+   "nome": "Mezanino",
+   "categoria": "social",
+   "origem": "comodidade:mezanino"
+  },
+  {
+   "id": "area-de-luz",
+   "nome": "Área de Luz",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "academia",
+   "nome": "Academia",
+   "categoria": "lazer",
+   "origem": "comodidade:academia"
+  },
+  {
+   "id": "area-gourmet",
+   "nome": "Área Gourmet",
+   "categoria": "lazer",
+   "origem": "comodidade:espaco-gourmet"
+  },
+  {
+   "id": "playground",
+   "nome": "Playground",
+   "categoria": "lazer",
+   "origem": "comodidade:playground"
+  },
+  {
+   "id": "quadra-de-tenis",
+   "nome": "Quadra de Tênis",
+   "categoria": "lazer",
+   "origem": "comodidade:quadra-de-tenis"
+  },
+  {
+   "id": "quadra-poliesportiva",
+   "nome": "Quadra Poliesportiva",
+   "categoria": "lazer",
+   "origem": "comodidade:quadra-poliesportiva"
+  },
+  {
+   "id": "salao-de-festas",
+   "nome": "Salão de Festas",
+   "categoria": "lazer",
+   "origem": "heroicons:cake"
+  },
+  {
+   "id": "salao-de-jogos",
+   "nome": "Salão de Jogos",
+   "categoria": "lazer",
+   "origem": "comodidade:salao-de-jogos"
+  },
+  {
+   "id": "sauna",
+   "nome": "Sauna",
+   "categoria": "lazer",
+   "origem": "comodidade:sauna"
+  },
+  {
+   "id": "quarto",
+   "nome": "Quarto",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-casal",
+   "nome": "Quarto Casal",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-infantil",
+   "nome": "Quarto Infantil",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "suite-casal",
+   "nome": "Suíte Casal",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "suite-solteiro",
+   "nome": "Suíte Solteiro",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "closet",
+   "nome": "Closet",
+   "categoria": "intimas",
+   "origem": "comodidade:closet"
+  },
+  {
+   "id": "banheiro-adaptado",
+   "nome": "Banheiro Adaptado",
+   "categoria": "banheiros",
+   "origem": "novo"
+  },
+  {
+   "id": "banheiro-feminino-e-masculino",
+   "nome": "Banheiro Feminino e Masculino",
+   "categoria": "banheiros",
+   "origem": "comodidade:banheiros-senhor-e-senhora"
+  },
+  {
+   "id": "lavabo",
+   "nome": "Lavabo",
+   "categoria": "banheiros",
+   "origem": "comodidade:lavabo"
+  },
+  {
+   "id": "vestiario",
+   "nome": "Vestiário",
+   "categoria": "banheiros",
+   "origem": "comodidade:vestiario"
+  },
+  {
+   "id": "adega",
+   "nome": "Adega",
+   "categoria": "cozinha",
+   "origem": "comodidade:adega"
+  },
+  {
+   "id": "copa",
+   "nome": "Copa",
+   "categoria": "cozinha",
+   "origem": "comodidade:copa"
+  },
+  {
+   "id": "cozinha",
+   "nome": "Cozinha",
+   "categoria": "cozinha",
+   "origem": "novo"
+  },
+  {
+   "id": "cozinha-americana",
+   "nome": "Cozinha Americana",
+   "categoria": "cozinha",
+   "origem": "comodidade:cozinha-americana"
+  },
+  {
+   "id": "cozinha-convencional",
+   "nome": "Cozinha Convencional",
+   "categoria": "cozinha",
+   "origem": "novo"
+  },
+  {
+   "id": "cozinha-externa",
+   "nome": "Cozinha Externa",
+   "categoria": "cozinha",
+   "origem": "comodidade:cozinha-externa"
+  },
+  {
+   "id": "refeitorio",
+   "nome": "Refeitório",
+   "categoria": "cozinha",
+   "origem": "comodidade:refeitorio"
+  },
+  {
+   "id": "area-de-servico",
+   "nome": "Área de Serviço",
+   "categoria": "servicos",
+   "origem": "comodidade:area-de-servico"
+  },
+  {
+   "id": "despensa",
+   "nome": "Despensa",
+   "categoria": "servicos",
+   "origem": "comodidade:despensa"
+  },
+  {
+   "id": "lavanderia",
+   "nome": "Lavanderia",
+   "categoria": "servicos",
+   "origem": "comodidade:lavanderia"
+  },
+  {
+   "id": "dependencia-de-servico",
+   "nome": "Dependência de Serviço",
+   "categoria": "servicos",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-de-empregada",
+   "nome": "Quarto de Empregada",
+   "categoria": "servicos",
+   "origem": "comodidade:quarto-de-empregada"
+  },
+  {
+   "id": "auditorio",
+   "nome": "Auditório",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "centro-de-convencoes",
+   "nome": "Centro de Convenções",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "sala-de-reunioes",
+   "nome": "Sala de Reuniões",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "escritorio",
+   "nome": "Escritório",
+   "categoria": "comercial",
+   "origem": "comodidade:escritorio"
+  },
+  {
+   "id": "divisorias",
+   "nome": "Divisórias",
+   "categoria": "comercial",
+   "origem": "comodidade:divisorias"
+  },
+  {
+   "id": "bicicletario",
+   "nome": "Bicicletário",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:bicicletario"
+  },
+  {
+   "id": "elevadores",
+   "nome": "Elevadores",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:elevador"
+  },
+  {
+   "id": "estacionamento",
+   "nome": "Estacionamento",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:estacionamento-visitantes"
+  },
+  {
+   "id": "guarita",
+   "nome": "Guarita",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:guarita"
+  },
+  {
+   "id": "heliponto",
+   "nome": "Heliponto",
+   "categoria": "infraestrutura",
+   "origem": "novo"
+  },
+  {
+   "id": "jardim",
+   "nome": "Jardim",
+   "categoria": "natureza",
+   "origem": "comodidade:jardim"
+  },
+  {
+   "id": "jardim-de-inverno",
+   "nome": "Jardim de Inverno",
+   "categoria": "natureza",
+   "origem": "comodidade:jardim-de-inverno"
+  },
+  {
+   "id": "quintal",
+   "nome": "Quintal",
+   "categoria": "natureza",
+   "origem": "comodidade:quintal"
+  },
+  {
+   "id": "pomar",
+   "nome": "Pomar",
+   "categoria": "natureza",
+   "origem": "comodidade:arvores-frutiferas"
+  },
+  {
+   "id": "casa-de-caseiro",
+   "nome": "Casa de Caseiro",
+   "categoria": "natureza",
+   "origem": "novo"
+  },
+  {
+   "id": "celeiro",
+   "nome": "Celeiro",
+   "categoria": "natureza",
+   "origem": "comodidade:celeiro"
+  },
+  {
+   "id": "galpao",
+   "nome": "Galpão",
+   "categoria": "natureza",
+   "origem": "comodidade:galpao"
+  },
+  {
+   "id": "poleiro",
+   "nome": "Poleiro",
+   "categoria": "natureza",
+   "origem": "novo"
+  },
+  {
+   "id": "balanca",
+   "nome": "Balança",
+   "categoria": "natureza",
+   "origem": "novo"
+  }
+ ]
+};
+(function(){
+  const cats = DATA.categorias, icons = DATA.icones;
+  const byCat = id => icons.filter(i => i.categoria === id);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  let cat = 'todas', sel = icons[0] && icons[0].id;
+  try { const h = location.hash.slice(1); if (h && icons.some(i => i.id === h)) sel = h; } catch(e){}
+
+  // progresso
+  const tot = cats.reduce((a,c)=>a+c.total,0), cob = cats.reduce((a,c)=>a+c.cobertos,0);
+  document.getElementById('prog').innerHTML =
+    `<div class="prog-row"><span><b>${icons.length}</b> ícones desenhados</span><span>${cob} de ${tot} itens da planilha</span></div>
+     <div class="bar"><i style="width:${(cob/tot*100).toFixed(1)}%"></i></div>
+     <div class="prog-row"><span>Versão ${DATA.versao}</span><span>${cats.filter(c=>c.cobertos>=c.total).map(c=>c.nome).join(', ') || ''} ${cats.some(c=>c.cobertos>=c.total)?'completa':''}</span></div>`;
+
+  // filtros
+  const chips = document.getElementById('chips');
+  function drawChips(){
+    chips.innerHTML = '';
+    const mk = (id, label, n, done) => {
+      const b = document.createElement('button'); b.type='button'; b.className='chip'+(done?' done':'');
+      b.setAttribute('aria-pressed', String(cat===id)); b.innerHTML = `${label} <small>${n}</small>`;
+      b.onclick = () => { cat = id; drawChips(); drawList(); }; chips.appendChild(b);
+    };
+    mk('todas','Todas',icons.length,false);
+    cats.forEach(c => mk(c.id, c.nome, `${c.cobertos}/${c.total}`, c.cobertos>=c.total));
+  }
+
+  const q = document.getElementById('q');
+  q.addEventListener('input', drawList);
+  const list = document.getElementById('list');
+  function drawList(){
+    const t = norm(q.value.trim());
+    const match = i => !t || norm([i.nome, i.id, ...(i.aliases||[]), i.origem||''].join(' ')).includes(t);
+    list.innerHTML = '';
+    let any = false;
+    const tagsAll = DATA.etiquetas || [];
+    cats.filter(c => cat==='todas' || c.id===cat).forEach(c => {
+      const items = byCat(c.id).filter(match);
+      const tags = tagsAll.filter(e => e.categoria===c.id && (!t || norm(e.nome).includes(t)));
+      if (t && !items.length && !tags.length) return;
+      if (tags.length) any = true;
+      const sec = document.createElement('section'); sec.className='cat';
+      sec.innerHTML = `<h2>${c.nome} <small>${c.cobertos}/${c.total} itens</small></h2>`;
+      if (items.length){
+        any = true;
+        const g = document.createElement('div'); g.className='grid';
+        items.forEach(i => {
+          const b = document.createElement('button'); b.type='button'; b.className='tile';
+          b.setAttribute('aria-pressed', String(i.id===sel));
+          b.innerHTML = `<svg class="ic"><use href="#vc-esp-${i.id}"/></svg><span>${i.nome}</span>`;
+          b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
+          g.appendChild(b);
+        });
+        sec.appendChild(g);
+      }
+      if (tags.length) {
+        const r = document.createElement('div'); r.className='tags';
+        r.innerHTML = '<span>Sem ícone, usar como etiqueta de texto:</span>' +
+          tags.map(e => `<span class="tag" title="${e.motivo}">${e.nome}</span>`).join('');
+        sec.appendChild(r);
+      }
+      if (!t && c.cobertos < c.total) {
+        const p = document.createElement('div'); p.className='pending';
+        p.textContent = `${c.total - c.cobertos} itens desta categoria ainda vão ser desenhados.`;
+        sec.appendChild(p);
+      }
+      list.appendChild(sec);
+    });
+    if (t && !any) list.innerHTML = `<p class="empty">Nenhum ícone para “${q.value}”. Tente outro nome, como “quarto” ou “cozinha”.</p>`;
+  }
+
+  function origem(i){
+    const o = i.origem || 'novo';
+    if (o.startsWith('comodidade:')) return `<span class="pill fam">Mesmo desenho da comodidade ${o.slice(11)}</span>`;
+    if (o.startsWith('heroicons:')) return `<span class="pill fam">Heroicons ${o.slice(10)}</span>`;
+    return '<span class="pill fam">Desenho novo</span>';
+  }
+  function svgSource(id){
+    const s = document.getElementById('vc-esp-'+id);
+    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">${s.innerHTML.trim()}</svg>`;
+  }
+  const det = document.getElementById('detail');
+  function drawDetail(){
+    const i = icons.find(x => x.id===sel); if (!i) { det.hidden = true; return; }
+    const c = cats.find(x => x.id===i.categoria);
+    const u = `<use href="#vc-esp-${i.id}"/>`;
+    det.innerHTML = `
+      <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
+      <div class="d-body">
+        <h3>${i.nome}</h3>
+        <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${origem(i)}${i.extra?'<span class="pill">Extra</span>':''}</div>
+        ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
+        <div class="file">svg/${i.id}.svg</div>
+        <div class="sizes">
+          <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
+          <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
+          <div><svg class="ic" style="width:28px;height:28px">${u}</svg><small>28</small></div>
+          <div><svg class="ic" style="width:40px;height:40px">${u}</svg><small>40</small></div>
+        </div>
+        <div class="on-brand">
+          <div style="background:#4D00AF;color:#03FE9F"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#03FE9F;color:#4D00AF"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+        </div>
+        <div class="acts">
+          <button class="btn btn-primary" type="button" data-copy="svg">Copiar SVG</button>
+          <button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>
+        </div>
+        <div class="copied" id="copied"></div>
+        <p class="note">Os arquivos ficam na pasta <code>icones-espacos</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).</p>
+      </div>`;
+    det.hidden = false;
+    det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
+      const txt = b.dataset.copy==='svg' ? svgSource(i.id)
+        : `<svg class="icon" width="24" height="24"><use href="espacos-sprite.svg#vc-esp-${i.id}"/></svg>`;
+      const out = det.querySelector('#copied');
+      const ok = () => out.textContent = b.dataset.copy==='svg' ? 'SVG copiado.' : 'Código copiado.';
+      const fail = () => { out.textContent = 'Não deu para copiar aqui. Selecione o código abaixo e use Ctrl+C.'; const pre=document.createElement('pre'); pre.className='file'; pre.textContent=txt; out.after(pre); };
+      try { navigator.clipboard.writeText(txt).then(ok, fail); } catch(e) { fail(); }
+    });
+  }
+  drawChips(); drawList(); drawDetail();
+})();
+</script>

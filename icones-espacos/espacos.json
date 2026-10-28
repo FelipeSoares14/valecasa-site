@@ -1,0 +1,417 @@
+{
+ "versao": "1.0",
+ "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
+ "categorias": [
+  {
+   "id": "social",
+   "nome": "Áreas Sociais e de Convivência",
+   "total": 10,
+   "cobertos": 10
+  },
+  {
+   "id": "lazer",
+   "nome": "Lazer e Esportes",
+   "total": 8,
+   "cobertos": 8
+  },
+  {
+   "id": "intimas",
+   "nome": "Áreas Íntimas e Dormitórios",
+   "total": 6,
+   "cobertos": 6
+  },
+  {
+   "id": "banheiros",
+   "nome": "Banheiros",
+   "total": 4,
+   "cobertos": 4
+  },
+  {
+   "id": "cozinha",
+   "nome": "Cozinha e Alimentação",
+   "total": 7,
+   "cobertos": 7
+  },
+  {
+   "id": "servicos",
+   "nome": "Serviços e Apoio Doméstico",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "comercial",
+   "nome": "Comercial e Corporativo",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "infraestrutura",
+   "nome": "Infraestrutura e Acesso",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "natureza",
+   "nome": "Natureza e Rural",
+   "total": 9,
+   "cobertos": 9
+  }
+ ],
+ "etiquetas": [],
+ "icones": [
+  {
+   "id": "hall-de-entrada",
+   "nome": "Hall de Entrada",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "sala-de-espera",
+   "nome": "Sala de Espera",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "recepcao",
+   "nome": "Recepção",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "sacada",
+   "nome": "Sacada",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "varanda",
+   "nome": "Varanda",
+   "categoria": "social",
+   "origem": "comodidade:varanda"
+  },
+  {
+   "id": "varanda-com-churrasqueira",
+   "nome": "Varanda com Churrasqueira",
+   "categoria": "social",
+   "origem": "comodidade:varanda-gourmet-com-churrasqueira"
+  },
+  {
+   "id": "varanda-gourmet",
+   "nome": "Varanda Gourmet",
+   "categoria": "social",
+   "origem": "comodidade:varanda-gourmet"
+  },
+  {
+   "id": "terraco",
+   "nome": "Terraço",
+   "categoria": "social",
+   "origem": "comodidade:terraco"
+  },
+  {
+   "id": "mezanino",
+   "nome": "Mezanino",
+   "categoria": "social",
+   "origem": "comodidade:mezanino"
+  },
+  {
+   "id": "area-de-luz",
+   "nome": "Área de Luz",
+   "categoria": "social",
+   "origem": "novo"
+  },
+  {
+   "id": "academia",
+   "nome": "Academia",
+   "categoria": "lazer",
+   "origem": "comodidade:academia"
+  },
+  {
+   "id": "area-gourmet",
+   "nome": "Área Gourmet",
+   "categoria": "lazer",
+   "origem": "comodidade:espaco-gourmet"
+  },
+  {
+   "id": "playground",
+   "nome": "Playground",
+   "categoria": "lazer",
+   "origem": "comodidade:playground"
+  },
+  {
+   "id": "quadra-de-tenis",
+   "nome": "Quadra de Tênis",
+   "categoria": "lazer",
+   "origem": "comodidade:quadra-de-tenis"
+  },
+  {
+   "id": "quadra-poliesportiva",
+   "nome": "Quadra Poliesportiva",
+   "categoria": "lazer",
+   "origem": "comodidade:quadra-poliesportiva"
+  },
+  {
+   "id": "salao-de-festas",
+   "nome": "Salão de Festas",
+   "categoria": "lazer",
+   "origem": "heroicons:cake"
+  },
+  {
+   "id": "salao-de-jogos",
+   "nome": "Salão de Jogos",
+   "categoria": "lazer",
+   "origem": "comodidade:salao-de-jogos"
+  },
+  {
+   "id": "sauna",
+   "nome": "Sauna",
+   "categoria": "lazer",
+   "origem": "comodidade:sauna"
+  },
+  {
+   "id": "quarto",
+   "nome": "Quarto",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-casal",
+   "nome": "Quarto Casal",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-infantil",
+   "nome": "Quarto Infantil",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "suite-casal",
+   "nome": "Suíte Casal",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "suite-solteiro",
+   "nome": "Suíte Solteiro",
+   "categoria": "intimas",
+   "origem": "novo"
+  },
+  {
+   "id": "closet",
+   "nome": "Closet",
+   "categoria": "intimas",
+   "origem": "comodidade:closet"
+  },
+  {
+   "id": "banheiro-adaptado",
+   "nome": "Banheiro Adaptado",
+   "categoria": "banheiros",
+   "origem": "novo"
+  },
+  {
+   "id": "banheiro-feminino-e-masculino",
+   "nome": "Banheiro Feminino e Masculino",
+   "categoria": "banheiros",
+   "origem": "comodidade:banheiros-senhor-e-senhora"
+  },
+  {
+   "id": "lavabo",
+   "nome": "Lavabo",
+   "categoria": "banheiros",
+   "origem": "comodidade:lavabo"
+  },
+  {
+   "id": "vestiario",
+   "nome": "Vestiário",
+   "categoria": "banheiros",
+   "origem": "comodidade:vestiario"
+  },
+  {
+   "id": "adega",
+   "nome": "Adega",
+   "categoria": "cozinha",
+   "origem": "comodidade:adega"
+  },
+  {
+   "id": "copa",
+   "nome": "Copa",
+   "categoria": "cozinha",
+   "origem": "comodidade:copa"
+  },
+  {
+   "id": "cozinha",
+   "nome": "Cozinha",
+   "categoria": "cozinha",
+   "origem": "novo"
+  },
+  {
+   "id": "cozinha-americana",
+   "nome": "Cozinha Americana",
+   "categoria": "cozinha",
+   "origem": "comodidade:cozinha-americana"
+  },
+  {
+   "id": "cozinha-convencional",
+   "nome": "Cozinha Convencional",
+   "categoria": "cozinha",
+   "origem": "novo"
+  },
+  {
+   "id": "cozinha-externa",
+   "nome": "Cozinha Externa",
+   "categoria": "cozinha",
+   "origem": "comodidade:cozinha-externa"
+  },
+  {
+   "id": "refeitorio",
+   "nome": "Refeitório",
+   "categoria": "cozinha",
+   "origem": "comodidade:refeitorio"
+  },
+  {
+   "id": "area-de-servico",
+   "nome": "Área de Serviço",
+   "categoria": "servicos",
+   "origem": "comodidade:area-de-servico"
+  },
+  {
+   "id": "despensa",
+   "nome": "Despensa",
+   "categoria": "servicos",
+   "origem": "comodidade:despensa"
+  },
+  {
+   "id": "lavanderia",
+   "nome": "Lavanderia",
+   "categoria": "servicos",
+   "origem": "comodidade:lavanderia"
+  },
+  {
+   "id": "dependencia-de-servico",
+   "nome": "Dependência de Serviço",
+   "categoria": "servicos",
+   "origem": "novo"
+  },
+  {
+   "id": "quarto-de-empregada",
+   "nome": "Quarto de Empregada",
+   "categoria": "servicos",
+   "origem": "comodidade:quarto-de-empregada"
+  },
+  {
+   "id": "auditorio",
+   "nome": "Auditório",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "centro-de-convencoes",
+   "nome": "Centro de Convenções",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "sala-de-reunioes",
+   "nome": "Sala de Reuniões",
+   "categoria": "comercial",
+   "origem": "novo"
+  },
+  {
+   "id": "escritorio",
+   "nome": "Escritório",
+   "categoria": "comercial",
+   "origem": "comodidade:escritorio"
+  },
+  {
+   "id": "divisorias",
+   "nome": "Divisórias",
+   "categoria": "comercial",
+   "origem": "comodidade:divisorias"
+  },
+  {
+   "id": "bicicletario",
+   "nome": "Bicicletário",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:bicicletario"
+  },
+  {
+   "id": "elevadores",
+   "nome": "Elevadores",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:elevador"
+  },
+  {
+   "id": "estacionamento",
+   "nome": "Estacionamento",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:estacionamento-visitantes"
+  },
+  {
+   "id": "guarita",
+   "nome": "Guarita",
+   "categoria": "infraestrutura",
+   "origem": "comodidade:guarita"
+  },
+  {
+   "id": "heliponto",
+   "nome": "Heliponto",
+   "categoria": "infraestrutura",
+   "origem": "novo"
+  },
+  {
+   "id": "jardim",
+   "nome": "Jardim",
+   "categoria": "natureza",
+   "origem": "comodidade:jardim"
+  },
+  {
+   "id": "jardim-de-inverno",
+   "nome": "Jardim de Inverno",
+   "categoria": "natureza",
+   "origem": "comodidade:jardim-de-inverno"
+  },
+  {
+   "id": "quintal",
+   "nome": "Quintal",
+   "categoria": "natureza",
+   "origem": "comodidade:quintal"
+  },
+  {
+   "id": "pomar",
+   "nome": "Pomar",
+   "categoria": "natureza",
+   "origem": "comodidade:arvores-frutiferas"
+  },
+  {
+   "id": "casa-de-caseiro",
+   "nome": "Casa de Caseiro",
+   "categoria": "natureza",
+   "origem": "novo"
+  },
+  {
+   "id": "celeiro",
+   "nome": "Celeiro",
+   "categoria": "natureza",
+   "origem": "comodidade:celeiro"
+  },
+  {
+   "id": "galpao",
+   "nome": "Galpão",
+   "categoria": "natureza",
+   "origem": "comodidade:galpao"
+  },
+  {
+   "id": "poleiro",
+   "nome": "Poleiro",
+   "categoria": "natureza",
+   "origem": "novo"
+  },
+  {
+   "id": "balanca",
+   "nome": "Balança",
+   "categoria": "natureza",
+   "origem": "novo"
+  }
+ ]
+}

@@ -196,7 +196,7 @@ const DATA = /*__DATA__*/;
 
   function svgSource(id){
     const s = document.getElementById('vc-'+id);
-    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${s.innerHTML.trim()}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">${s.innerHTML.trim()}</svg>`;
   }
   const det = document.getElementById('detail');
   function drawDetail(){

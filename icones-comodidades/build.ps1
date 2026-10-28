@@ -19,7 +19,9 @@ if ($dup) { throw "ids repetidos no índice: $($dup -join ', ')" }
 # Sprite
 $symbols = foreach ($id in $ids) {
   $svg = [IO.File]::ReadAllText("$root\svg\$id.svg")
-  $inner = [regex]::Match($svg, '(?s)<svg[^>]*>(.*)</svg>').Groups[1].Value.Trim()
+  # Sem o <metadata> de procedência (C2PA): no sprite ele só pesaria
+  $inner = [regex]::Match($svg, '(?s)<svg[^>]*>(.*)</svg>').Groups[1].Value -replace '(?s)<metadata>.*?</metadata>', ''
+  $inner = $inner.Trim()
   "  <symbol id=`"vc-$id`" viewBox=`"0 0 24 24`">$inner</symbol>"
 }
 $sprite = "<svg xmlns=`"http://www.w3.org/2000/svg`" fill=`"none`" stroke=`"currentColor`" stroke-width=`"1.5`" stroke-linecap=`"round`" stroke-linejoin=`"round`">`n$($symbols -join "`n")`n</svg>`n"
