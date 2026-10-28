@@ -165,7 +165,24 @@ window.VCData = (function(){
       etapas:[['Fundação',100],['Estrutura',38],['Alvenaria',10],['Instalações',0],['Acabamento',0]],
       com:['piscina','piscina-infantil','deck-molhado','academia','coworking','brinquedoteca','salao-de-jogos','espaco-gourmet','churrasqueira','playground','mini-quadra','pet-place','automacao-residencial','portaria-24h'],
       txt:['Torre única de 25 andares na parte alta do Pedregulho, com quatro apartamentos por andar e duplex com terraço na cobertura.','O lazer fica todo no embasamento: piscina de 20 metros, quadra, brinquedoteca, coworking e academia. No espelho de vendas dá pra girar o prédio em 3D e ver cada unidade no lugar dela.'],
-      why:[['i-eye','Vista para a Mantiqueira','Do 15º andar pra cima, os finais 03 e 04 olham direto para a serra.'],['i-academic','Perto da EEAR','A 4 minutos de carro do portão principal.'],['i-home','De 69 a 241 m²','Do 2 quartos ao duplex com spa no terraço.']]}
+      why:[['i-eye','Vista para a Mantiqueira','Do 15º andar pra cima, os finais 03 e 04 olham direto para a serra.'],['i-academic','Perto da EEAR','A 4 minutos de carro do portão principal.'],['i-home','De 69 a 241 m²','Do 2 quartos ao duplex com spa no terraço.']]},
+    {id:9, nome:'Bosque dos Pinheiros', cons:'paraiba', bairro:'Clube dos 500', fase:'obras', entrega:[2027,9], lanc:[2026,6], cena:'loteamento', seed:91, torres:0, andares:0, porAndar:0,
+      modelo3d:'img/bosque-dos-pinheiros.gltf.json', vista3d:{plano:true, dir:[-.12,.95,1], dist:1.5, minDist:30},
+      /* tipos de lote: a área mínima e o preço "a partir de" saem do espelho (lancamentos.js) */
+      tip:[{lote:true,fr:10,fu:25},{lote:true,fr:12,fu:25},{lote:true,esquina:true},{lote:true,misto:true,fr:15,fu:30}],
+      pm2:{res:640, misto:780},
+      /* quadras com lotes. w = largura útil (m), fr x fu = frente x fundo, t = tipo em `tip`.
+         Igual à implantação de 3d/bosque-dos-pinheiros.py: se mudar lá, mude aqui. */
+      lotes:[
+        {q:1,w:100,fr:12,fu:25,t:1,bonus:1.06,obs:'vista aberta para a Mantiqueira'},{q:2,w:100,fr:12,fu:25,t:1,bonus:1.06,obs:'vista aberta para a Mantiqueira'},
+        {q:3,w:100,fr:12,fu:25,t:1,bonus:1.06,obs:'vista aberta para a Mantiqueira'},{q:4,w:100,fr:12,fu:25,t:1,bonus:1.06,obs:'vista aberta para a Mantiqueira'},
+        {q:5,w:100,fr:10,fu:25,t:0},{q:6,w:100,fr:10,fu:25,t:0,obs:'ao lado do bulevar arborizado'},{q:7,w:100,fr:10,fu:25,t:0,obs:'ao lado do bulevar arborizado'},{q:8,w:100,fr:10,fu:25,t:0,obs:'a uma quadra da praça'},
+        {q:9,w:100,fr:10,fu:25,t:0,obs:'em frente à escola'},{q:10,w:100,fr:10,fu:25,t:0,bonus:1.03,obs:'em frente à praça com pista de caminhada'},{q:11,w:100,fr:12,fu:25,t:1,bonus:1.08,obs:'de frente para o bosque'},
+        {q:12,w:219,fr:15,fu:30,t:3,misto:true,obs:'na avenida de acesso, boa para comércio'}],
+      etapas:[['Terraplenagem',100],['Drenagem e esgoto',80],['Água e energia',45],['Asfalto e calçadas',20],['Paisagismo',5]],
+      com:['area-verde','lago','pista-de-cooper','playground','fitness-ao-ar-livre','quadra-poliesportiva','acesso-asfaltado','rua-tranquila'],
+      txt:['Bairro planejado de 228 lotes entre a Vila Rosa e o Clube dos 500, com bosque de pinheiros, lago e duas praças.','Lotes residenciais de 250 a 350 m² e lotes mistos para comércio na avenida de entrada. Dá pra pagar direto com a loteadora, em até 180 meses, e girar o loteamento em 3D para escolher o lote.'],
+      why:[['i-sparkle','Bosque com lago','Três hectares de área verde com trilha, aberta para quem mora no bairro.'],['i-eye','Vista para a Mantiqueira','As quadras 1 a 4, no alto do terreno, olham direto para a serra.'],['i-calc','Direto com a loteadora','Entrada de 10% e o saldo em até 180 meses, sem banco.']]}
   ];
 
   return {hoje, bairros, pois, dutra, rio, corretores, imoveis, construtoras, lancamentos};

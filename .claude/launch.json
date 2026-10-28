@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "valecasa-csp",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["C:/Users/felip/AppData/Local/Temp/claude/C--Users-felip-ProjetosClaude-valecasa-site/27794daa-0ab0-432f-bcc8-f01fdaafbe36/scratchpad/serve_csp.py", "8768", "."],
+      "port": 8768
+    },
+    {
+      "name": "valecasa-static",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8770"],
+      "port": 8770
+    }
+  ]
+}

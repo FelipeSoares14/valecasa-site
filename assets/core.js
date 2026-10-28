@@ -37,7 +37,7 @@ window.VC = (function(){
     'armario-de-cozinha':'Armário de cozinha','perto-de-escolas':'Perto de escolas','piscina-aquecida':'Piscina aquecida','adega':'Adega','automacao-residencial':'Automação residencial','playground':'Playground',
     'com-lojas-no-terreo':'Loja no térreo','divisorias':'Divisórias','ar-condicionado':'Ar-condicionado','lago':'Lago','galpao':'Galpão','mobiliado':'Mobiliado','cozinha-americana':'Cozinha americana','fogao':'Fogão',
     'freezer':'Geladeira','canil':'Canil','lavanderia':'Lavanderia','deposito-privativo':'Depósito privativo','de-esquina':'De esquina','brinquedoteca':'Brinquedoteca','coworking':'Coworking','bicicletario':'Bicicletário',
-    'pet-place':['Pet place','vc-canil'],'sauna':'Sauna','hidromassagem':'Hidromassagem','coffee-shop':'Café','quadra-poliesportiva':'Quadra poliesportiva','pista-de-cooper':'Pista de caminhada','area-verde':'Área verde','vagas-determinadas':'Vagas demarcadas','piscina-infantil':'Piscina infantil','deck-molhado':'Deck molhado','mini-quadra':'Quadra recreativa'
+    'pet-place':['Pet place','vc-canil'],'sauna':'Sauna','hidromassagem':'Hidromassagem','coffee-shop':'Café','quadra-poliesportiva':'Quadra poliesportiva','pista-de-cooper':'Pista de caminhada','area-verde':'Área verde','vagas-determinadas':'Vagas demarcadas','piscina-infantil':'Piscina infantil','deck-molhado':'Deck molhado','mini-quadra':'Quadra recreativa','fitness-ao-ar-livre':'Academia ao ar livre'
   };
   const com = id => { const v=COM[id]; return Array.isArray(v) ? {n:v[0], i:v[1]} : {n:v||id, i:'vc-'+id}; };
 

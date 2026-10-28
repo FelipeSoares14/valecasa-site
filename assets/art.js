@@ -242,7 +242,60 @@ window.VCArt = (function(){
     return wrap(s);
   }
 
-  const SCENES={casa,sobrado,apto,torre,condominio,sala,cozinha,quarto,banheiro,piscina,chacara,terreno,comercial,obra};
+  function pinho(x,y,s=1,c='#2F5D3A'){ return rect(x-1.6*s,y-8*s,3.2*s,8*s,'#6B4F3A')+poly(`${n(x-11*s)},${n(y-6*s)} ${n(x)},${n(y-30*s)} ${n(x+11*s)},${n(y-6*s)}`,c)+poly(`${n(x-8*s)},${n(y-20*s)} ${n(x)},${n(y-40*s)} ${n(x+8*s)},${n(y-20*s)}`,shade(c,.12)); }
+
+  /* Loteamento visto do alto: quadras em perspectiva, bulevar com pinheiros, bosque e praça */
+  function loteamento(seed, o={}){
+    const r=R(seed), day=o.day!=null?o.day:true;
+    const pal = day ? ['#7FB3E3','#CFE4F4','#EEF2EC'] : ['#2A0F6B','#6B2E8F','#D9708A','#F6B98A'];
+    const g=grad(pal); let s=`<defs>${g.def}</defs>`+rect(0,0,400,300,`url(#${g.id})`);
+    if(day) s+=clouds(r);
+    s+=mountains(r,138, day?'#8EA6BF':'#3B2366', day?'#AFC2D5':'#55307E')+rect(0,134,400,166, day?'#9CBF7A':'#3A3A5E');
+    for(let x=4;x<400;x+=14) s+=circ(x+r()*6,136+r()*3,4+r()*3, day?'#5E8F4A':'#2C2A4E');
+    // perspectiva: d = 0 perto (embaixo), 1 longe (horizonte); u = 0 a 1 de lado a lado
+    const P=(u,d)=>{ const t=Math.pow(1-d,1.5), y=140+160*t, xl=78-170*t, xr=322+170*t; return [n(xl+(xr-xl)*u), n(y)]; };
+    const quad=(u0,u1,d0,d1,f,op='')=>poly([P(u0,d0),P(u1,d0),P(u1,d1),P(u0,d1)].map(p=>p.join(',')).join(' '),f,op);
+    const asf=day?'#7E848B':'#4A4470', borda=day?'#ECE6D6':'#8E86B8', lote=day?'#93C46A':'#4F6E55', livre=day?'#B9E58C':'#6E9A6E';
+    s+=quad(0,1,0,1,asf);
+    const COLS=[[.02,.22],[.26,.465],[.535,.74],[.78,.98]], ROWS=[[.04,.2],[.25,.42],[.47,.64],[.69,.86],[.9,.99]];
+    ROWS.forEach(([d0,d1],ri)=>COLS.forEach(([u0,u1],ci)=>{
+      s+=quad(u0,u1,d0,d1,borda);
+      const iu=(u1-u0)*.04, id=(d1-d0)*.08, a=u0+iu, b=u1-iu, c=d0+id, e=d1-id;
+      if(ri<=1 && ci>=2){ s+=quad(a,b,c,e,day?'#5F8F4E':'#33503F'); return; }   // bosque
+      if(ri===2 && ci===3){ s+=quad(a,b,c,e,day?'#8DB36B':'#45604A'); return; } // praça
+      const k=ci===0&&ri===0?7:8;
+      for(let i=0;i<k;i++) for(const [c0,c1] of [[c,(c+e)/2],[(c+e)/2,e]]){
+        const u0b=a+(b-a)*i/k, u1b=a+(b-a)*(i+1)/k, du=(u1b-u0b)*.06, dd=(c1-c0)*.06;
+        s+=quad(u0b+du,u1b-du,c0+dd,c1-dd, r()<.45?livre:lote);
+      }
+    }));
+    // canteiro do bulevar com pinheiros e ipês
+    s+=quad(.485,.515,0,.99,day?'#79A35A':'#3E5A48');
+    for(let d=.02; d<.96; d+=.07){ const [x,y]=P(.5,d), sc=.25+Math.pow(1-d,1.5)*.75; s+= r()<.6 ? pinho(x,y,sc*.9,day?'#2F5D3A':'#1E3A30') : circ(x,y-9*sc,7*sc,day?'#E58BB8':'#B0608F'); }
+    // bosque: pinheiros de trás para a frente
+    const tr=[]; for(let i=0;i<70;i++) tr.push([.56+r()*.41, .05+r()*.36]);
+    tr.sort((p,q)=>q[1]-p[1]).forEach(([u,d])=>{ const [x,y]=P(u,d), sc=.3+Math.pow(1-d,1.5)*.8; s+=pinho(x,y,sc,r()<.5?(day?'#2F5D3A':'#1E3A30'):(day?'#3F7048':'#284838')); });
+    // praça: árvores e playground
+    for(let i=0;i<7;i++){ const [x,y]=P(.8+r()*.16,.49+r()*.14), sc=.45; s+=circ(x,y-8*sc,8*sc,r()<.4?'#E58BB8':'#5F8F4A'); }
+    if(!day){ for(let i=0;i<40;i++){ const [x,y]=P(r(),r()*.95); s+=circ(x,y,1.2,'#FFD27A','opacity=".9"'); } }
+    // pórtico na entrada
+    const [px,py]=P(.5,0); s+=rect(px-34,py-46,6,46,'#1F3B2D')+rect(px+28,py-46,6,46,'#1F3B2D')+rect(px-38,py-54,76,10,'#1F3B2D')+rect(px-30,py-51,60,3,'#E2A93B');
+    return wrap(s);
+  }
+
+  /* Praça do loteamento: gramado, caminho, playground e pinheiros */
+  function praca(seed){
+    const r=R(seed); let s=sky(r)+mountains(r,170)+rect(0,166,400,134,'#8DB36B');
+    s+=poly('150,300 250,300 214,170 196,170','#E6D2A0');
+    for(let i=0;i<5;i++) s+=pinho(30+i*30+r()*10,190+i*3,.8+r()*.3);
+    for(let i=0;i<4;i++) s+=pinho(300+i*26+r()*8,188+i*4,.9+r()*.3,'#3F7048');
+    s+=rect(268,236,90,30,'#E0795A','rx="3"')+rect(284,206,22,30,'#F2C94C')+poly('306,206 342,236 336,240 300,212','#3E7CB1')+rect(282,202,26,6,'#4D00AF');
+    s+=rect(60,250,50,5,'#8A5A44')+rect(62,255,4,10,'#5A3A2A')+rect(104,255,4,10,'#5A3A2A');
+    s+=tree(120,232,1.1,'#E58BB8','#C96F9C')+tree(360,226,1.2)+bush(200,292,20)+bush(40,286,16);
+    return wrap(s);
+  }
+
+  const SCENES={casa,sobrado,apto,torre,condominio,sala,cozinha,quarto,banheiro,piscina,chacara,terreno,comercial,obra,loteamento,praca};
   function scene(type, seed, o){ return (SCENES[type]||casa)(seed||1, o); }
 
   /* ===== Planta ilustrativa ===== */
@@ -277,6 +330,25 @@ window.VCArt = (function(){
     s+=`<line class="fp-dim" x1="14" y1="${Y}" x2="14" y2="${Y+H}"/><line class="fp-dim" x1="10" y1="${Y}" x2="18" y2="${Y}"/><line class="fp-dim" x1="10" y1="${Y+H}" x2="18" y2="${Y+H}"/><text class="fp-dim-t" x="10" y="${Y+H/2}" text-anchor="middle" transform="rotate(-90 10 ${Y+H/2})">${fmtA(hm)} m</text>`;
     s+=`<g transform="translate(384 ${Y+H-6})"><circle r="9" fill="none" class="fp-dim"/><path d="M0 -6 L3 3 L0 1 L-3 3Z" class="fp-n"/></g>`;
     return `<svg viewBox="0 0 400 290" role="img" aria-label="Planta ilustrativa de ${t.a} m²">${s}</svg>`;
+  }
+
+  /* ===== Desenho do lote: medidas, recuos e área para construir (ilustrativo) =====
+     d = {fr, fu, esquina, misto}; recuos de exemplo: 4 m na frente, 1,5 m nas laterais e no fundo */
+  function lote(d){
+    const RF=4, RL=1.5, RE=2, X=60, Y=24, W=280, H=200, k=Math.min(W/d.fr, H/d.fu), w=d.fr*k, h=d.fu*k, x0=X+(W-w)/2, y0=Y;
+    const le=(d.esquina?RE:RL)*k, ld=RL*k, rf=RF*k, rb=RL*k, aw=d.fr-(d.esquina?RE:RL)-RL, ah=d.fu-RF-RL;
+    let s=`<rect x="${n(x0-(d.esquina?40:0))}" y="${n(y0+h+6)}" width="${n(w+(d.esquina?40:0))}" height="30" fill="var(--ink-3)" opacity=".18"/>`;
+    s+=`<text class="fp-n" x="${n(x0+w/2)}" y="${n(y0+h+25)}" text-anchor="middle">Rua</text>`;
+    if(d.esquina) s+=`<rect x="${n(x0-40)}" y="${y0}" width="34" height="${n(h+6)}" fill="var(--ink-3)" opacity=".18"/><text class="fp-n" x="${n(x0-23)}" y="${n(y0+h/2)}" text-anchor="middle" transform="rotate(-90 ${n(x0-23)} ${n(y0+h/2)})">Rua</text>`;
+    s+=`<rect class="fp-externo fp-in" x="${n(x0)}" y="${y0}" width="${n(w)}" height="${n(h)}"/>`;
+    s+=`<rect class="fp-social fp-in" x="${n(x0+le)}" y="${n(y0+rb)}" width="${n(w-le-ld)}" height="${n(h-rf-rb)}"/>`;
+    s+=`<text class="fp-n" x="${n(x0+le+(w-le-ld)/2)}" y="${n(y0+rb+(h-rf-rb)/2-4)}" text-anchor="middle">Área para</text><text class="fp-n" x="${n(x0+le+(w-le-ld)/2)}" y="${n(y0+rb+(h-rf-rb)/2+8)}" text-anchor="middle">construir</text>`;
+    s+=`<text class="fp-a" x="${n(x0+le+(w-le-ld)/2)}" y="${n(y0+rb+(h-rf-rb)/2+21)}" text-anchor="middle">${fmtA(aw*ah)} m²</text>`;
+    s+=`<text class="fp-a" x="${n(x0+w/2)}" y="${n(y0+h-rf/2+3)}" text-anchor="middle">recuo ${RF} m</text>`;
+    s+=`<rect class="fp-wall" x="${n(x0)}" y="${y0}" width="${n(w)}" height="${n(h)}"/>`;
+    s+=`<line class="fp-dim" x1="${n(x0)}" y1="${n(y0+h+44)}" x2="${n(x0+w)}" y2="${n(y0+h+44)}"/><text class="fp-dim-t" x="${n(x0+w/2)}" y="${n(y0+h+56)}" text-anchor="middle">${fmtA(d.fr)} m de frente</text>`;
+    s+=`<line class="fp-dim" x1="${n(x0+w+14)}" y1="${y0}" x2="${n(x0+w+14)}" y2="${n(y0+h)}"/><text class="fp-dim-t" x="${n(x0+w+26)}" y="${n(y0+h/2)}" text-anchor="middle" transform="rotate(-90 ${n(x0+w+26)} ${n(y0+h/2)})">${fmtA(d.fu)} m de fundo</text>`;
+    return `<svg viewBox="0 0 400 290" role="img" aria-label="Lote de ${fmtA(d.fr)} por ${fmtA(d.fu)} metros, com recuos ilustrativos">${s}</svg>`;
   }
 
   /* ===== Mapa ilustrativo de Guará ===== */
@@ -318,5 +390,5 @@ window.VCArt = (function(){
   /* Ilustração do DS: busca sem resultado (ilustracoes/piloto/estado-busca-vazia.svg) */
   const vazia = `<svg class="ilu" role="img" aria-label="Lupa sobre rua sem imóveis" viewBox="0 0 240 240" fill="none"><path fill="#4D00AF" d="M126 22c36 2 72 22 86 58 14 35 2 70-20 96-22 26-55 44-90 40-35-4-66-26-80-58-14-31-8-68 12-94 20-27 56-44 92-42Z"/><path fill="#E2C9F8" d="M44 188v-34l18-16 18 16v34H44ZM88 188v-74h28v74H88ZM168 188v-30l16-14 16 14v30h-32Z"/><path d="M95 124h4M105 124h4M95 136h4M105 136h4M95 148h4M105 148h4M95 160h4M105 160h4" stroke="#4D00AF" stroke-width="3" stroke-linecap="round"/><circle cx="146" cy="104" r="34" fill="#6514D6" stroke="#03FE9F" stroke-width="10"/><path d="M128 112h36" stroke="#E2C9F8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/><path d="M171 129l24 24" stroke="#FFDA00" stroke-width="12" stroke-linecap="round"/><path d="M28 188h184" stroke="#03FE9F" stroke-width="4" stroke-linecap="round"/></svg>`;
 
-  return {scene, planta, mapa, layoutPins, skyline, vazia, R, shade};
+  return {scene, planta, lote, mapa, layoutPins, skyline, vazia, R, shade};
 })();

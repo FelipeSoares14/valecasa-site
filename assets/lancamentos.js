@@ -8,12 +8,16 @@
   const prog = l => Math.round(l.etapas.reduce((a,[,p],i)=>a+p*W[i],0)/100);
   const minP = l => Math.min(...l.tip.map(t=>t.p));
   const cons = l => D.construtoras[l.cons];
-  const quartosTxt = l => l.tip.some(t=>t.studio) ? 'Studio e 1 quarto' : [...new Set(l.tip.map(t=>t.q))].join(' e ')+' quartos';
-  const areas = l => { const a=l.tip.map(t=>t.a), mn=Math.min(...a), mx=Math.max(...a); return mn===mx ? mn+' m²' : `${mn} a ${mx} m²`; };
+  const quartosTxt = l => l.lotes ? (l.tip.some(t=>t.misto) ? 'Lotes residenciais e mistos' : 'Lotes residenciais') : l.tip.some(t=>t.studio) ? 'Studio e 1 quarto' : [...new Set(l.tip.map(t=>t.q))].join(' e ')+' quartos';
+  const areas = l => { const a=l.lotes ? espelho(l).flat().map(u=>u.a) : l.tip.map(t=>t.a), mn=Math.min(...a), mx=Math.max(...a); return mn===mx ? mn+' m²' : `${mn} a ${mx} m²`; };
   const mesesAte = l => Math.max(0,(l.entrega[0]-2026)*12 + l.entrega[1]-10);
-  const tipName = t => t.studio ? 'Studio' : t.duplex ? `Duplex de ${t.q} quartos` : t.casa ? `Casa de ${t.q} quartos` : `${t.q} ${plural(t.q,'quarto','quartos')}`;
-  const tipSub = t => [t.s?`${t.s} ${plural(t.s,'suíte','suítes')}`:'', t.v?`${t.v} ${plural(t.v,'vaga','vagas')}`:'sem vaga'].filter(Boolean).join(' · ');
+  const tipName = t => t.lote ? (t.misto ? 'Lote misto' : t.esquina ? 'Lote de esquina' : `Lote ${t.fr} × ${t.fu} m`) : t.studio ? 'Studio' : t.duplex ? `Duplex de ${t.q} quartos` : t.casa ? `Casa de ${t.q} quartos` : `${t.q} ${plural(t.q,'quarto','quartos')}`;
+  const tipSub = t => t.lote ? (t.misto ? 'Comércio, serviço ou moradia' : t.esquina ? 'Duas frentes para a rua' : 'Residencial') : [t.s?`${t.s} ${plural(t.s,'suíte','suítes')}`:'', t.v?`${t.v} ${plural(t.v,'vaga','vagas')}`:'sem vaga'].filter(Boolean).join(' · ');
   const bLogo = (c, extra='') => `<span class="b-logo" style="background:${c.cor};${extra}">${c.sig}</span>`;
+  const m2 = v => String(Math.round(v*10)/10).replace('.',',');
+  const dispTxt = (l,n) => l.lotes ? plural(n,'lote disponível','lotes disponíveis') : plural(n,'unidade disponível','unidades disponíveis');
+  const uNome = (l,u) => l.lotes ? `quadra ${u.f}, lote ${u.u}` : `unidade ${u.n}`;
+  const stTxt = (l,st) => ({free:'Disponível', res:l.lotes?'Reservado':'Reservada', sold:l.lotes?'Vendido':'Vendida'})[st];
   const andarTxt = u => u.dup ? `${u.f}º e ${u.f+1}º andares` : `${u.f}º andar`;
   const byEntrega = (a,b) => (a.entrega[0]*12+a.entrega[1])-(b.entrega[0]*12+b.entrega[1]);
   const telCons = l => `(12) 31${String(30+l.id*3).padStart(2,'0')}-${4000+l.id*137}`;
@@ -26,6 +30,14 @@
     const r=A.R(l.id*31+torre*7), sold = l.fase==='pronto'?.8 : l.fase==='obras'?.5 : .2, rows=[];
     if(l.casas){
       const Q='ABCDEF'; for(let q=0;q<6;q++){ const row=[]; for(let u=1;u<=8;u++){ const x=r(), st= x<sold ? 'sold' : x<sold+.03 ? 'res':'free', tip=l.tip[(u===1||u===8)?1:0]; row.push({n:Q[q]+u, f:Q[q], u, st, tip, p:tip.p+(u===1||u===8?18000:0)}); } rows.push(row); }
+    } else if(l.lotes){
+      // por quadra: fileira norte de 1 a n (oeste→leste) e fileira sul de n+1 a 2n (leste→oeste), como no 3D
+      const esq=l.tip.find(t=>t.esquina), sl=sold*.8;
+      for(const Q of l.lotes){ const n=Math.floor(Q.w/Q.fr), c=(Q.w-(n-2)*Q.fr)/2, row=[];
+        for(let k=1;k<=2*n;k++){ const i=k<=n?k-1:2*n-k, e=i===0||i===n-1, fr=e?c:Q.fr, a=Math.round(fr*Q.fu*10)/10, x=r();
+          row.push({n:Q.q*100+k, f:Q.q, u:k, st:x<sl?'sold':x<sl+.05?'res':'free', tip:e&&!Q.misto?esq:l.tip[Q.t], a, fr, fu:Q.fu, esq:e, norte:k<=n, obs:Q.obs||'',
+            p:Math.round(a*(Q.misto?l.pm2.misto:l.pm2.res)*(e?1.1:1)*(Q.bonus||1)/1000)*1000}); }
+        rows.push(row); }
     } else if(l.pav){
       const P=l.pav, D2=P.duplex, st=(x,bias)=> x<bias ? 'sold' : x<bias+.07 ? 'res' : 'free';
       rows.push(D2.finais.map((ti,i)=>({n:D2.andar*100+i+1, f:D2.andar, u:i+1, dup:true, st:st(r(),sold*.7), tip:l.tip[ti], p:l.tip[ti].p})));
@@ -38,9 +50,11 @@
     }
     return cacheEsp[key]=rows;
   }
-  const torresN = l => l.casas ? 1 : l.torres;
+  const torresN = l => l.casas||l.lotes ? 1 : l.torres;
   const disponiveis = l => { let n=0; for(let t=0;t<torresN(l);t++) espelho(l,t).forEach(r=>r.forEach(u=>{ if(u.st==='free') n++; })); return n; };
-  const unidades = l => l.casas || (l.pav ? espelho(l).flat().length : l.torres*l.andares*l.porAndar);
+  const unidades = l => l.casas || (l.pav||l.lotes ? espelho(l).flat().length : l.torres*l.andares*l.porAndar);
+  // loteamentos: a área mínima e o preço "a partir de" de cada tipo de lote saem do próprio espelho
+  D.lancamentos.filter(l=>l.lotes).forEach(l=>{ const us=espelho(l).flat(); l.tip.forEach(t=>{ const d=us.filter(u=>u.tip===t); t.a=Math.min(...d.map(u=>u.a)); t.p=Math.min(...d.map(u=>u.p)); }); });
 
   /* ===== header e footer da área ===== */
   VC.lxHeader = nav => `<header class="lx-hdr"><div class="lx-wrap lx-hdr-in">
@@ -62,15 +76,15 @@
   VC.lxPoster = l => { const c=cons(l); return `<a class="poster" href="#lancamento-${l.id}">
     <div class="img">${scene(l.cena,l.seed,{torres:l.torres})}<span class="tl">${phPill(l)}</span>${VC.favBtn('l'+l.id)}<span class="dots"><i></i><i></i><i></i><i></i><i></i></span><span class="bl"><span class="ph-pill dk">${entregaTxt(l)}</span></span><span class="br" style="color:${c.cor}">${c.sig}</span></div>
     <span class="hood">${ic('i-pin','i-12')}${esc(l.bairro)} · Guaratinguetá</span><span class="name">${esc(l.nome)}</span>
-    <div class="specs"><span>${ic('i-bed')}${quartosTxt(l)}</span><span>${ic('i-area')}${areas(l)}</span></div>
+    <div class="specs"><span>${ic(l.lotes?'i-map':'i-bed')}${quartosTxt(l)}</span><span>${ic('i-area')}${areas(l)}</span></div>
     <span class="from">A partir de <b>${brl(minP(l))}</b></span></a>`; };
-  const typTable = l => `<table class="typ"><thead><tr><th>Planta</th><th>Área</th><th>A partir de</th></tr></thead><tbody>${l.tip.map(t=>`<tr><td><b>${tipName(t)}</b><br><span class="muted" style="font-size:12px">${tipSub(t)}</span></td><td>${t.a} m²</td><td><b>${brl(t.p)}</b></td></tr>`).join('')}</tbody></table>`;
+  const typTable = l => `<table class="typ"><thead><tr><th>${l.lotes?'Lote':'Planta'}</th><th>Área</th><th>A partir de</th></tr></thead><tbody>${l.tip.map(t=>`<tr><td><b>${tipName(t)}</b><br><span class="muted" style="font-size:12px">${tipSub(t)}</span></td><td>${t.a} m²</td><td><b>${brl(t.p)}</b></td></tr>`).join('')}</tbody></table>`;
   const progBar = l => { const p=prog(l); return `<div class="prog"><div class="top"><span>${l.fase==='planta'?'Obra ainda não começou':'Andamento da obra'}</span><b>${p}%</b></div><div class="bar"><i style="width:${p}%"></i></div></div>`; };
   function lrow(l){ const c=cons(l), d=disponiveis(l); return `<a class="lrow" href="#lancamento-${l.id}">
     <div class="img">${scene(l.cena,l.seed,{torres:l.torres})}<span class="tl">${phPill(l)}<span class="ph-pill">${entregaTxt(l)}</span></span><span class="br" style="background:${c.cor}">${c.sig}</span></div>
     <div class="body"><div class="top"><div><span class="by">${esc(c.n)}</span><h3>${esc(l.nome)}</h3><span class="hood">${ic('i-pin','i-12')}${esc(l.bairro)} · Guaratinguetá</span></div>${VC.favBtn('l'+l.id,'icon-btn plain')}</div>
       ${typTable(l)}${progBar(l)}
-      <div class="foot"><div class="amen-list">${l.com.slice(0,3).map(x=>{ const k=com(x); return `<span>${ic(k.i)}${esc(k.n)}</span>`; }).join('')}<span style="color:var(--ink-3)">+${l.com.length-3}</span></div><span class="avail" style="color:var(--brand-text)"><i></i>${d} ${plural(d,'unidade disponível','unidades disponíveis')}</span></div>
+      <div class="foot"><div class="amen-list">${l.com.slice(0,3).map(x=>{ const k=com(x); return `<span>${ic(k.i)}${esc(k.n)}</span>`; }).join('')}<span style="color:var(--ink-3)">+${l.com.length-3}</span></div><span class="avail" style="color:var(--brand-text)"><i></i>${d} ${dispTxt(l,d)}</span></div>
     </div></a>`; }
 
   /* ===== console de busca ===== */
@@ -137,14 +151,51 @@
     calc();
   }
 
+  /* simulador de lote: entrada e saldo parcelado direto com a loteadora, pela Tabela Price */
+  const JUROS_LOTE = .0079;
+  function simLoteHTML(l){
+    return `<div class="sim" data-sim>
+      <div class="sim-ctrl">
+        <div class="sl"><div class="top"><label for="sim-p">Valor do lote</label><output id="sim-po"></output></div><input class="rng" type="range" id="sim-p" min="80000" max="700000" step="1000" value="${minP(l)}"></div>
+        <div class="sl"><div class="top"><label for="sim-s">Entrada</label><output id="sim-so"></output></div><input class="rng" type="range" id="sim-s" min="10" max="50" step="1" value="10"><small>Paga na assinatura do contrato com a loteadora.</small></div>
+        <div class="sl"><div class="top"><label for="sim-m">Prazo do saldo</label><output id="sim-mo"></output></div><input class="rng" type="range" id="sim-m" min="12" max="180" step="12" value="120"><small>Parcelas mensais direto com a loteadora, sem banco.</small></div>
+      </div>
+      <div class="sim-out" aria-live="polite">
+        <div class="big"><span>Parcela mensal</span><b id="sim-big"></b></div>
+        <div class="stack" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
+        <div class="sim-rows">
+          <div><i style="background:var(--vc-sun-500)"></i><span>Entrada<small id="sim-r1s"></small></span><b id="sim-r1"></b></div>
+          <div><i style="background:var(--vc-green-500)"></i><span>Saldo parcelado<small id="sim-r2s"></small></span><b id="sim-r2"></b></div>
+          <div><i style="background:var(--vc-purple-400)"></i><span>Juros no período<small id="sim-r3s"></small></span><b id="sim-r3"></b></div>
+        </div>
+        <p class="sim-note">Simulação ilustrativa, com juros de 0,79% ao mês pela Tabela Price. As parcelas também são corrigidas uma vez por ano pelo IPCA, que não entra nesta conta.</p>
+      </div></div>`;
+  }
+  function bindSimLote(root){
+    const g=id=>$('#'+id,root), fill=i=>i.style.setProperty('--p', ((i.value-i.min)/(i.max-i.min)*100)+'%');
+    const calc=()=>{
+      const P=+g('sim-p').value, s=+g('sim-s').value, n=+g('sim-m').value, ent=P*s/100, saldo=P-ent, parc=saldo*JUROS_LOTE/(1-Math.pow(1+JUROS_LOTE,-n)), juros=parc*n-saldo, tot=P+juros;
+      g('sim-po').textContent=brl(P); g('sim-so').textContent=`${s}% · ${brl(ent)}`; g('sim-mo').textContent=`${n} meses · ${n/12} ${plural(n/12,'ano','anos')}`;
+      g('sim-big').innerHTML=`${brl(parc)}<small> /mês</small>`;
+      g('sim-r1').textContent=brl(ent); g('sim-r1s').textContent=`${s}% do valor`;
+      g('sim-r2').textContent=`${n} × ${brl(parc)}`; g('sim-r2s').textContent=`${brl(saldo)} de saldo`;
+      g('sim-r3').textContent=brl(juros); g('sim-r3s').textContent=`Total pago no fim: ${brl(tot)}`;
+      const st=$$('.stack i',root); st[0].style.width=(ent/tot*100)+'%'; st[1].style.width=(saldo/tot*100)+'%'; st[2].style.width=(juros/tot*100)+'%';
+      $$('.rng',root).forEach(fill);
+    };
+    $$('.rng',root).forEach(i=>i.addEventListener('input',calc));
+    root._setPrice = p=>{ g('sim-p').value=p; calc(); };
+    calc();
+  }
+
   /* ===== modal de visita ===== */
   function visitaModal(l, unit){
     const c=cons(l), dias=[]; let d=new Date(D.hoje.getTime()+864e5);
     while(dias.length<6){ if(d.getDay()!==1) dias.push(new Date(d)); d=new Date(d.getTime()+864e5); }
     const SEM=['dom','seg','ter','qua','qui','sex','sáb'];
     let di=0, hi=null; const horas=['10:00','11:00','14:00','15:00','16:00','17:00'];
-    const lugar = l.fase==='pronto' ? 'no condomínio' : 'no decorado';
-    VC.modal(VC.mh(`Agendar visita ${lugar}`, `${esc(l.nome)} · ${esc(c.n)}${unit?` · unidade ${unit}`:''}`)+`<form class="modal-b" id="vs-form" novalidate>
+    const lugar = l.lotes ? 'no estande de vendas' : l.fase==='pronto' ? 'no condomínio' : 'no decorado';
+    VC.modal(VC.mh(`Agendar visita ${lugar}`, `${esc(l.nome)} · ${esc(c.n)}${unit?` · ${esc(unit)}`:''}`)+`<form class="modal-b" id="vs-form" novalidate>
       <div class="field"><span style="font-size:13px;font-weight:500">Dia</span><div class="slots" role="group" aria-label="Dia da visita">${dias.map((x,i)=>`<button type="button" data-d="${i}" aria-pressed="${i===0}">${SEM[x.getDay()]}<b>${x.getDate()}</b>${MES[x.getMonth()]}</button>`).join('')}</div></div>
       <div class="field"><span style="font-size:13px;font-weight:500">Horário</span><div class="times" role="group" aria-label="Horário">${horas.map((h,i)=>`<button type="button" data-h="${i}" aria-pressed="false">${h}</button>`).join('')}</div><span class="hint" id="vs-hh"></span></div>
       <div class="field"><label for="vs-nome">Nome</label><input class="input" id="vs-nome" autocomplete="name"><span class="hint" data-ok=""></span></div>
@@ -307,25 +358,30 @@
   function lxDetalhe(m){
     const l=D.lancamentos.find(x=>x.id===+m[1]); if(!l){ VC.go('lancamentos'); return; }
     const c=cons(l), p=prog(l), disp=disponiveis(l), meses=mesesAte(l), b=VC.bairro(l.bairro);
-    const gal=[[l.cena,l.seed,'Fachada',{torres:l.torres,day:false}],[l.cena,l.seed,'Fachada de dia',{torres:l.torres,day:true}],['piscina',l.seed+3,'Lazer'],['sala',l.seed+4,(l.fase==='pronto'?'Sala':'Decorado: sala')],['cozinha',l.seed+5,(l.fase==='pronto'?'Cozinha':'Decorado: cozinha')],['quarto',l.seed+6,(l.fase==='pronto'?'Suíte':'Decorado: suíte')]];
+    const lote=!!l.lotes;
+    const gal = lote ? [[l.cena,l.seed,'Vista aérea',{day:true}],[l.cena,l.seed+1,'Fim de tarde',{day:false}],['praca',l.seed+3,'Praça do bairro'],['terreno',l.seed+4,'Lote demarcado'],[l.cena,l.seed+5,'Bulevar de entrada',{day:true}]]
+      : [[l.cena,l.seed,'Fachada',{torres:l.torres,day:false}],[l.cena,l.seed,'Fachada de dia',{torres:l.torres,day:true}],['piscina',l.seed+3,'Lazer'],['sala',l.seed+4,(l.fase==='pronto'?'Sala':'Decorado: sala')],['cozinha',l.seed+5,(l.fase==='pronto'?'Cozinha':'Decorado: cozinha')],['quarto',l.seed+6,(l.fase==='pronto'?'Suíte':'Decorado: suíte')]];
     const obraF = l.fase==='obras' ? [['obra',l.seed+11,'Obra em ago/2026',{}],['obra',l.seed+12,'Obra em set/2026',{}],['obra',l.seed+13,'Obra em out/2026',{}]] : [];
     obraF.forEach((f,i)=>f[3]=Math.max(5,p-12+i*6));
-    const marcos=[['Lançamento',mes(l.lanc),true],['Início das obras',mes([l.lanc[0]+(l.lanc[1]+4>12?1:0),((l.lanc[1]+3)%12)+1]),l.fase!=='planta'||p>0],['Estrutura concluída',l.etapas[1][1]===100?'Concluída':'Em andamento',l.etapas[1][1]===100],['Entrega das chaves',mes(l.entrega),l.fase==='pronto']];
+    const marcos=[['Lançamento',mes(l.lanc),true],['Início das obras',mes([l.lanc[0]+(l.lanc[1]+4>12?1:0),((l.lanc[1]+3)%12)+1]),l.fase!=='planta'||p>0],
+      lote ? ['Ruas asfaltadas',l.etapas[3][1]===100?'Concluído':'Em andamento',l.etapas[3][1]===100] : ['Estrutura concluída',l.etapas[1][1]===100?'Concluída':'Em andamento',l.etapas[1][1]===100],
+      [lote?'Entrega dos lotes':'Entrega das chaves',mes(l.entrega),l.fase==='pronto']];
     const dists=[{n:'Centro', sub:'Praça e comércio', x:300,y:198}].concat(D.pois.filter(x=>['buriti','eear','feg','santacasa'].includes(x.id))).map(x=>({...x, km:Math.max(.3,Math.hypot(x.x-b.x,x.y-b.y)*VC.KM)})).concat([{n:'Via Dutra', sub:'Acesso mais próximo', km:Math.max(.3,VC.distDutra(b.x,b.y)*VC.KM)}]).sort((a,b)=>a.km-b.km);
     const casa=!!l.casas;
     const html = `
     <section class="dhero">${scene(l.cena,l.seed,{torres:l.torres,day:false})}<div class="lx-wrap dhero-in">
       <nav class="crumbs" aria-label="Você está em"><a href="#lancamentos">Lançamentos</a>›<a href="#lancamentos-busca" data-lxb="${esc(l.bairro)}">${esc(l.bairro)}</a>›<span>${esc(l.nome)}</span></nav>
-      <div class="tags">${phPill(l)}<span class="ph-pill dk">${entregaTxt(l)}</span>${l.fase!=='planta'?'<span class="ph-pill dk">Decorado aberto</span>':'<span class="ph-pill dk">Tabela de pré-lançamento</span>'}</div>
+      <div class="tags">${phPill(l)}<span class="ph-pill dk">${entregaTxt(l)}</span>${lote?'<span class="ph-pill dk">Estande no local</span>':l.fase!=='planta'?'<span class="ph-pill dk">Decorado aberto</span>':'<span class="ph-pill dk">Tabela de pré-lançamento</span>'}</div>
       <div class="by">${bLogo(c)}<span>${esc(c.n)}<br><span style="font-size:12px;color:var(--lx-ink-3)">Construindo desde ${c.desde}</span></span></div>
       <h1>${esc(l.nome)}</h1>
       <div class="row"><span class="hood">${ic('i-pin')}${esc(l.bairro)} · Guaratinguetá</span><div class="pf">A partir de<b>${brl(minP(l))}</b></div>
-        <div class="ctas"><button class="btn btn-primary btn-lg" type="button" data-visita>Agendar visita${l.fase==='pronto'?'':' ao decorado'}</button><button class="btn btn-outline btn-lg btn-lx-ghost" type="button" data-goto="d-plantas">Ver plantas</button>${VC.favBtn('l'+l.id,'icon-btn')}</div></div>
+        <div class="ctas"><button class="btn btn-primary btn-lg" type="button" data-visita>Agendar visita${lote?' ao estande':l.fase==='pronto'?'':' ao decorado'}</button><button class="btn btn-outline btn-lg btn-lx-ghost" type="button" data-goto="d-plantas">Ver ${lote?'lotes':'plantas'}</button>${VC.favBtn('l'+l.id,'icon-btn')}</div></div>
     </div>
     <div class="lx-wrap"><div class="facts">
-      <div><span>Plantas</span><b>${quartosTxt(l)}</b></div><div><span>Área</span><b>${areas(l)}</b></div><div><span>${casa?'Casas':'Torres'}</span><b>${casa?l.casas:l.torres}</b></div><div><span>${casa?'Pavimentos':'Andares'}</span><b>${l.andares}</b></div><div><span>Disponíveis</span><b>${disp} de ${unidades(l)}</b></div><div><span>Entrega</span><b>${mes(l.entrega)}</b></div>
+      ${lote ? `<div><span>Lotes</span><b>${l.tip.some(t=>t.misto)?'Residenciais e mistos':'Residenciais'}</b></div><div><span>Área</span><b>${areas(l)}</b></div><div><span>Quadras</span><b>${l.lotes.length}</b></div><div><span>Total de lotes</span><b>${unidades(l)}</b></div>`
+        : `<div><span>Plantas</span><b>${quartosTxt(l)}</b></div><div><span>Área</span><b>${areas(l)}</b></div><div><span>${casa?'Casas':'Torres'}</span><b>${casa?l.casas:l.torres}</b></div><div><span>${casa?'Pavimentos':'Andares'}</span><b>${l.andares}</b></div>`}<div><span>Disponíveis</span><b>${disp} de ${unidades(l)}</b></div><div><span>Entrega</span><b>${mes(l.entrega)}</b></div>
     </div></div></section>
-    <nav class="subnav" aria-label="Seções do empreendimento"><div class="lx-wrap subnav-in">${SECS.map(([id,t],i)=>`<a href="#lancamento-${l.id}" data-sec="${id}" class="${i===0?'on':''}">${t}</a>`).join('')}</div></nav>
+    <nav class="subnav" aria-label="Seções do empreendimento"><div class="lx-wrap subnav-in">${SECS.map(([id,t],i)=>`<a href="#lancamento-${l.id}" data-sec="${id}" class="${i===0?'on':''}">${lote&&id==='d-plantas'?'Lotes':lote&&id==='d-unidades'?'Espelho':t}</a>`).join('')}</div></nav>
 
     <section class="lx-paper dsec" id="d-visao"><div class="lx-wrap">
       <div class="ov"><div class="txt"><span class="lx-k">Visão geral</span>${l.txt.map(t=>`<p>${esc(t)}</p>`).join('')}<p>${esc(b.vibe)}</p></div>
@@ -334,31 +390,31 @@
     </div></section>
 
     <section class="lx-paper dsec" id="d-plantas"><div class="lx-wrap">
-      <div class="dsec-h"><div><span class="lx-k">Plantas</span><h2 class="lx-h2">${l.tip.length} ${plural(l.tip.length,'planta','plantas')}, <em>${areas(l)}</em></h2></div><p>Plantas ilustrativas com medidas aproximadas. O memorial descritivo completo vem com a proposta.</p></div>
+      <div class="dsec-h"><div><span class="lx-k">${lote?'Lotes':'Plantas'}</span><h2 class="lx-h2">${l.tip.length} ${lote?plural(l.tip.length,'tipo de lote','tipos de lote'):plural(l.tip.length,'planta','plantas')}, <em>${areas(l)}</em></h2></div><p>${lote?'Medidas de cada tipo e um exemplo de recuos. As regras de construção do bairro vêm no contrato.':'Plantas ilustrativas com medidas aproximadas. O memorial descritivo completo vem com a proposta.'}</p></div>
       <div class="fp-tabs" role="tablist" aria-label="Plantas">${l.tip.map((t,i)=>`<button type="button" role="tab" data-tip="${i}" aria-selected="${i===0}">${tipName(t)}<small>${t.a} m² · a partir de ${brlK(t.p)}</small></button>`).join('')}</div>
       <div class="fp" id="fp-body"></div>
     </div></section>
 
     <section class="lx-paper dsec" id="d-unidades"><div class="lx-wrap">
-      <div class="dsec-h"><div><span class="lx-k">Espelho de vendas</span><h2 class="lx-h2">Escolha <em>a sua unidade</em></h2></div><p>O que ainda está livre, ${casa?'quadra por quadra':'andar por andar'}. Toque numa unidade para ver planta, posição do sol e preço de tabela.</p></div>
+      <div class="dsec-h"><div><span class="lx-k">Espelho de vendas</span><h2 class="lx-h2">Escolha <em>${lote?'o seu lote':'a sua unidade'}</em></h2></div><p>${lote?'O que ainda está livre, quadra por quadra. Toque num lote para ver medidas, posição do sol e preço de tabela.':`O que ainda está livre, ${casa?'quadra por quadra':'andar por andar'}. Toque numa unidade para ver planta, posição do sol e preço de tabela.`}</p></div>
       <div class="mirror-wrap"><div class="mirror-box">
         ${!casa&&l.torres>1?`<div class="fp-tabs" role="tablist" aria-label="Torres" style="margin-bottom:14px">${[...Array(l.torres)].map((_,i)=>`<button type="button" role="tab" data-torre="${i}" aria-selected="${i===0}" style="padding:7px 14px">Torre ${'ABCD'[i]}</button>`).join('')}</div>`:''}
-        ${l.modelo3d?`<div class="m-view" role="tablist" aria-label="Como ver o espelho"><button type="button" role="tab" data-mview="3d" aria-selected="true">${ic('i-building')}Prédio 3D</button><button type="button" role="tab" data-mview="grade" aria-selected="false">${ic('i-list')}Grade</button></div>`:''}
-        <div class="m-legend"><span><i style="background:var(--badge-rent-bg);box-shadow:inset 0 0 0 1px var(--vc-green-600)"></i>Disponível</span><span><i style="background:var(--lx-res)"></i>Reservada</span><span><i style="background:var(--lx-sold)"></i>Vendida</span>
-          <label style="margin-left:auto;display:inline-flex;gap:6px;align-items:center">Planta <select class="sel" id="m-tip"><option value="">Todas</option>${l.tip.map((t,i)=>`<option value="${i}">${tipName(t)} · ${t.a} m²</option>`).join('')}</select></label></div>
-        ${l.modelo3d?`<div class="m3d" id="m3d"><div class="m3d-msg">Carregando o prédio…</div><div class="m3d-tip" hidden></div>
+        ${l.modelo3d?`<div class="m-view" role="tablist" aria-label="Como ver o espelho"><button type="button" role="tab" data-mview="3d" aria-selected="true">${ic(lote?'i-map':'i-building')}${lote?'Loteamento 3D':'Prédio 3D'}</button><button type="button" role="tab" data-mview="grade" aria-selected="false">${ic('i-list')}Grade</button></div>`:''}
+        <div class="m-legend"><span><i style="background:var(--badge-rent-bg);box-shadow:inset 0 0 0 1px var(--vc-green-600)"></i>Disponível</span><span><i style="background:var(--lx-res)"></i>${stTxt(l,'res')}</span><span><i style="background:var(--lx-sold)"></i>${stTxt(l,'sold')}</span>
+          <label style="margin-left:auto;display:inline-flex;gap:6px;align-items:center">${lote?'Tipo':'Planta'} <select class="sel" id="m-tip"><option value="">Todas</option>${l.tip.map((t,i)=>`<option value="${i}">${tipName(t)} · ${t.a} m²</option>`).join('')}</select></label></div>
+        ${l.modelo3d?`<div class="m3d" id="m3d"><div class="m3d-msg">Carregando ${lote?'o loteamento':'o prédio'}…</div><div class="m3d-tip" hidden></div>
           <div class="m3d-ui"><span class="m3d-hint">Arraste para girar</span><button type="button" class="m3d-reset" data-m3d-reset aria-label="Voltar à vista inicial" title="Voltar à vista inicial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.34-5.66M4 4v4.5h4.5"/></svg></button></div></div>`:''}
-        <div class="mirror-scroll" ${l.modelo3d?'hidden':''}><div class="mirror" id="mirror"></div></div>
+        <div class="mirror-scroll" ${l.modelo3d?'hidden':''}><div class="mirror ${lote?'lotes':''}" id="mirror"></div></div>
       </div><div class="unit-card" id="unit-card" aria-live="polite"></div></div>
     </div></section>
 
     <section class="lx-paper dsec" id="d-lazer"><div class="lx-wrap">
-      <div class="launch"><div class="launch-head"><div><span class="badge" style="background:var(--vc-green-500);color:var(--vc-green-ink)">Lançamento</span><h3 style="margin-top:10px">${esc(l.nome)}</h3><p>${esc(l.bairro)} · Guaratinguetá · ${l.fase==='pronto'?'Entregue em':'Entrega em'} ${mes(l.entrega)}</p></div><button class="btn btn-primary btn-sm" type="button" data-goto="d-plantas">Ver plantas ${ic('i-arrow')}</button></div>
+      <div class="launch"><div class="launch-head"><div><span class="badge" style="background:var(--vc-green-500);color:var(--vc-green-ink)">Lançamento</span><h3 style="margin-top:10px">${esc(l.nome)}</h3><p>${esc(l.bairro)} · Guaratinguetá · ${l.fase==='pronto'?'Entregue em':'Entrega em'} ${mes(l.entrega)}</p></div><button class="btn btn-primary btn-sm" type="button" data-goto="d-plantas">Ver ${lote?'lotes':'plantas'} ${ic('i-arrow')}</button></div>
         <div class="amen">${l.com.map(x=>{ const k=com(x); return `<div>${ic(k.i)}${esc(k.n)}</div>`; }).join('')}</div></div>
     </div></section>
 
     <section class="lx-dark dsec" id="d-obra"><div class="lx-wrap">
-      <div class="dsec-h"><div><span class="lx-k">Andamento da obra</span><h2 class="lx-h2">${l.fase==='planta'?'A obra <em>vai começar</em>':l.fase==='pronto'?'Obra <em>entregue</em>':`${p}% <em>concluída</em>`}</h2></div><p>${l.fase==='planta'?`Lançado em ${mes(l.lanc)}. A construtora prevê o início da obra para os próximos meses e a entrega para ${mes(l.entrega)}.`:l.fase==='pronto'?`Chaves entregues em ${mes(l.entrega)}. O condomínio já está funcionando.`:'Atualizado pela construtora em 30/set/2026, com fotos do canteiro todo mês.'}</p></div>
+      <div class="dsec-h"><div><span class="lx-k">${lote?'Obras de infraestrutura':'Andamento da obra'}</span><h2 class="lx-h2">${l.fase==='planta'?'A obra <em>vai começar</em>':l.fase==='pronto'?'Obra <em>entregue</em>':`${p}% <em>concluída</em>`}</h2></div><p>${l.fase==='planta'?`Lançado em ${mes(l.lanc)}. A construtora prevê o início da obra para os próximos meses e a entrega para ${mes(l.entrega)}.`:l.fase==='pronto'?`Chaves entregues em ${mes(l.entrega)}. O condomínio já está funcionando.`:'Atualizado pela construtora em 30/set/2026, com fotos do canteiro todo mês.'}</p></div>
       <div class="obra"><div class="ring" style="--v:${p}"><div><b>${p}%</b><span>da obra</span></div></div>
         <div><div class="stages">${l.etapas.map(([n,v])=>`<div class="stage ${v===100?'done':''}"><div class="top"><span>${n}</span><b>${v}%</b></div><div class="bar"><i style="width:${v}%"></i></div></div>`).join('')}</div>
         <ul class="mil">${marcos.map(([t,d,ok])=>`<li class="${ok?'done':''}"><b>${t}</b><small>${d}</small></li>`).join('')}</ul></div></div>
@@ -372,9 +428,10 @@
     </div></section>
 
     <section class="lx-paper dsec" id="d-pagamento"><div class="lx-wrap">
-      <div class="dsec-h"><div><span class="lx-k">Pagamento</span><h2 class="lx-h2">Simule <em>a sua parcela</em></h2></div><p>${meses?`Faltam ${meses} meses para as chaves. Ajuste o sinal e quanto você quer pagar durante a obra.`:'Imóvel pronto: você paga o sinal e financia o resto pelo banco.'}</p></div>
-      <div id="d-sim">${simHTML(l)}</div>
-      <div class="conds">${[['i-calc','Sinal a partir de 5%','Na assinatura do contrato com a construtora.'],['i-chart','Correção pelo INCC','Só durante a obra, até a entrega das chaves.'],['i-key','FGTS no financiamento','Pode usar para dar entrada ou amortizar.'],['i-home','Financiamento bancário','Na entrega, com o banco que você escolher.']].map(([i,t,s])=>`<div>${ic(i)}<b>${t}</b>${s}</div>`).join('')}</div>
+      <div class="dsec-h"><div><span class="lx-k">Pagamento</span><h2 class="lx-h2">Simule <em>a sua parcela</em></h2></div><p>${lote?'Lote se paga direto com a loteadora: uma entrada e o saldo em parcelas mensais. Ajuste a entrada e o prazo.':meses?`Faltam ${meses} meses para as chaves. Ajuste o sinal e quanto você quer pagar durante a obra.`:'Imóvel pronto: você paga o sinal e financia o resto pelo banco.'}</p></div>
+      <div id="d-sim">${lote?simLoteHTML(l):simHTML(l)}</div>
+      <div class="conds">${(lote?[['i-calc','Entrada a partir de 10%','Na assinatura do contrato com a loteadora.'],['i-calendar','Saldo em até 180 meses','Direto com a loteadora, sem análise de banco.'],['i-chart','Correção pelo IPCA','As parcelas são reajustadas uma vez por ano.'],['i-key','Escritura na quitação','Ou antes, se você financiar o saldo por um banco.']]
+        :[['i-calc','Sinal a partir de 5%','Na assinatura do contrato com a construtora.'],['i-chart','Correção pelo INCC','Só durante a obra, até a entrega das chaves.'],['i-key','FGTS no financiamento','Pode usar para dar entrada ou amortizar.'],['i-home','Financiamento bancário','Na entrega, com o banco que você escolher.']]).map(([i,t,s])=>`<div>${ic(i)}<b>${t}</b>${s}</div>`).join('')}</div>
     </div></section>
 
     <section class="lx-paper dsec" id="d-construtora"><div class="lx-wrap">
@@ -382,13 +439,20 @@
       <div class="posters">${(D.lancamentos.filter(x=>x.cons===l.cons&&x.id!==l.id).concat(D.lancamentos.filter(x=>x.cons!==l.cons&&x.id!==l.id))).slice(0,4).map(VC.lxPoster).join('')}</div>
     </div></section>
 
-    <div class="actionbar" role="region" aria-label="Ações do empreendimento"><div class="nm"><b>${esc(l.nome)}</b><small>A partir de ${brl(minP(l))} · ${disp} ${plural(disp,'disponível','disponíveis')}</small></div><div class="acts"><button class="btn btn-sm btn-lx-ghost wa" type="button" data-lwa>${ic('i-wa')}<span>WhatsApp</span></button><button class="btn btn-primary btn-sm" type="button" data-visita>Agendar visita</button></div></div>`;
+    <div class="actionbar" role="region" aria-label="Ações do empreendimento"><div class="nm"><b>${esc(l.nome)}</b><small>A partir de ${brl(minP(l))} · ${disp} ${lote?plural(disp,'lote disponível','lotes disponíveis'):plural(disp,'disponível','disponíveis')}</small></div><div class="acts"><button class="btn btn-sm btn-lx-ghost wa" type="button" data-lwa>${ic('i-wa')}<span>WhatsApp</span></button><button class="btn btn-primary btn-sm" type="button" data-visita>Agendar visita</button></div></div>`;
     VC.mount('lx', html, {title:l.nome, actionbar:true});
     const main=$('#main');
 
     // plantas
     const fpBody=$('#fp-body');
     const drawFP=i=>{ const t=l.tip[i], free=[]; for(let k=0;k<torresN(l);k++) espelho(l,k).forEach(r=>r.forEach(u=>{ if(u.st==='free'&&u.tip===t) free.push(u); }));
+      if(lote){ const us=espelho(l).flat().filter(u=>u.tip===t), fr=[...new Set(us.map(u=>u.fr))].sort((a,b)=>a-b), qs=[...new Set(us.map(u=>u.f))];
+        const ex=us.find(u=>u.fr===fr[0]);
+        fpBody.innerHTML=`<div class="fp-draw">${A.lote({fr:ex.fr, fu:ex.fu, esquina:t.esquina, misto:t.misto})}<div class="note"><div class="fp-legend"><span><i style="background:var(--fp-social)"></i>Área para construir</span><span><i style="background:var(--fp-externo)"></i>Recuos</span></div><span>Desenho ilustrativo · recuos de exemplo</span></div></div>
+        <div class="fp-spec"><span class="lx-k">Lote</span><h3>${tipName(t)}</h3><dl><dt>Área</dt><dd>${us.length>1&&t.a!==Math.max(...us.map(u=>u.a))?`${m2(t.a)} a ${m2(Math.max(...us.map(u=>u.a)))}`:m2(t.a)} m²</dd><dt>Frente</dt><dd>${fr.length>1?`${m2(fr[0])} a ${m2(fr[fr.length-1])}`:m2(fr[0])} m</dd><dt>Fundo</dt><dd>${ex.fu} m</dd><dt>Uso</dt><dd>${t.misto?'Comércio, serviço ou moradia':'Residencial'}</dd><dt>Quadras</dt><dd>${qs.length>4?`${qs.length} quadras`:qs.join(', ')}</dd></dl>
+          <div class="pf">A partir de<b>${brl(t.p)}</b></div><span class="avail"><i></i>${free.length} ${dispTxt(l,free.length)} deste tipo</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" type="button" data-see-units="${i}">Ver lotes deste tipo</button><button class="btn btn-sm btn-lx-ghost" type="button" data-sim-tip="${i}">Simular</button></div></div>`;
+        return; }
       fpBody.innerHTML=`<div class="fp-draw">${A.planta(t)}<div class="note"><div class="fp-legend"><span><i style="background:var(--fp-social)"></i>Social</span><span><i style="background:var(--fp-intimo)"></i>Íntima</span><span><i style="background:var(--fp-molhado)"></i>Banheiros e serviço</span><span><i style="background:var(--fp-externo)"></i>${t.casa?'Quintal':'Varanda'}</span></div><span>Planta ilustrativa · medidas aproximadas</span></div></div>
       <div class="fp-spec"><span class="lx-k">${t.casa?'Casa':'Apartamento'}</span><h3>${tipName(t)}</h3><dl><dt>Área privativa</dt><dd>${t.a} m²</dd><dt>Quartos</dt><dd>${t.studio?'Studio':t.q}</dd><dt>Suítes</dt><dd>${t.s||'—'}</dd><dt>Banheiros</dt><dd>${t.studio||t.q===1?1:t.s+1}</dd><dt>Vagas</dt><dd>${t.v||'Sem vaga'}</dd></dl>
         <div class="pf">A partir de<b>${brl(t.p)}</b></div><span class="avail"><i></i>${free.length} ${plural(free.length,'unidade disponível','unidades disponíveis')} nesta planta</span>
@@ -397,12 +461,30 @@
     // espelho
     let torre=0, tipF='', sel=null, v3=null;
     const mir=$('#mirror'), uc=$('#unit-card');
+    const stLbl=u=>stTxt(l,u.st).toLowerCase();
     const drawMirror=()=>{ const rows=espelho(l,torre), cols=rows[0].length;
+      if(lote){
+        // cada quadra em duas linhas, na posição real: fileira norte em cima, fileira sul embaixo (de oeste para leste)
+        const nc=Math.max(...rows.map(r=>r.length/2)), btn=u=>{ const dim=tipF!==''&&u.tip!==l.tip[+tipF]; return `<button type="button" class="unit ${u.st==='free'?'':u.st} ${dim?'dim':''} ${sel===u.n?'sel':''}" data-u="${u.n}" ${u.st==='sold'?'disabled':''} aria-label="Quadra ${u.f}, lote ${u.u}, ${stLbl(u)}">${u.u}</button>`; };
+        mir.style.gridTemplateColumns=`44px repeat(${nc}, minmax(28px,1fr))`;
+        mir.innerHTML=rows.map(r=>{ const h=r.length/2, pad='<span></span>'.repeat(nc-h);
+          return `<span class="fl qd">Qd. ${r[0].f}</span>${r.slice(0,h).map(btn).join('')}${pad}<span class="fl"></span>${r.slice(h).reverse().map(btn).join('')}${pad}`; }).join('');
+        return;
+      }
       mir.style.gridTemplateColumns=`44px repeat(${cols}, minmax(0,1fr))`;
-      mir.innerHTML=`<span></span>`+rows[0].map(u=>`<span class="colh">${casa?'Casa '+u.u:'Final '+String(u.u).padStart(2,'0')}</span>`).join('')+rows.map(r=>`<span class="fl">${casa?'Qd. '+r[0].f:r[0].dup?r[0].f+'/'+(r[0].f+1)+'º':r[0].f+'º'}</span>`+r.map(u=>{ const dim=tipF!==''&&u.tip!==l.tip[+tipF]; return `<button type="button" class="unit ${u.st==='free'?'':u.st} ${dim?'dim':''} ${sel===u.n?'sel':''}" data-u="${u.n}" ${u.st==='sold'?'disabled':''} aria-label="${casa?'Casa':'Unidade'} ${u.n}, ${u.st==='free'?'disponível':u.st==='res'?'reservada':'vendida'}">${u.n}</button>`; }).join('')).join('');
+      mir.innerHTML=`<span></span>`+rows[0].map(u=>`<span class="colh">${casa?'Casa '+u.u:'Final '+String(u.u).padStart(2,'0')}</span>`).join('')+rows.map(r=>`<span class="fl">${casa?'Qd. '+r[0].f:r[0].dup?r[0].f+'/'+(r[0].f+1)+'º':r[0].f+'º'}</span>`+r.map(u=>{ const dim=tipF!==''&&u.tip!==l.tip[+tipF]; return `<button type="button" class="unit ${u.st==='free'?'':u.st} ${dim?'dim':''} ${sel===u.n?'sel':''}" data-u="${u.n}" ${u.st==='sold'?'disabled':''} aria-label="${casa?'Casa':'Unidade'} ${u.n}, ${stLbl(u)}">${u.n}</button>`; }).join('')).join('');
     };
     const findU=n=>{ for(const r of espelho(l,torre)) for(const u of r) if(String(u.n)===String(n)) return u; };
-    const drawUnit=u=>{ if(!u){ uc.innerHTML=`<span class="k">Espelho de vendas</span><h3>Nenhuma livre</h3><p>Todas as unidades desta seleção já foram vendidas.</p>`; return; }
+    const drawUnit=u=>{ if(!u){ uc.innerHTML=lote?`<span class="k">Espelho de vendas</span><h3>Nenhum livre</h3><p>Todos os lotes deste tipo já foram vendidos.</p>`:`<span class="k">Espelho de vendas</span><h3>Nenhuma livre</h3><p>Todas as unidades desta seleção já foram vendidas.</p>`; return; }
+      if(lote){
+        const sol = u.norte ? 'Frente para o norte: a fachada pega sol o dia todo' : 'Frente para o sul: o quintal pega sol o dia todo';
+        uc.innerHTML=`<span class="k">Quadra ${u.f} · ${u.norte?'fileira norte':'fileira sul'}</span><h3>Lote ${u.u}</h3>
+          <p>${u.tip.misto?'Lote misto':u.esq?'Lote de esquina':'Lote'} de ${m2(u.a)} m² (${m2(u.fr)} × ${u.fu} m)${u.obs?`, ${esc(u.obs)}`:''}. ${sol}.</p>
+          <div class="pr"><span style="font-size:13px;color:var(--lx-ink-2)">Preço de tabela</span><br><b>${brl(u.p)}</b></div>
+          ${u.st==='res'?`<p style="color:var(--vc-sun-500)">Reservado até amanhã. Se a reserva cair, a gente te avisa.</p><button class="btn btn-sm btn-lx-ghost" type="button" data-avise="${u.n}">Me avisar se liberar</button>`
+            :`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" type="button" data-quero="${u.n}">Quero este lote</button><button class="btn btn-sm btn-lx-ghost" type="button" data-sim-u="${u.n}">Simular este</button></div>`}`;
+        return;
+      }
       const sol = u.u<=Math.ceil((casa?8:l.porAndar)/2) ? 'sol da manhã' : 'sol da tarde', vista = !casa && (l.pav ? u.f>=15 && u.u>=3 : u.f>=Math.ceil(l.andares*.6)) ? ', vista aberta para a Mantiqueira' : '';
       uc.innerHTML=`<span class="k">${casa?`Quadra ${u.f} · casa ${u.u}`:`${l.torres>1?`Torre ${'ABCD'[torre]} · `:''}${andarTxt(u)} · final ${String(u.u).padStart(2,'0')}`}</span><h3>${casa?'Casa':u.dup?'Duplex':'Apto'} ${u.n}</h3>
         <p>${tipName(u.tip)}, ${u.tip.a} m², ${tipSub(u.tip)}. Posição com ${sol}${vista}.</p>
@@ -416,18 +498,18 @@
     const m3=$('#m3d'), mscroll=$('.mirror-scroll');
     const setView=v=>{ $$('[data-mview]').forEach(b=>b.setAttribute('aria-selected', b.dataset.mview===v)); if(m3) m3.hidden=v!=='3d'; mscroll.hidden=v==='3d'; };
     if(m3){
-      const ST={free:'Disponível',res:'Reservada',sold:'Vendida'};
-      const tip3=u=>`<span class="k">${andarTxt(u)} · final ${String(u.u).padStart(2,'0')}</span><b>${u.dup?'Duplex':'Apto'} ${u.n}</b><span>${tipName(u.tip)} · ${u.tip.a} m² · ${tipSub(u.tip)}</span>
-        <span class="row"><strong>${u.st==='sold'?'—':brl(u.p)}</strong><em class="st ${u.st}">${ST[u.st]}</em></span>${u.st==='sold'?'':`<small>${u.n===sel?'Selecionada':'Clique para selecionar'}</small>`}`;
+      const tip3=u=>lote ? `<span class="k">Quadra ${u.f} · ${u.norte?'fileira norte':'fileira sul'}</span><b>Lote ${u.u}</b><span>${u.tip.misto?'Lote misto · ':u.esq?'Esquina · ':''}${m2(u.a)} m² · ${m2(u.fr)} × ${u.fu} m</span>
+        <span class="row"><strong>${u.st==='sold'?'—':brl(u.p)}</strong><em class="st ${u.st}">${stTxt(l,u.st)}</em></span>${u.st==='sold'?'':`<small>${u.n===sel?'Selecionado':'Clique para selecionar'}</small>`}` : `<span class="k">${andarTxt(u)} · final ${String(u.u).padStart(2,'0')}</span><b>${u.dup?'Duplex':'Apto'} ${u.n}</b><span>${tipName(u.tip)} · ${u.tip.a} m² · ${tipSub(u.tip)}</span>
+        <span class="row"><strong>${u.st==='sold'?'—':brl(u.p)}</strong><em class="st ${u.st}">${stTxt(l,u.st)}</em></span>${u.st==='sold'?'':`<small>${u.n===sel?'Selecionada':'Clique para selecionar'}</small>`}`;
       import('./espelho3d.js').then(mod=>{ if(!document.body.contains(m3)) return;
-        v3=mod.mount(m3,{url:l.modelo3d, label:`${l.nome} em 3D. Use a grade para navegar pelo teclado.`, unit:n=>findU(n), sel:()=>sel, dim:u=>tipF!==''&&u.tip!==l.tip[+tipF], tip:tip3,
+        v3=mod.mount(m3,{url:l.modelo3d, label:`${l.nome} em 3D. Use a grade para navegar pelo teclado.`, erro:`Não deu pra carregar ${lote?'o loteamento':'o prédio'} em 3D.`, vista:l.vista3d, unit:n=>findU(n), sel:()=>sel, dim:u=>tipF!==''&&u.tip!==l.tip[+tipF], tip:tip3,
           onPick:u=>pick(u), onError:()=>setView('grade')});
         VC.onCleanup(()=>{ if(v3) v3.dispose(); v3=null; });
       }).catch(()=>setView('grade'));
     }
     $('#m-tip').addEventListener('change', e=>{ tipF=e.target.value; pick(firstFree()); });
     // simulador
-    const simRoot=$('#d-sim [data-sim]'); bindSim(simRoot);
+    const simRoot=$('#d-sim [data-sim]'); (lote?bindSimLote:bindSim)(simRoot);
     const toSim=(price)=>{ simRoot._setPrice(price, meses); document.getElementById('d-pagamento').scrollIntoView({behavior:'smooth'}); };
 
     main.addEventListener('click', e=>{
@@ -444,8 +526,8 @@
       const su=e.target.closest('[data-see-units]'); if(su){ tipF=su.dataset.seeUnits; $('#m-tip').value=tipF; pick(firstFree()); document.getElementById('d-unidades').scrollIntoView({behavior:'smooth'}); return; }
       const st=e.target.closest('[data-sim-tip]'); if(st){ toSim(l.tip[+st.dataset.simTip].p); return; }
       const sv=e.target.closest('[data-sim-u]'); if(sv){ toSim(findU(sv.dataset.simU).p); return; }
-      const q=e.target.closest('[data-quero]'); if(q){ visitaModal(l, q.dataset.quero); return; }
-      const av=e.target.closest('[data-avise]'); if(av){ VC.toast(`Pronto. Se a unidade ${av.dataset.avise} liberar, a gente te avisa.`); return; }
+      const q=e.target.closest('[data-quero]'); if(q){ visitaModal(l, uNome(l, findU(q.dataset.quero))); return; }
+      const av=e.target.closest('[data-avise]'); if(av){ const uu=findU(av.dataset.avise); VC.toast(`Pronto. Se ${lote?`o lote ${uu.u} da quadra ${uu.f}`:`a unidade ${uu.n}`} liberar, a gente te avisa.`); return; }
       const lb=e.target.closest('[data-lxb]'); if(lb){ L=Object.assign(L0(),{view:L.view, bairros:[lb.dataset.lxb]}); }
     });
     // scroll-spy
