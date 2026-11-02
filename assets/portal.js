@@ -317,6 +317,59 @@
 
   /* ===== PÁGINA DO IMÓVEL ===== */
   const pmt = (pv, aa=.115, n=360) => { const i=Math.pow(1+aa,1/12)-1; return pv*i/(1-Math.pow(1+i,-n)); };
+  /* simulador de financiamento bancário: tabela Price ou SAC, juros efetivos ao ano */
+  const finCalc = (pv, aa, n, tab) => { const i=Math.pow(1+aa,1/12)-1;
+    if(tab==='price'){ const p=pv*i/(1-Math.pow(1+i,-n)); return {ini:p, fim:p, juros:p*n-pv}; }
+    const a=pv/n; return {ini:a+pv*i, fim:a*(1+i), juros:i*pv*(n+1)/2}; };
+  function simFinHTML(im){
+    return `<div class="sim sim-im">
+      <div class="sim-ctrl">
+        <div class="sl"><div class="top"><label for="fs-e">Entrada</label><output id="fs-eo"></output></div><input class="rng" type="range" id="fs-e" min="20" max="80" step="1" value="20"><small>A maioria dos bancos financia até 80% do valor.</small></div>
+        <div class="sl"><div class="top"><label for="fs-f">FGTS na entrada</label><output id="fs-fo"></output></div><input class="rng" type="range" id="fs-f" min="0" max="${Math.floor(im.preco*.2/500)*500}" step="500" value="0"><small>Com 3 anos de carteira assinada, somando todos os empregos, dá pra usar o saldo.</small></div>
+        <div class="sl"><div class="top"><label for="fs-n">Prazo</label><output id="fs-no"></output></div><input class="rng" type="range" id="fs-n" min="5" max="35" step="1" value="30"></div>
+        <div class="sl"><div class="top"><label for="fs-j">Juros do banco</label><output id="fs-jo"></output></div><input class="rng" type="range" id="fs-j" min="8" max="14" step=".1" value="11.5"><small>Muda de banco pra banco. Vale pedir a taxa de pelo menos dois.</small></div>
+        <div class="sl"><div class="top"><span class="lbl" id="fs-tl">Tabela</span></div><div class="seg" role="group" aria-labelledby="fs-tl"><button type="button" data-tab="price" aria-pressed="true">Price</button><button type="button" data-tab="sac" aria-pressed="false">SAC</button></div><small id="fs-ts"></small></div>
+      </div>
+      <div class="sim-out" aria-live="polite">
+        <div class="big"><span id="fs-bl"></span><b id="fs-big"></b><span id="fs-bs"></span></div>
+        <div class="renda">${ic('i-user')}<span>Renda familiar a partir de <b id="fs-renda"></b><small>Os bancos aceitam até 30% da renda na parcela.</small></span></div>
+        <div class="stack" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
+        <div class="sim-rows">
+          <div><i style="background:var(--vc-sun-500)"></i><span>Entrada<small id="fs-r1s"></small></span><b id="fs-r1"></b></div>
+          <div><i style="background:var(--vc-green-500)"></i><span>Valor financiado<small id="fs-r2s"></small></span><b id="fs-r2"></b></div>
+          <div><i style="background:var(--vc-purple-400)"></i><span>Juros no período<small id="fs-r3s"></small></span><b id="fs-r3"></b></div>
+        </div>
+        <button class="btn btn-primary" type="button" id="fs-go">Quero conversar sobre financiamento ${ic('i-arrow')}</button>
+        <p class="sim-note">Simulação ilustrativa. A parcela do banco também traz os seguros obrigatórios e a taxa de administração, e os juros dependem da sua renda e do seu relacionamento com o banco. Quem faz a conta final é o banco.</p>
+      </div></div>`;
+  }
+  function bindSimFin(root, im){
+    const g=id=>$('#'+id,root), fill=i=>i.style.setProperty('--p', ((i.value-i.min)/(i.max-i.min)*100)+'%'), pct=v=>String(v).replace('.',',');
+    let tab='price', last;
+    const calc=()=>{
+      const P=im.preco, e=+g('fs-e').value, ent=P*e/100, f=g('fs-f'); f.max=Math.floor(ent/500)*500;
+      const fg=+f.value, n=+g('fs-n').value*12, j=+g('fs-j').value, pv=P-ent, r=finCalc(pv, j/100, n, tab), tot=P+r.juros;
+      g('fs-eo').textContent=`${e}% · ${brl(ent)}`; g('fs-fo').textContent=fg?brl(fg):'Não vou usar';
+      g('fs-no').textContent=`${n/12} anos · ${n} parcelas`; g('fs-jo').textContent=`${pct(j)}% ao ano`;
+      g('fs-ts').textContent = tab==='price' ? 'Parcela igual do começo ao fim. No total, paga mais juros.' : 'Parcela começa maior e cai todo mês. No total, paga menos juros.';
+      g('fs-bl').textContent = tab==='price' ? 'Parcela fixa' : 'Primeira parcela';
+      g('fs-big').innerHTML = `${brl(r.ini)}<small> /mês</small>`;
+      g('fs-bs').textContent = tab==='price' ? `Igual nas ${n} parcelas.` : `Cai até ${brl(r.fim)} na última.`;
+      g('fs-renda').textContent = brl(r.ini/.3);
+      g('fs-r1').textContent=brl(ent); g('fs-r1s').textContent = fg ? `${brl(fg)} do FGTS e ${brl(ent-fg)} do seu bolso` : `${e}% do valor, do seu bolso`;
+      g('fs-r2').textContent=brl(pv); g('fs-r2s').textContent=`${100-e}% do valor, em ${n} parcelas`;
+      g('fs-r3').textContent=brl(r.juros); g('fs-r3s').textContent=`Total pago no fim: ${brl(tot)}`;
+      const st=$$('.stack i',root); st[0].style.width=(ent/tot*100)+'%'; st[1].style.width=(pv/tot*100)+'%'; st[2].style.width=(r.juros/tot*100)+'%';
+      $$('.rng',root).forEach(fill);
+      last={ent, pv, n, ini:r.ini};
+    };
+    $$('.rng',root).forEach(i=>i.addEventListener('input',calc));
+    root.addEventListener('click', e=>{
+      const b=e.target.closest('[data-tab]'); if(b){ tab=b.dataset.tab; $$('[data-tab]',root).forEach(x=>x.setAttribute('aria-pressed', x===b)); calc(); }
+      if(e.target.closest('#fs-go')) contatoModal(im, `Simulei aqui: entrada de ${brl(last.ent)} e ${brl(last.pv)} financiados em ${last.n/12} anos pela tabela ${tab==='price'?'Price':'SAC'}, com ${tab==='price'?'parcela':'primeira parcela'} perto de ${brl(last.ini)}. Dá pra conversar sobre isso?`);
+    });
+    calc();
+  }
   function quality(im){
     const f=fotos(im).length, items=[
       ['Fotos de todos os cômodos', f>=5], ['Preço completo, com custos', true], ['Recado de quem anuncia', !!im.nota], ['Localização no mapa', im.id%2===1 || im.an!=='prop'],
@@ -324,9 +377,9 @@
     const ok=items.filter(x=>x[1]).length; return {items, nota:Math.round((4+ok)*10)/10};
   }
   const fmtData = d => d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}).replace('.','');
-  function contatoModal(im){
+  function contatoModal(im, extra){
     const c=D.corretores[im.an], first=c.agencia?c.n:c.n.split(' ')[0], art = c.tipo==='Corretora'||c.agencia ? 'a' : 'o', quem = im.an==='prop' ? 'o proprietário' : `${art} ${first}`;
-    const msg=`Oi${im.an==='prop'?'':', '+first}! Vi ${im.tipo==='Casa'||im.tipo==='Chácara'||im.tipo==='Kitnet'?'a':'o'} ${im.tipo.toLowerCase()} ${prep(im.bairro)} ${im.bairro} no ValeCasa (código VC-${im.id}) e quero saber se ainda está disponível.`;
+    const msg=`Oi${im.an==='prop'?'':', '+first}! Vi ${im.tipo==='Casa'||im.tipo==='Chácara'||im.tipo==='Kitnet'?'a':'o'} ${im.tipo.toLowerCase()} ${prep(im.bairro)} ${im.bairro} no ValeCasa (código VC-${im.id}) e quero saber se ainda está disponível.${extra?' '+extra:''}`;
     VC.modal(VC.mh('Entrar em contato', `Sua mensagem vai direto para ${quem==='o proprietário'?'o proprietário':esc(c.n)}.`)+`<form class="modal-b" id="ct-form" novalidate>
       <div class="field"><label for="ct-nome">Nome</label><input class="input" id="ct-nome" autocomplete="name"><span class="hint" data-ok="Como ${quem} vai te chamar">Como ${quem} vai te chamar</span></div>
       <div class="field"><label for="ct-tel">Celular com DDD</label><input class="input" id="ct-tel" data-tel inputmode="tel" autocomplete="tel" placeholder="(12) 98123-4567"><span class="hint" data-ok=""></span></div>
@@ -394,9 +447,9 @@
             <button class="link" type="button" id="d-more" style="margin-top:8px;font-weight:600">Ler tudo</button></section>
           <section><div class="ph"><span class="t">${ic('i-home','i-20')}Espaços</span><span class="d">Os cômodos e áreas que fazem diferença</span></div><div class="list3">${im.esp.map(x=>`<span>${ic('i-check-s')}${esc(x)}</span>`).join('')}</div></section>
           <section><div class="ph"><span class="t">${ic('i-sparkle','i-20')}Comodidades</span><span class="d">Os itens que dão conforto e praticidade</span></div><div class="list3">${im.com.map(x=>{ const k=com(x); return `<span>${ic(k.i,'i-20')}${esc(k.n)}</span>`; }).join('')}</div></section>
-          <section><div class="ph"><span class="t">${ic('i-calc','i-20')}Quanto custa de verdade</span><span class="d">${venda?'Estimativas para você não ser pego de surpresa':'Tudo o que entra no boleto do mês'}</span></div>
-            ${venda ? `<div class="fin"><div><span>Entrada de 20%</span><b>${brl(im.preco*.2)}</b></div><div><span>Parcela estimada*</span><b>${brl(parcela)}/mês</b></div><div><span>Prazo</span><b>30 anos</b></div></div><p class="muted" style="font-size:12px;margin-top:10px">*Tabela Price com juros de 11,5% ao ano. O banco faz a conta final com a sua renda.</p>`
-              : `<dl class="costs" style="border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:14px;padding:16px 20px">${costs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}<dt class="sum">Total por mês</dt><dd class="sum">${brl(total(im)+Math.max(18,seguro))}</dd></dl>`}</section>
+          ${venda ? `<section id="d-fin"><div class="ph"><span class="t">${ic('i-calc','i-20')}Simule o financiamento</span><span class="d">Mexa na entrada, no prazo e nos juros. ITBI e escritura estão no resumo de custos.</span></div>${simFinHTML(im)}</section>`
+            : `<section><div class="ph"><span class="t">${ic('i-calc','i-20')}Quanto custa de verdade</span><span class="d">Tudo o que entra no boleto do mês</span></div>
+            <dl class="costs" style="border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:14px;padding:16px 20px">${costs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}<dt class="sum">Total por mês</dt><dd class="sum">${brl(total(im)+Math.max(18,seguro))}</dd></dl></section>`}
           ${m2 ? `<section><div class="ph"><span class="t">${ic('i-chart','i-20')}Preço comparado ao bairro</span><span class="d">${diff<0?`Este imóvel está ${-diff}% abaixo da média ${prep(b.n)} ${b.n}.`:diff>0?`Este imóvel está ${diff}% acima da média ${prep(b.n)} ${b.n}.`:'Na média do bairro.'}</span></div>
             <div class="cmp">${[['Este imóvel',m2,true],['Média '+(prep(b.n)==='na'?'da':prep(b.n)==='em'?'de':'do')+' '+b.n,b.m2],['Média de Guará',guaM2]].map(([l,v,me])=>{ const mx=Math.max(m2,b.m2,guaM2)*1.1; return `<div class="cmp-row ${me?'me':''}"><span>${esc(l)}</span><div class="bar"><i style="width:${(v/mx*100).toFixed(1)}%"></i></div><b>${brl(v)}/m²</b></div>`; }).join('')}</div></section>` : ''}
           <section id="d-loc"><div class="ph"><span class="t">${ic('i-map','i-20')}Localização</span><span class="d">${esc(im.bairro)}, Guaratinguetá. O endereço exato é passado por quem anuncia.</span></div>
@@ -412,7 +465,7 @@
         <aside class="d-aside"><div class="aside-sticky">
           <div class="contact">
             <div class="total"><span>${venda?'Valor:':'Total:'}</span><b>${venda?brl(im.preco):brl(total(im))+'/mês'}</b></div>
-            ${venda?`<div class="est">Parcela a partir de <b>${brl(parcela)}/mês</b> com 20% de entrada</div>`:''}
+            ${venda?`<div class="est">Parcela a partir de <b>${brl(parcela)}/mês</b> com 20% de entrada <button class="link" type="button" data-goto="d-fin">Simular</button></div>`:''}
             <div class="agent-photo" style="background:${c.cover?`linear-gradient(160deg,${c.cover[0]},${c.cover[1]})`:'linear-gradient(160deg,var(--vc-purple-600),var(--vc-purple-900))'}"><span class="avatar" style="background:${c.cor}">${im.an==='prop'?ic('i-user','i-24'):initials(c.n)}</span></div>
             <div class="who"><b>${esc(c.n)}</b><span>${c.tipo} · ${c.creci}</span>${c.nota?`<div><span class="stars sm">${ic('i-star')}</span> <span style="font-size:12px;color:var(--ink-2)">${String(c.nota).replace('.',',')}</span></div>`:''}</div>
             <div class="acts"><button class="btn btn-primary" type="button" id="d-contact">Entrar em contato ${ic('i-arrow')}</button><button class="btn btn-outline btn-sm" type="button" id="d-wa">${ic('i-wa')} Chamar no WhatsApp</button></div>
@@ -438,6 +491,7 @@
     });
     $('#d-more').addEventListener('click', e=>{ const d=$('#d-desc'); const open=d.classList.toggle('clamp'); e.currentTarget.textContent=open?'Ler tudo':'Mostrar menos'; });
     $$('.stars[data-rate]').forEach(drawStars);
+    if(venda) bindSimFin($('#d-fin'), im);
     const mp=$('#d-map'), ro=new ResizeObserver(()=>A.layoutPins(mp)); ro.observe(mp); VC.onCleanup(()=>ro.disconnect()); A.layoutPins(mp);
   }
   function drawStars(box){ const v=+box.dataset.rate; box.innerHTML=[1,2,3,4,5].map(i=>`<button type="button" data-v="${i}" class="${i<=v?'':'off'}" aria-label="${i} ${plural(i,'estrela','estrelas')}">${ic('i-star')}</button>`).join(''); }

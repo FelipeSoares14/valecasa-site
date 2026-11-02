@@ -497,11 +497,23 @@ select.input{appearance:auto}
 .hist li.hot::before{border-color:var(--vc-green-600);background:var(--vc-green-500)}
 .hist li b{color:var(--ink)}
 .hist li small{display:block;font-size:12px;color:var(--ink-3)}
-.fin{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.fin>div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
-.fin span{font-size:12px;color:var(--ink-3)}
-.fin b{font-size:18px;font-variant-numeric:tabular-nums}
-@media (max-width:560px){.fin{grid-template-columns:minmax(0,1fr)}}
+/* simulador de financiamento: reaproveita .sim/.sl/.rng/.sim-out do lx.css */
+#d-fin{container-type:inline-size}
+@container (max-width:640px){.sim-im{grid-template-columns:minmax(0,1fr)}}
+.sim-im .sim-ctrl{gap:20px}
+.sim-im .sl .top .lbl{font-weight:600}
+.sim-im input[type=range].rng{background:linear-gradient(90deg,var(--purple-text) var(--p,50%),var(--line-strong) var(--p,50%))}
+.sim-im input[type=range].rng::-webkit-slider-thumb{background:var(--purple-text);border-color:var(--bg);box-shadow:0 0 0 1px var(--purple-text)}
+.sim-im input[type=range].rng::-moz-range-thumb{background:var(--purple-text);border-color:var(--bg);box-shadow:0 0 0 1px var(--purple-text)}
+.sim-im .seg{align-self:flex-start}
+.sim-im .seg button{font-size:13px;padding:8px 18px}
+.sim-im .sim-out .big b{font-size:clamp(34px,4vw,48px)}
+.sim-out .renda{display:flex;gap:10px;align-items:flex-start;background:var(--lx-glass);border:1px solid var(--lx-line);border-radius:12px;padding:12px 14px;font-size:14px}
+.sim-out .renda svg{color:var(--vc-green-500);flex:none;margin-top:1px}
+.sim-out .renda b{font-variant-numeric:tabular-nums}
+.sim-out .renda small{display:block;font-size:12px;color:var(--lx-ink-3)}
+.sim-im #fs-go{align-self:flex-start}
+.contact .est .link{font-size:12.5px;font-weight:600;margin-left:4px}
 .rate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
 .rate-grid .lbl{font-size:13px;font-weight:600;display:block;margin-bottom:8px}
 
