@@ -354,7 +354,8 @@ window.VCArt = (function(){
   /* ===== Mapa ilustrativo de Guará ===== */
   function mapa(o={}){
     const D=window.VCData; let s='<rect class="m-land" x="-900" y="-900" width="2400" height="2220"/>';
-    D.bairros.forEach(b=>{ s+=`<ellipse class="m-hood" cx="${b.x}" cy="${b.y}" rx="44" ry="28" ${o.focus===b.n?'style="fill:var(--tint-purple);stroke:var(--vc-purple-400);stroke-width:1.5;stroke-dasharray:4 3"':''}/>`; });
+    const paint=o.paint||{}; // camadas da busca: classe de cor por bairro (bairros.css)
+    D.bairros.forEach(b=>{ s+=`<ellipse class="m-hood ${paint[b.n]||''}" cx="${b.x}" cy="${b.y}" rx="44" ry="28" ${o.focus===b.n?`style="${paint[b.n]?'':'fill:var(--tint-purple);'}stroke:var(--vc-purple-400);stroke-width:1.5;stroke-dasharray:4 3"`:''}/>`; });
     const c=D.bairros[0];
     D.bairros.slice(1).forEach((b,i)=>{ const mx=(c.x+b.x)/2+(i%2?18:-18), my=(c.y+b.y)/2+(i%3?-12:12); s+=`<path class="m-road-e" d="M${c.x} ${c.y} Q${mx} ${my} ${b.x} ${b.y}" stroke-width="5"/><path class="m-road" d="M${c.x} ${c.y} Q${mx} ${my} ${b.x} ${b.y}" stroke-width="3"/>`; });
     s+=`<path class="m-water" d="M-900 150 L-10 150 ${D.rio.slice(D.rio.indexOf('C'))} L1500 52" stroke-width="14"/>`;
@@ -363,6 +364,7 @@ window.VCArt = (function(){
     s+=`<text class="m-lbl-b" x="560" y="186" text-anchor="end" transform="rotate(-14 560 186)">Via Dutra</text><text class="m-lbl-b" x="520" y="48" text-anchor="end" transform="rotate(-4 520 48)" style="fill:var(--vc-link)">Rio Paraíba do Sul</text>`;
     if(o.pois!==false) D.pois.filter(p=>!p.hide).forEach(p=>{ s+=`<rect class="m-poi" x="${p.x-4}" y="${p.y-4}" width="8" height="8" rx="2"/>`; if(o.poiLabels!==false) s+= p.left ? `<text class="m-poi-t" x="${p.x-8}" y="${p.y+3}" text-anchor="end">${p.n}</text>` : `<text class="m-poi-t" x="${p.x+8}" y="${p.y+3}">${p.n}</text>`; });
     if(o.labels!==false) D.bairros.forEach(b=>{ s+=`<text class="m-lbl" x="${b.x}" y="${b.y+30}" text-anchor="middle">${b.n}</text>`; });
+    if(o.tags) D.bairros.forEach(b=>{ if(o.tags[b.n]) s+=`<text class="m-tag" x="${b.x}" y="${b.y-16}" text-anchor="middle">${o.tags[b.n]}</text>`; });
     return `<svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${s}</svg>`;
   }
   /* posiciona marcadores HTML sobre o SVG (preserveAspectRatio meet) */

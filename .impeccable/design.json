@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T12:00:00-03:00",
+  "title": "Design System: ValeCasa",
+  "extensions": {
+    "colorMeta": {
+      "brand-green": { "role": "primary", "displayName": "Verde Sinal", "canonical": "#03FE9F", "tonalRamp": ["#00331F", "#006B43", "#007F50", "#1FCC8A", "#03FE9F", "#6BFFC8", "#BDFFE6", "#E6FFF5"] },
+      "brand-green-soft": { "role": "primary", "displayName": "Verde Hortelã", "canonical": "#6BFFC8" },
+      "brand-green-tint": { "role": "primary", "displayName": "Verde Broto", "canonical": "#BDFFE6" },
+      "brand-green-deep": { "role": "primary", "displayName": "Verde Mata", "canonical": "#007F50" },
+      "on-green": { "role": "primary", "displayName": "Verde Raiz", "canonical": "#00331F" },
+      "brand-purple": { "role": "secondary", "displayName": "Roxo ValeCasa", "canonical": "#4D00AF", "tonalRamp": ["#120430", "#22004F", "#3D008C", "#4D00AF", "#6514D6", "#8A4DF0", "#E2C9F8", "#F3ECFF"] },
+      "brand-purple-deep": { "role": "secondary", "displayName": "Roxo Profundo", "canonical": "#3D008C" },
+      "brand-purple-night": { "role": "secondary", "displayName": "Roxo Noite", "canonical": "#22004F" },
+      "brand-purple-bright": { "role": "secondary", "displayName": "Roxo Elétrico", "canonical": "#8A4DF0" },
+      "brand-purple-tint": { "role": "secondary", "displayName": "Lavanda Clara", "canonical": "#F3ECFF" },
+      "lilac": { "role": "secondary", "displayName": "Lilás", "canonical": "#E2C9F8" },
+      "lx-ground": { "role": "secondary", "displayName": "Chão de Lançamentos", "canonical": "#1B0646" },
+      "lx-paper": { "role": "secondary", "displayName": "Papel Lilás", "canonical": "#F5F0FD" },
+      "sun": { "role": "tertiary", "displayName": "Sol", "canonical": "#FFDA00", "tonalRamp": ["#3D2E00", "#6B5A00", "#E09200", "#F5B400", "#FFDA00", "#FFE873", "#FFF3B8", "#FBF3E7"] },
+      "coral-location": { "role": "tertiary", "displayName": "Coral Endereço", "canonical": "#E5483B" },
+      "star": { "role": "tertiary", "displayName": "Estrela", "canonical": "#F5B400" },
+      "link": { "role": "tertiary", "displayName": "Link", "canonical": "#1F6FE0" },
+      "success": { "role": "tertiary", "displayName": "Sucesso", "canonical": "#16A34A" },
+      "danger": { "role": "tertiary", "displayName": "Perigo", "canonical": "#DC2626" },
+      "ink": { "role": "neutral", "displayName": "Tinta", "canonical": "#140E1B", "tonalRamp": ["#140E1B", "#2A2433", "#4E4A5E", "#6D687E", "#C9C5D6", "#E3E0EC", "#F1EFF7", "#F7F6FB"] },
+      "ink-2": { "role": "neutral", "displayName": "Tinta Média", "canonical": "#4E4A5E" },
+      "ink-3": { "role": "neutral", "displayName": "Tinta Suave", "canonical": "#6D687E" },
+      "bg": { "role": "neutral", "displayName": "Névoa", "canonical": "#F7F6FB" },
+      "surface": { "role": "neutral", "displayName": "Superfície", "canonical": "#FFFFFF" },
+      "surface-2": { "role": "neutral", "displayName": "Superfície 2", "canonical": "#F1EFF7" },
+      "line": { "role": "neutral", "displayName": "Linha", "canonical": "#E3E0EC" },
+      "line-strong": { "role": "neutral", "displayName": "Linha Forte", "canonical": "#C9C5D6" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Títulos do hero do portal, até 15ch, com uma palavra em verde." },
+      "display-lx": { "displayName": "Display Lançamentos", "purpose": "Títulos da área de Lançamentos." },
+      "number-light": { "displayName": "Number Light", "purpose": "Parcela, estatística, contagem e percentuais em destaque; sempre peso 300 e tabular." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos de seção e da página do imóvel." },
+      "title": { "displayName": "Title", "purpose": "Títulos de bloco com ícone e nomes em cards." },
+      "price": { "displayName": "Price", "purpose": "Preço no card de imóvel." },
+      "body": { "displayName": "Body", "purpose": "Texto corrido, até 68ch." },
+      "label": { "displayName": "Label", "purpose": "Sobretítulos e cabeçalhos do rodapé em caixa alta." }
+    },
+    "shadows": [
+      { "name": "repouso", "value": "0 1px 2px rgba(27,24,37,.06), 0 1px 1px rgba(27,24,37,.04)", "purpose": "Botões redondos sobre foto e selos flutuantes." },
+      { "name": "flutuante", "value": "0 6px 24px -6px rgba(43,10,110,.18), 0 2px 6px rgba(27,24,37,.06)", "purpose": "Modais, menu lateral e toast." },
+      { "name": "cartao-busca", "value": "0 20px 50px -20px rgba(0,0,0,.5)", "purpose": "Só o cartão de busca sobre o hero roxo." }
+    ],
+    "motion": [
+      { "name": "estado", "value": "0.15s ease", "purpose": "Fundo e borda de botões no hover." },
+      { "name": "entrada-de-tela", "value": "0.28s ease-out", "purpose": "Nova tela entra subindo 6px e ganhando opacidade." },
+      { "name": "zoom-da-foto", "value": "0.45s ease", "purpose": "Foto do card aproxima para 1.035 no hover." }
+    ],
+    "breakpoints": [
+      { "name": "celular", "value": "560px" },
+      { "name": "tablet", "value": "760px" },
+      { "name": "coluna-unica", "value": "960px" },
+      { "name": "menu-lateral", "value": "1080px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A próxima ação da área. Um por bloco de decisão.",
+      "html": "<button class=\"ds-btn-primary\">Entrar em contato <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></button>",
+      "css": ".ds-btn-primary{font:600 14px/1 var(--font,Geologica,system-ui,sans-serif);background:var(--vc-green-500,#03FE9F);color:var(--on-green,#00331F);border:1.5px solid transparent;border-radius:999px;padding:11px 22px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-primary:hover{background:var(--vc-green-300,#6BFFC8)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:2px}"
+    },
+    {
+      "name": "Botão roxo",
+      "kind": "button",
+      "refersTo": "button-purple",
+      "description": "Ação institucional ou de anunciante, em caixa alta.",
+      "html": "<button class=\"ds-btn-purple\">Anunciar imóvel</button>",
+      "css": ".ds-btn-purple{font:600 12px/1 var(--font,Geologica,system-ui,sans-serif);text-transform:uppercase;letter-spacing:.06em;background:var(--vc-purple-600,#4D00AF);color:#fff;border:1.5px solid transparent;border-radius:6px;padding:11px 22px;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-purple:hover{background:var(--vc-purple-700,#3D008C)}.ds-btn-purple:active{transform:translateY(1px)}.ds-btn-purple:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:2px}"
+    },
+    {
+      "name": "Botão outline",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária ao lado do botão principal.",
+      "html": "<button class=\"ds-btn-outline\">Chamar no WhatsApp</button>",
+      "css": ".ds-btn-outline{font:600 14px/1 var(--font,Geologica,system-ui,sans-serif);background:var(--surface,#fff);color:var(--ink,#140E1B);border:1.5px solid var(--ink,#140E1B);border-radius:999px;padding:11px 22px;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-outline:hover{background:var(--surface-2,#F1EFF7)}.ds-btn-outline:active{transform:translateY(1px)}.ds-btn-outline:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:2px}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de formulário com rótulo e dica.",
+      "html": "<label class=\"ds-field\"><span>Celular com DDD</span><input class=\"ds-input\" placeholder=\"(12) 98123-4567\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font:500 13px var(--font,Geologica,system-ui,sans-serif);color:var(--ink,#140E1B)}.ds-input{font:400 14px var(--font,Geologica,system-ui,sans-serif);color:var(--ink,#140E1B);background:var(--surface,#fff);border:1.5px solid var(--line-strong,#C9C5D6);border-radius:6px;padding:10px 12px}.ds-input::placeholder{color:var(--ink-3,#6D687E)}.ds-input:focus{outline:none;border-color:var(--vc-purple-600,#4D00AF);box-shadow:0 0 0 3px var(--vc-purple-100,#E2C9F8)}"
+    },
+    {
+      "name": "Segmento",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Escolha entre poucas opções (Venda/Aluguel, Price/SAC).",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"true\">Price</button><button aria-pressed=\"false\">SAC</button></div>",
+      "css": ".ds-seg{display:inline-flex;background:var(--surface-2,#F1EFF7);border-radius:6px;padding:3px;gap:2px}.ds-seg button{border:0;background:none;font:500 13px var(--font,Geologica,system-ui,sans-serif);color:var(--ink-2,#4E4A5E);padding:8px 18px;border-radius:4px;cursor:pointer}.ds-seg button:hover{color:var(--ink,#140E1B)}.ds-seg button[aria-pressed=\"true\"]{background:var(--vc-green-500,#03FE9F);color:var(--on-green,#00331F);font-weight:600}.ds-seg button:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:2px}"
+    },
+    {
+      "name": "Navegação do portal",
+      "kind": "nav",
+      "description": "Links do cabeçalho branco, com a página atual em pílula.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Comprar</a><a href=\"#\">Alugar</a><a href=\"#\">Lançamentos <span>Novo</span></a><a href=\"#\">Bairros</a></nav>",
+      "css": ".ds-nav{display:flex;gap:2px;font-family:var(--font,Geologica,system-ui,sans-serif)}.ds-nav a{font-size:14px;font-weight:500;color:var(--ink-2,#4E4A5E);text-decoration:none;padding:8px 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}.ds-nav a:hover{background:var(--surface-2,#F1EFF7);color:var(--ink,#140E1B)}.ds-nav a[aria-current=\"page\"]{color:var(--ink,#140E1B);font-weight:600;background:var(--surface-2,#F1EFF7)}.ds-nav a:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:2px}.ds-nav span{font:700 9px/1 var(--font,Geologica,system-ui,sans-serif);letter-spacing:.06em;text-transform:uppercase;background:var(--vc-purple-600,#4D00AF);color:#fff;padding:3px 5px;border-radius:3px}"
+    },
+    {
+      "name": "Card de imóvel",
+      "kind": "card",
+      "refersTo": "card-photo",
+      "description": "Plano, sem caixa: a foto é o contêiner, com bairro em coral e preço tabular.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-photo\"><span class=\"ds-badge\">Venda</span></span><span class=\"ds-hood\">Campo do Galvão</span><span class=\"ds-price\">R$ 520.000</span><span class=\"ds-bd\">Cond. não tem · IPTU R$ 1.200/ano</span><span class=\"ds-title\">Casa térrea com quintal e edícula em rua sem saída</span></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;gap:4px;width:260px;color:var(--ink,#140E1B);text-decoration:none;font-family:var(--font,Geologica,system-ui,sans-serif)}.ds-photo{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;margin-bottom:6px;background:linear-gradient(160deg,#BDFFE6,#E2C9F8);transition:transform .45s ease}.ds-card:hover .ds-photo{transform:scale(1.02)}.ds-card:focus-visible{outline:2px solid var(--vc-purple-400,#8A4DF0);outline-offset:4px}.ds-badge{position:absolute;top:10px;left:10px;font:700 10.5px/1 var(--font,Geologica,system-ui,sans-serif);letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;border-radius:4px;background:#F3ECFF;color:#3D008C}.ds-hood{font-size:12px;font-weight:500;color:var(--vc-coral,#E5483B)}.ds-price{font-size:17px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}.ds-bd{font-size:11.5px;color:var(--ink-3,#6D687E);font-variant-numeric:tabular-nums}.ds-title{font-size:13px;font-weight:600;line-height:1.35;margin-top:4px}"
+    },
+    {
+      "name": "Painel do simulador",
+      "kind": "custom",
+      "refersTo": "simulator-panel",
+      "description": "Resultado em número leve sobre roxo-noite, barra empilhada e aviso honesto.",
+      "html": "<div class=\"ds-sim\"><span>Parcela fixa</span><b>R$ 3.941<small> /mês</small></b><div class=\"ds-stack\"><i style=\"width:7%;background:#FFDA00\"></i><i style=\"width:27%;background:#03FE9F\"></i><i style=\"width:66%;background:#8A4DF0\"></i></div><p>Simulação ilustrativa. Quem faz a conta final é o banco.</p></div>",
+      "css": ".ds-sim{background:#1B0646;color:#fff;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:14px;width:340px;font-family:var(--font,Geologica,system-ui,sans-serif)}.ds-sim span{font-size:13px;color:#D9CBF6}.ds-sim b{font-size:48px;font-weight:300;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}.ds-sim small{font-size:18px;font-weight:500;letter-spacing:0;color:#D9CBF6}.ds-stack{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px}.ds-stack i{display:block;height:100%}.ds-sim p{font-size:12px;color:#A893D8;margin:0}"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Conselheiro Moderno",
+    "overview": "O ValeCasa ajuda a escolher uma casa como um conselheiro que conhece Guará de cor: mostra os números sem rodeio (preço completo, custo do mês, parcela, preço do m² comparado ao bairro) e, ao lado deles, o que não cabe numa planilha: o recado de quem anuncia, o sol da manhã na sala, a padaria a duas quadras, quanto tempo leva até a Dutra. O visual carrega essa dupla natureza. A parte \"dados\" é limpa, tabular e precisa: números alinhados, barras de comparação, pontuações. A parte \"coração\" é a marca: o roxo profundo que acolhe, o verde vivo que diz \"pode ir\", as ilustrações de lugares reais da cidade e o coral que marca onde as coisas ficam.\n\nO portal é claro e arejado, com densidade média: cards em grade e trilhos horizontais, seções separadas por espaço, não por caixas. A área de Lançamentos tem dialeto próprio, mais cinematográfico: um chão roxo-noite fixo nos dois temas, alternado com seções em papel lilás, títulos enormes em peso 800 e números grandes em peso 300. Os dois mundos compartilham a mesma fonte, os mesmos tokens de marca e o mesmo jeito de mostrar números.\n\nO ValeCasa nunca deve parecer um portal nacional genérico: cinza e azul corporativo, grade infinita de cards iguais, a cidade como filtro e não como lugar.",
+    "keyCharacteristics": [
+      "Uma família só, Geologica, do peso 300 ao 900; a hierarquia vem de peso e tamanho.",
+      "Roxo é chão e identidade; verde é ação e destaque; coral é localização.",
+      "Números sempre tabulares, com os grandes em peso leve.",
+      "Ilustrações de marcos reais de Guará no lugar de imagens genéricas.",
+      "Tema claro e escuro completos, com a área de Lançamentos ancorada no roxo-noite em ambos."
+    ],
+    "rules": [
+      { "name": "The Green Means Go Rule", "body": "O verde neon é reservado para a próxima ação e para o destaque de uma palavra. Se tudo é verde, nada é ação.", "section": "colors" },
+      { "name": "The Coral Is a Place Rule", "body": "Coral marca onde as coisas ficam (bairro, localização) e o que é novo. Não é cor de erro nem decoração.", "section": "colors" },
+      { "name": "The Purple Floor Rule", "body": "Roxo funciona como chão (hero, rodapé, painel de resultado, Lançamentos) ou como identidade pequena (logo, selo, contador). Evite roxo médio em grandes áreas de conteúdo do portal.", "section": "colors" },
+      { "name": "The Tabular Numbers Rule", "body": "Todo número que se compara (preço, área, parcela, distância, nota) usa algarismos tabulares.", "section": "typography" },
+      { "name": "The Heavy Words, Light Numbers Rule", "body": "Palavras de impacto em 800; números de impacto em 300. Nunca um número gigante em peso pesado.", "section": "typography" },
+      { "name": "The Flat Cards Rule", "body": "Cards de imóvel não têm sombra nem borda: a foto é o contêiner, e o hover aproxima a imagem (escala 1.035) em vez de levantar o card.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar Verde Sinal só para a próxima ação e para uma palavra de destaque em títulos sobre roxo.",
+      "Do pôr texto Verde Raiz (#00331F) sobre verde neon, nunca branco.",
+      "Do mostrar números com algarismos tabulares, e os grandes em peso 300.",
+      "Do marcar bairro e localização em Coral Endereço.",
+      "Do usar as ilustrações de marcos reais de Guará (Estação, Garças, EEAR) e cenas da cidade onde caberia uma imagem genérica.",
+      "Do manter cards de imóvel planos, com a foto como contêiner.",
+      "Do definir toda cor nova como token com versão clara e escura."
+    ],
+    "donts": [
+      "Don't parecer um portal nacional genérico: cinza e azul corporativo, grade infinita de cards idênticos, a cidade reduzida a um filtro.",
+      "Don't usar roxo médio como fundo de grandes áreas de conteúdo do portal; roxo é chão escuro ou identidade pequena.",
+      "Don't usar coral como cor de erro; erro é Perigo (#DC2626).",
+      "Don't criar uma segunda família tipográfica; a hierarquia vem de peso e tamanho em Geologica.",
+      "Don't ilustrar pessoas com rostos; pessoas aparecem sempre em fotografia.",
+      "Don't pôr sombra ou borda em cards de imóvel para \"dar destaque\"."
+    ]
+  }
+}

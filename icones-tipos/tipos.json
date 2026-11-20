@@ -1,0 +1,170 @@
+{
+ "versao": "1.0",
+ "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
+ "categorias": [
+  {
+   "id": "casas",
+   "nome": "Casas",
+   "total": 4,
+   "cobertos": 4
+  },
+  {
+   "id": "apartamentos",
+   "nome": "Apartamentos e Unidades",
+   "total": 6,
+   "cobertos": 6
+  },
+  {
+   "id": "terrenos-rurais",
+   "nome": "Terrenos e Rurais",
+   "total": 3,
+   "cobertos": 3
+  }
+ ],
+ "etiquetas": [],
+ "icones": [
+  {
+   "id": "casa",
+   "nome": "Casa",
+   "categoria": "casas",
+   "origem": "time:casa comum",
+   "aliases": [
+    "Casa térrea",
+    "Residência"
+   ]
+  },
+  {
+   "id": "sobrado",
+   "nome": "Sobrado",
+   "categoria": "casas",
+   "origem": "novo",
+   "aliases": [
+    "Casa de dois andares",
+    "Casa assobradada"
+   ]
+  },
+  {
+   "id": "casa-de-condominio",
+   "nome": "Casa de Condomínio",
+   "categoria": "casas",
+   "origem": "novo",
+   "aliases": [
+    "Casa em condomínio",
+    "Condomínio fechado",
+    "Condomínio horizontal"
+   ]
+  },
+  {
+   "id": "casa-de-vila",
+   "nome": "Casa de Vila",
+   "categoria": "casas",
+   "origem": "time:casa de vila",
+   "aliases": [
+    "Vila",
+    "Casa em vila",
+    "Vila de casas"
+   ]
+  },
+  {
+   "id": "apartamento",
+   "nome": "Apartamento",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Apto",
+    "Prédio",
+    "Edifício"
+   ]
+  },
+  {
+   "id": "cobertura",
+   "nome": "Cobertura",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Penthouse",
+    "Cobertura duplex",
+    "Cobertura linear"
+   ]
+  },
+  {
+   "id": "kitnet",
+   "nome": "Kitnet",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Quitinete",
+    "Kitchenette",
+    "Conjugado"
+   ]
+  },
+  {
+   "id": "studio",
+   "nome": "Studio",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Estúdio",
+    "Apartamento studio"
+   ]
+  },
+  {
+   "id": "flat",
+   "nome": "Flat",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Apart-hotel",
+    "Apart hotel",
+    "Hotel residência"
+   ]
+  },
+  {
+   "id": "loft",
+   "nome": "Loft",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Loft industrial",
+    "Pé-direito duplo",
+    "Mezanino"
+   ]
+  },
+  {
+   "id": "terreno-lote",
+   "nome": "Terreno / Lote",
+   "categoria": "terrenos-rurais",
+   "origem": "time:terreno",
+   "aliases": [
+    "Terreno",
+    "Lote",
+    "Área",
+    "Loteamento"
+   ]
+  },
+  {
+   "id": "chacara",
+   "nome": "Chácara",
+   "categoria": "terrenos-rurais",
+   "origem": "novo",
+   "aliases": [
+    "Chácara de recreio",
+    "Casa de campo"
+   ]
+  },
+  {
+   "id": "fazenda-sitio",
+   "nome": "Fazenda / Sítio",
+   "categoria": "terrenos-rurais",
+   "origem": "time:rural",
+   "aliases": [
+    "Fazenda",
+    "Sítio",
+    "Rancho",
+    "Haras",
+    "Área rural",
+    "Porteira"
+   ]
+  }
+ ]
+}

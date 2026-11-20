@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>ValeCasa Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +14,7 @@
   --vc-coral:#E5483B; --vc-star:#F5B400; --vc-link:#1F6FE0; --vc-success:#16A34A; --vc-warning:#D97706; --vc-danger:#DC2626;
   /* Neutros (levemente puxados para o violeta) */
   --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
-  --ink:#140E1B; --ink-2:#4E4A5E; --ink-3:#817C93;
+  --ink:#140E1B; --ink-2:#4E4A5E; --ink-3:#6D687E;
   --on-green:#00331F; --brand-text:#007F50; --purple-text:#4D00AF; --badge-rent-bg:#BDFFE6; --badge-rent-fg:#006B43; --logo-on-light:#4D00AF;
   --photo-a:#9CC8EF; --photo-b:#CFE3F2; --photo-c:#7DAA62; --photo-d:#5B8A45;
   --shadow-1:0 1px 2px rgba(27,24,37,.06),0 1px 1px rgba(27,24,37,.04);
@@ -538,6 +539,20 @@ code,.mono{font-family:var(--mono);font-size:12px}
   <symbol id="e-galpao" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 9 12 4.5l9.75 4.5M3.75 8.3V21h16.5V8.3M7.5 21v-8.25h9V21M7.5 15h9M7.5 17.25h9M7.5 19.5h9"/></symbol>
   <symbol id="e-poleiro" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6.375a2.25 2.25 0 1 1-4.5 0a2.25 2.25 0 1 1 4.5 0ZM6 6.375 4.5 7.125 6.15 7.5M7.125 3.75l.375-1.125.75.75.75-.75.375 1.125M6.75 8.25v3a6 6 0 0 0 6 6h1.5a5.25 5.25 0 0 0 5.25-5.25V5.25l-3.75 4.5h-3.375M10.5 12.75c1.5 1.5 3.75 1.5 5.25 0M11.25 17.25v3M15 17.25v3M2.25 20.25h19.5"/></symbol>
   <symbol id="e-balanca" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0a3.75 3.75 0 1 1 7.5 0ZM12 6l1.5-1.5M12 9.75v3.75M3.75 13.5h16.5M3.75 13.5v4.5M20.25 13.5v4.5M8.25 13.5v4.5M15.75 13.5v4.5M2.25 18h19.5M4.5 18v2.25M19.5 18v2.25"/></symbol>
+  <!-- Tipos de imóvel (ValeCasa, grade Heroicons, só path). Fonte: icones-tipos/svg -->
+  <symbol id="t-casa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 6h13.5l3 3.75H2.25l3-3.75ZM3.75 9.75v10.5M20.25 9.75v10.5M2.25 20.25h19.5M6 20.25V13.5h3v6.75M12 20.25V13.5h6v6.75M12 15.75h6M12 18h6"/></symbol>
+  <symbol id="t-sobrado" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 2.25h13.5l3 3.75H2.25l3-3.75ZM3.75 6v14.25M20.25 6v14.25M2.25 20.25h19.5M3.75 12.75h16.5M6 8.25h3.75v2.25H6V8.25ZM6 20.25V15h3v5.25M12 20.25V15h6v5.25M12 17.625h6"/></symbol>
+  <symbol id="t-casa-de-condominio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3.75h19.5v2.25H2.25V3.75ZM3 6v14.25M5.25 6v14.25M18.75 6v14.25M21 6v14.25M9.375 10.5h5.25l1.875 2.25h-9l1.875-2.25ZM8.25 12.75v7.5M15.75 12.75v7.5M11.25 20.25v-3.75h1.5v3.75M2.25 20.25h19.5"/></symbol>
+  <symbol id="t-casa-de-vila" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3.75 21.75 10.5M3.75 4.27v15.98h16.5V9.98M3.75 12.75h16.5M6 8.25h3v2.25H6V8.25ZM12.75 20.25v-4.5h3v4.5"/></symbol>
+  <symbol id="t-apartamento" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5M3.75 21V8.25h6M9.75 21V3h10.5v18M6 11.25h1.5M6 14.25h1.5M6 17.25h1.5M12 6h1.5m3 0H18M12 9h1.5m3 0H18M12 12h1.5m3 0H18M12 15h1.5m3 0H18M13.5 21v-3h3v3"/></symbol>
+  <symbol id="t-cobertura" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M3.75 11.25h16.5M5.25 21V6.75h6v4.5M4.5 6.75h6.75M18.75 11.25V21M11.25 9h7.5M18.75 9v2.25M13.875 6.75a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.125 6.75V9M8.25 14.25h1.5m4.5 0h1.5M10.125 21v-3.75h3.75V21"/></symbol>
+  <symbol id="t-kitnet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 4.5h13.5M2.25 4.5v15.75M15.75 4.5v15.75M2.25 12.375h13.5M4.875 12.375V8.625h2.25v3.75M10.875 12.375V8.625h2.25v3.75M4.875 20.25V16.5h2.25v3.75M10.875 20.25V16.5h2.25v3.75M15.75 12.375h1.5l4.5 7.875M18.75 15h1.5M20.25 17.625h1.5M2.25 20.25h19.5"/></symbol>
+  <symbol id="t-studio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 20.25h19.5M3.75 20.25v-6.75M3.75 16.5h7.5v3.75M6 16.5v-.75a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v.75M13.5 20.25v-6.75h7.5v6.75M13.5 15.75h7.5M15.75 13.5V12h3v1.5M17.25 3.75V6M15 8.25a2.25 2.25 0 0 1 4.5 0h-4.5Z"/></symbol>
+  <symbol id="t-flat" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M5.25 21V6.75h13.5V21M6.75 2.25h10.5V4.5H6.75V2.25ZM8.25 4.5v2.25M15.75 4.5v2.25M8.25 9.75h1.5m4.5 0h1.5M8.25 12.75h1.5m4.5 0h1.5M7.5 15h9l-1.5 1.5H9L7.5 15ZM10.125 21v-4.5M13.875 21v-4.5"/></symbol>
+  <symbol id="t-loft" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 20.25h19.5M3.75 20.25V3.75h16.5v16.5M6 6h4.5v3.75H6V6ZM8.25 6v3.75M12 12h8.25M14.25 12v-1.875H18M18 12V8.25M6.75 20.25h1.3125v-2.0625h1.3125v-2.0625h1.3125V14.0625h1.3125V12H12"/></symbol>
+  <symbol id="t-terreno-lote" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 12.75C18.7 10.35 15.45 8.35 12 6.75 8.55 8.35 5.3 10.35 2.25 12.75 5.6 14.4 8.85 16.4 12 18.75c3.15-2.35 6.4-4.35 9.75-6ZM16.125 12l1.125.75-1.125.75M7.875 12l-1.125.75 1.125.75"/></symbol>
+  <symbol id="t-chacara" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75 7.125 8.25 12 12.75M3.75 11.4v8.85h6.75V11.4M6 20.25v-3.75h2.25v3.75M18 4.5c-1.5.75-3 2.25-3 4.125 0 .75.375 1.5.75 1.875-.75.75-1.5 1.875-1.5 3a3.75 3.75 0 0 0 7.5 0c0-1.125-.75-2.25-1.5-3 .375-.375.75-1.125.75-1.875 0-1.875-1.5-3.375-3-4.125ZM18 13.5v6.75M2.25 20.25h19.5"/></symbol>
+  <symbol id="t-fazenda-sitio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75h19.5M3 8.25v10.5M12 8.25v10.5M21 8.25v10.5M2.25 10.5C5.25 9.5 18.75 9.5 21.75 10.5M2.25 14.625h19.5M12 9.75l-9 9M12 9.75l9 9"/></symbol>
 </svg>
 
 <header class="masthead">
@@ -574,6 +589,7 @@ code,.mono{font-family:var(--mono);font-size:12px}
     <a href="#cards">Cards de imóvel</a>
     <a href="#comodidades">Comodidades</a>
     <a href="#comodos">Espaços do imóvel</a>
+    <a href="#tipos">Tipos de imóvel</a>
     <a href="#detalhe">Página do imóvel</a>
     <a href="#descoberta">Bairros e corretores</a>
     <a href="#navegacao">Header e footer</a>
@@ -764,7 +780,7 @@ code,.mono{font-family:var(--mono);font-size:12px}
         <div style="background:linear-gradient(135deg,#4D00AF,#6A00FF);color:#fff">grad-purple</div><div style="background:linear-gradient(135deg,#1FCC8A,#03FE9F);color:#00331F">grad-green</div><div style="background:linear-gradient(135deg,rgba(77,0,175,.45),rgba(3,254,159,.55));color:#140E1B">grad-lilac</div>
       </div>
       <div class="ramp">
-        <div style="background:#F7F6FB;color:#140E1B">bg</div><div style="background:#F1EFF7;color:#140E1B">surface-2</div><div style="background:#E3E0EC;color:#140E1B">line</div><div style="background:#817C93;color:#fff">ink-3</div><div style="background:#4E4A5E;color:#fff">ink-2</div><div style="background:#140E1B;color:#fff">ink</div>
+        <div style="background:#F7F6FB;color:#140E1B">bg</div><div style="background:#F1EFF7;color:#140E1B">surface-2</div><div style="background:#E3E0EC;color:#140E1B">line</div><div style="background:#6D687E;color:#fff">ink-3</div><div style="background:#4E4A5E;color:#fff">ink-2</div><div style="background:#140E1B;color:#fff">ink</div>
       </div>
       <p class="note">★ cor oficial dos arquivos da marca. Contraste: texto sobre o verde 500 é sempre <code>--vc-green-ink</code> (#00331F), nunca branco (branco sobre #03FE9F fica em 1,3:1). Para texto verde sobre fundo branco use o 700 (#007F50, 4,9:1). Branco sobre o roxo #4D00AF passa com folga (11:1). O verde 600 (#1FCC8A) e o amarelo (#FFDA00) ficam abaixo de 2,1:1 sobre branco: servem só para fundo e ilustração, e o texto sobre eles é sempre escuro (#140E1B).</p>
     </section>
@@ -1166,6 +1182,41 @@ code,.mono{font-family:var(--mono);font-size:12px}
       </div>
     </section>
 
+    <!-- TIPOS DE IMÓVEL -->
+    <section id="tipos">
+      <div class="sec-head">
+        <span class="eyebrow">Componentes · Busca e anúncios</span>
+        <h2>Tipos de imóvel</h2>
+        <p>Ícones dos tipos de imóvel usados na busca, nos filtros, nos cards e nos anúncios. Mesmo método dos Espaços: grade 24×24 px, traço 1.5, só <code>&lt;path&gt;</code> e cor herdada do texto.</p>
+      </div>
+      <div class="esp-cat"><h4>Casas</h4><div class="icon-grid"><div class="icon-cell"><svg class="i"><use href="#t-casa"/></svg><span>Casa</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-sobrado"/></svg><span>Sobrado</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-casa-de-condominio"/></svg><span>Casa de Condomínio</span></div><div class="icon-cell"><svg class="i"><use href="#t-casa-de-vila"/></svg><span>Casa de Vila</span></div></div></div>
+      <div class="esp-cat"><h4>Apartamentos e Unidades</h4><div class="icon-grid"><div class="icon-cell novo"><svg class="i"><use href="#t-apartamento"/></svg><span>Apartamento</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-cobertura"/></svg><span>Cobertura</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-kitnet"/></svg><span>Kitnet</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-studio"/></svg><span>Studio</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-flat"/></svg><span>Flat</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-loft"/></svg><span>Loft</span></div></div></div>
+      <div class="esp-cat"><h4>Terrenos e Rurais</h4><div class="icon-grid"><div class="icon-cell"><svg class="i"><use href="#t-terreno-lote"/></svg><span>Terreno / Lote</span></div><div class="icon-cell novo"><svg class="i"><use href="#t-chacara"/></svg><span>Chácara</span></div><div class="icon-cell"><svg class="i"><use href="#t-fazenda-sitio"/></svg><span>Fazenda / Sítio</span></div></div></div>
+      <p class="note">13 tipos. Casa, Casa de Vila, Terreno / Lote e Fazenda / Sítio são os ícones do time redesenhados no padrão (só traço, sem preenchimento); os de borda roxa (9) foram desenhados na mesma linguagem: fachada real de cada tipo, como o imóvel aparece na rua.</p>
+      <h3 class="sub">Em uso</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <button class="chip" aria-pressed="true" style="gap:8px;padding-left:12px"><svg class="i" style="width:16px;height:16px"><use href="#t-casa"/></svg>Casa</button>
+        <button class="chip" aria-pressed="false" style="gap:8px;padding-left:12px"><svg class="i" style="width:16px;height:16px"><use href="#t-apartamento"/></svg>Apartamento</button>
+        <button class="chip" aria-pressed="false" style="gap:8px;padding-left:12px"><svg class="i" style="width:16px;height:16px"><use href="#t-kitnet"/></svg>Kitnet</button>
+        <button class="chip" aria-pressed="false" style="gap:8px;padding-left:12px"><svg class="i" style="width:16px;height:16px"><use href="#t-terreno-lote"/></svg>Terreno</button>
+        <button class="chip" aria-pressed="false" style="gap:8px;padding-left:12px"><svg class="i" style="width:16px;height:16px"><use href="#t-chacara"/></svg>Chácara</button>
+      </div>
+      <h3 class="sub">Regras</h3>
+      <div class="ilu-rules">
+        <div><b>A fachada de verdade</b><span>Cada tipo mostra como o imóvel é visto da rua em Guará: casa térrea com garagem, sobrado de dois andares, pórtico de condomínio, predinho de kitnets com escada externa, porteira de sítio.</span></div>
+        <div><b>Mesma família</b><span>Casa e Sobrado usam o mesmo telhado de quatro águas; Apartamento, Cobertura e Flat são prédios com janelas em traço curto. Studio e Loft mostram o interior, porque a diferença deles está dentro: o Loft é o corte do pé-direito duplo, com mezanino, cama e escada.</span></div>
+        <div><b>Sempre com o nome</b><span>Kitnet, Studio e Flat são parecidos na vida real. O ícone ajuda a achar, mas o texto ao lado é obrigatório.</span></div>
+        <div><b>Tamanhos</b><span>16 px em listas e filtros, 20 px no card do imóvel, 28 px nos atalhos de busca da home.</span></div>
+      </div>
+      <div class="panel" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:4px;min-width:0;max-width:60ch">
+          <b style="font-size:15px">Catálogo de tipos de imóvel</b>
+          <span class="note">Busca, nomes alternativos (Quitinete, Apart-hotel, Sítio…), origem de cada desenho e botão para copiar o SVG. Os arquivos ficam em <code>icones-tipos/svg/</code>, com sprite (<code>vc-tipo-&lt;id&gt;</code>), índice <code>tipos.json</code> e .zip em <code>icones-tipos/dist/</code>.</span>
+        </div>
+        <a class="btn btn-primary" href="https://claude.ai/artifact/3faQbPGd7n3rPPzQe11DFT">Abrir catálogo <svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+    </section>
+
     <!-- DETALHE -->
     <section id="detalhe">
       <div class="sec-head">
@@ -1350,7 +1401,7 @@ code,.mono{font-family:var(--mono);font-size:12px}
   <span class="c">/* Neutros */</span>
   <span class="k">--bg</span>: <span class="v">#F7F6FB</span>; <span class="k">--surface</span>: <span class="v">#FFFFFF</span>; <span class="k">--surface-2</span>: <span class="v">#F1EFF7</span>;
   <span class="k">--line</span>: <span class="v">#E3E0EC</span>; <span class="k">--line-strong</span>: <span class="v">#C9C5D6</span>;
-  <span class="k">--ink</span>: <span class="v">#140E1B</span>; <span class="k">--ink-2</span>: <span class="v">#4E4A5E</span>; <span class="k">--ink-3</span>: <span class="v">#817C93</span>;
+  <span class="k">--ink</span>: <span class="v">#140E1B</span>; <span class="k">--ink-2</span>: <span class="v">#4E4A5E</span>; <span class="k">--ink-3</span>: <span class="v">#6D687E</span>;
 
   <span class="c">/* Tipografia */</span>
   <span class="k">--font</span>: <span class="v">"Geologica", ui-sans-serif, "Segoe UI", system-ui, sans-serif</span>;

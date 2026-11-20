@@ -76,13 +76,15 @@ window.VC = (function(){
     const drop = im.antes ? `<span class="drop">${ic('i-trend-down')}baixou ${brlK(im.antes-im.preco)}</span>` : '';
     return im.fin==='aluguel' ? `<span class="price">${brl(total(im))}<small>/total</small>${drop}</span>` : `<span class="price">${brl(im.preco)}${drop}</span>`;
   }
-  function card(im){
+  function card(im, o){
+    const av = o && o.nota && window.VCAval ? window.VCAval.by(im.bairro) : null;
+    const hn = av && av.n>=5 ? `<span class="hn" title="Nota dos moradores do bairro">${ic('i-star')}${window.VCAval.fmt(av.nota)} bairro</span>` : '';
     const f=fotos(im), badge = im.fin==='aluguel' ? '<span class="badge b-rent">Aluguel</span>' : '<span class="badge b-sale">Venda</span>';
     const extra = im.dias<=2 ? '<span class="badge b-new">Novo</span>' : '';
     const owner = im.an==='prop' ? '<span class="badge b-owner">Proprietário</span>' : '';
     return `<a class="card" href="#imovel-${im.id}" data-id="${im.id}">
       <div class="photo">${scene(f[0][0],f[0][1])}<span class="tl">${badge}${extra}</span>${favBtn('i'+im.id)}<span class="bl"><span class="badge b-photo">${ic('i-camera','i-12')} ${f.length}</span>${owner}</span></div>
-      <span class="hood">${esc(im.bairro)}</span>
+      <span class="hood">${esc(im.bairro)}${hn}</span>
       ${priceHTML(im)}
       <span class="breakdown">${breakdown(im)}</span>
       <span class="title">${esc(im.tit)}</span>
@@ -138,7 +140,7 @@ window.VC = (function(){
     return `<footer class="footer"><div class="wrap footer-in">
       <div><a class="logo" href="#inicio" aria-label="ValeCasa">${LOGO}</a><p class="tagline">O portal de imóveis de Guaratinguetá, direto ao ponto. Aqui o destaque é de quem faz o melhor anúncio.</p>
         <div class="social" aria-label="Redes sociais"><span>${ic('i-wa')}</span><span>${ic('i-ig')}</span><span>${ic('i-mail')}</span><span>${ic('i-phone')}</span></div></div>
-      <div><h4>Procurar</h4><ul><li><a href="#comprar">Comprar</a></li><li><a href="#alugar">Alugar</a></li><li><a href="#lancamentos">Lançamentos</a></li><li><a href="#bairros">Bairros de Guará</a></li></ul></div>
+      <div><h4>Procurar</h4><ul><li><a href="#comprar">Comprar</a></li><li><a href="#alugar">Alugar</a></li><li><a href="#lancamentos">Lançamentos</a></li><li><a href="#bairros">Bairros de Guará</a></li><li><a href="#metodologia">Como avaliamos os bairros</a></li></ul></div>
       <div><h4>Anunciar</h4><ul><li><a href="#inicio" data-anunciar>Anunciar imóvel</a></li><li><a href="#corretores">Para corretores</a></li><li><a href="#lancamentos">Para construtoras</a></li><li><a href="#inicio" data-anunciar>Mídia kit</a></li></ul></div>
       <div><h4>ValeCasa</h4><ul><li><a href="#inicio">Quem somos</a></li><li><a href="#inicio">Ajuda</a></li><li><a href="#inicio">Fale conosco</a></li><li><a href="#inicio">Política de privacidade</a></li></ul></div>
       <small><span><b style="color:#fff;font-weight:600">O jeito certo de procurar imóveis.</b> · Protótipo com dados de exemplo · © 2026 ValeCasa</span>${themeTg()}</small>

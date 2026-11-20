@@ -3,7 +3,11 @@
   const {D,A,$,$$,esc,ic,th,brl,brlK,norm,plural,store,bairro,total,TAGS,TIPOS,com,fotos,scene,card,pinPrice} = VC;
 
   /* ===== estado da busca ===== */
-  const S0 = () => ({fin:'venda', tipos:[], bairros:[], pmin:null, pmax:null, qmin:0, bmin:0, vmin:0, amin:null, tags:[], q:'', an:null, sort:'relevancia', map:true, limit:12, frase:''});
+  const S0 = () => ({fin:'venda', tipos:[], bairros:[], pmin:null, pmax:null, qmin:0, bmin:0, vmin:0, amin:null, tags:[], bq:[], q:'', an:null, sort:'relevancia', map:true, limit:12, frase:''});
+  /* filtros que vêm da avaliação do bairro (avaliacoes.js) */
+  const AVB = n => window.VCAval ? window.VCAval.by(n) : null;
+  const BQ = {familias:['Bairros que combinam com famílias', o=>o.n>=5&&o.perfis.fam>50], nota4:['Nota do bairro 4 ou mais', o=>o.n>=5&&o.nota>=4], seco:['Fora de área de enchente', o=>o.ench.lv===0]};
+  const notaB = im => { const o=AVB(im.bairro); return o&&o.n>=5 ? o.nota : 0; };
   let S = S0(); if(window.innerWidth<960) S.map=false;
   const setS = o => { S = Object.assign(S0(), {map:S.map}, o); };
 
@@ -37,8 +41,9 @@
     if(s.vmin) r=r.filter(im=>im.v>=s.vmin);
     if(s.amin) r=r.filter(im=>(im.a||im.at)>=s.amin);
     if(s.tags.length && skip!=='tags') r=r.filter(im=>s.tags.every(t=> t==='baixou'?!!im.antes : t==='proprietario'?im.an==='prop' : im.tags.includes(t)));
+    if(s.bq && s.bq.length && skip!=='tags') r=r.filter(im=>{ const o=AVB(im.bairro); return o && s.bq.every(k=>BQ[k][1](o)); });
     if(s.q){ const w=norm(s.q).split(/\s+/).filter(x=>x.length>2); if(w.length) r=r.filter(im=>{ const h=norm([im.tit,im.bairro,im.tipo,im.nota,(im.esp||[]).join(' ')].join(' ')); return w.some(x=>h.includes(x)); }); }
-    const by={relevancia:(a,b)=>(a.dias-b.dias)||(b.seed-a.seed), recentes:(a,b)=>a.dias-b.dias, menor:(a,b)=>total(a)-total(b), maior:(a,b)=>total(b)-total(a), area:(a,b)=>(b.a||b.at)-(a.a||a.at)};
+    const by={relevancia:(a,b)=>(a.dias-b.dias)||(b.seed-a.seed), recentes:(a,b)=>a.dias-b.dias, menor:(a,b)=>total(a)-total(b), maior:(a,b)=>total(b)-total(a), area:(a,b)=>(b.a||b.at)-(a.a||a.at), nota:(a,b)=>(notaB(b)-notaB(a))||(a.dias-b.dias)};
     return r.sort(by[s.sort]||by.relevancia);
   }
   const prep = b => /^(Vila|Colônia)/.test(b) ? 'na' : b==='Engenheiro Neiva' ? 'em' : 'no';
@@ -128,7 +133,7 @@
 
     <section class="sec" id="sec-bairros"><div class="wrap">
       <div class="sec-h"><div><span class="eyebrow">Bairros</span><h2>Conheça Guará pelo bairro</h2><p>Preço médio de venda e o jeito de cada lugar, contado por quem mora lá.</p></div><div class="rail-nav"><button type="button" data-rail="rail-hoods" data-dir="-1" aria-label="Bairros anteriores">${ic('i-chev-l')}</button><button type="button" data-rail="rail-hoods" data-dir="1" aria-label="Próximos bairros">${ic('i-chev-r')}</button></div></div>
-      <div class="rail" id="rail-hoods" style="grid-auto-columns:minmax(180px,calc((100% - 5*24px)/6))">${D.bairros.map((b,i)=>{ const n=hoodCount(b.n); return `<a class="hood-t" href="#busca" data-bairro="${esc(b.n)}">${scene(['casa','apto','sobrado','chacara'][i%4], 90+i)}<div><h3>${esc(b.n)}</h3><span class="vibe">${esc(b.vibe)}</span></div><div><span>Média de venda</span><b>${brl(b.media)}</b><span class="cnt">${n} ${plural(n,'imóvel','imóveis')}</span></div></a>`; }).join('')}</div>
+      <div class="rail" id="rail-hoods" style="grid-auto-columns:minmax(180px,calc((100% - 5*24px)/6))">${D.bairros.map((b,i)=>{ const n=hoodCount(b.n), av=window.VCAval&&VCAval.by(b.n); return `<a class="hood-t" href="#bairro-${av?av.slug:''}">${scene(['casa','apto','sobrado','chacara'][i%4], 90+i)}<div><h3>${esc(b.n)}</h3><span class="vibe">${esc(b.vibe)}</span></div><div><span>Média de venda</span><b>${brl(b.media)}</b><span class="cnt">${av&&av.n>=5?`${VCAval.fmt(av.nota)} ★ · `:''}${n} ${plural(n,'imóvel','imóveis')}</span></div></a>`; }).join('')}</div>
     </div></section>
 
     <section class="sec"><div class="wrap">
@@ -192,9 +197,9 @@
     if(k==='preco') return S.pmin&&S.pmax ? `${brlK(S.pmin)} a ${brlK(S.pmax)}` : S.pmax ? 'Até '+brlK(S.pmax) : S.pmin ? 'A partir de '+brlK(S.pmin) : 'Preço';
     if(k==='quartos') return S.qmin||S.bmin||S.vmin ? [S.qmin&&S.qmin+'+ quartos', S.bmin&&S.bmin+'+ banh.', S.vmin&&S.vmin+'+ vagas'].filter(Boolean).join(' · ') : 'Quartos e banheiros';
     if(k==='area') return S.amin ? 'A partir de '+S.amin+' m²' : 'Área (m²)';
-    if(k==='mais') return S.tags.length ? `Mais filtros · ${S.tags.length}` : 'Mais filtros';
+    if(k==='mais') return S.tags.length+S.bq.length ? `Mais filtros · ${S.tags.length+S.bq.length}` : 'Mais filtros';
   }
-  const chipOn = k => k==='tipos'?S.tipos.length : k==='bairros'?S.bairros.length : k==='preco'?(S.pmin||S.pmax) : k==='quartos'?(S.qmin||S.bmin||S.vmin) : k==='area'?S.amin : S.tags.length;
+  const chipOn = k => k==='tipos'?S.tipos.length : k==='bairros'?S.bairros.length : k==='preco'?(S.pmin||S.pmax) : k==='quartos'?(S.qmin||S.bmin||S.vmin) : k==='area'?S.amin : S.tags.length+S.bq.length;
   const anyOn = () => CHIPS.some(([k])=>chipOn(k)) || S.q || S.an;
   function nums(name, vals, cur){ return `<div class="nums" role="group" aria-label="${name}" data-num="${name}">${vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="${(cur||0)===v}">${v?v+'+':'Qualquer'}</button>`).join('')}</div>`; }
   function popHTML(k){
@@ -206,10 +211,32 @@
       <div class="presets">${pre.map(v=>`<button type="button" data-pmax="${v}">até ${brlK(v)}</button>`).join('')}</div>${fin==='aluguel'?'<span class="hint muted" style="font-size:12px">O total soma aluguel, condomínio e IPTU.</span>':''}`; }
     if(k==='quartos') return `<h4>Quartos</h4>${nums('qmin',[0,1,2,3,4],S.qmin)}<h4>Banheiros</h4>${nums('bmin',[0,1,2,3],S.bmin)}<h4>Vagas</h4>${nums('vmin',[0,1,2,3],S.vmin)}`;
     if(k==='area') return `<h4>Área mínima</h4>${nums('amin',[0,50,80,120,200,300],S.amin).replace(/>(\d+)\+</g,'>$1 m²<')}`;
-    if(k==='mais'){ const base=filtra(S,'tags'); return `<h4>Características</h4><div class="checks" style="max-height:300px">${Object.entries(TAGS).map(([t,l])=>{ const n=base.filter(im=>t==='baixou'?!!im.antes:t==='proprietario'?im.an==='prop':im.tags.includes(t)).length; return `<label class="check"><input type="checkbox" data-arr="tags" value="${t}" ${S.tags.includes(t)?'checked':''}>${l}<small>${n}</small></label>`; }).join('')}</div>`; }
+    if(k==='mais'){ const base=filtra(S,'tags'); return `<h4>Características</h4><div class="checks" style="max-height:300px">${Object.entries(TAGS).map(([t,l])=>{ const n=base.filter(im=>t==='baixou'?!!im.antes:t==='proprietario'?im.an==='prop':im.tags.includes(t)).length; return `<label class="check"><input type="checkbox" data-arr="tags" value="${t}" ${S.tags.includes(t)?'checked':''}>${l}<small>${n}</small></label>`; }).join('')}</div>
+      <h4>Sobre o bairro</h4><div class="checks">${Object.entries(BQ).map(([k,[l,f]])=>{ const n=base.filter(im=>{ const o=AVB(im.bairro); return o&&f(o); }).length; return `<label class="check"><input type="checkbox" data-arr="bq" value="${k}" ${S.bq.includes(k)?'checked':''}>${l}<small>${n}</small></label>`; }).join('')}</div><a class="link" href="#metodologia" style="font-size:12px">Como avaliamos os bairros</a>`; }
   }
-  function resetGroup(k){ if(k==='tipos') S.tipos=[]; if(k==='bairros') S.bairros=[]; if(k==='preco'){S.pmin=null;S.pmax=null;} if(k==='quartos'){S.qmin=0;S.bmin=0;S.vmin=0;} if(k==='area') S.amin=null; if(k==='mais') S.tags=[]; }
+  function resetGroup(k){ if(k==='tipos') S.tipos=[]; if(k==='bairros') S.bairros=[]; if(k==='preco'){S.pmin=null;S.pmax=null;} if(k==='quartos'){S.qmin=0;S.bmin=0;S.vmin=0;} if(k==='area') S.amin=null; if(k==='mais'){ S.tags=[]; S.bq=[]; } }
+  /* camadas do mapa da busca: pintar bairros por nota, segurança, comércio, famílias ou enchente */
+  const LAYERS = {
+    nota:['Nota dos moradores','Nota dos moradores','Média ajustada · aparece a partir de 5 avaliações',[['3,5 ou menos','lv0'],['3,6 a 3,9','lv1'],['4,0 a 4,2','lv2'],['4,3 ou mais','lv3'],['Poucas avaliações','lvn']]],
+    seg:['Segurança','Segurança · dado público','SSP-SP, comparado à média da cidade',[['D','lv0'],['C','lv1'],['B','lv2'],['A','lv3']]],
+    com:['Comércio a pé','Comércio a 10 minutos a pé','OpenStreetMap · tipos de comércio e serviço',[['D','lv0'],['C','lv1'],['B','lv2'],['A','lv3']]],
+    fam:['Bom para famílias','Moradores que marcam “famílias com crianças”','Questionário dos moradores',[['Até 35%','lv0'],['36 a 50%','lv1'],['51 a 60%','lv2'],['Mais de 60%','lv3'],['Poucas respostas','lvn']]],
+    ench:['Enchente','Área mapeada de risco de enchente','Defesa Civil de Guaratinguetá',[['Fora da área','wv0'],['Parte do bairro','wv1'],['Grande parte','wv2']]]
+  };
+  function layerPaint(k){
+    const AV=window.VCAval, paint={}, tags={}; if(!AV || !LAYERS[k]) return {};
+    const lvG = g => ({A:3,B:2,C:1,D:0,E:0})[g];
+    AV.list.forEach(o=>{ const ok=o.n>=5; let lv=-1, t='';
+      if(k==='nota'&&ok){ lv=o.nota<=3.5?0:o.nota<4?1:o.nota<4.3?2:3; t=AV.fmt(o.nota)+' ★'; }
+      if(k==='seg'){ lv=lvG(o.pub[0][0]); t=o.pub[0][0]; }
+      if(k==='com'){ lv=lvG(o.ind.cam); t=o.ind.cam; }
+      if(k==='fam'&&ok){ const v=o.perfis.fam; lv=v<=35?0:v<=50?1:v<=60?2:3; t=v+'%'; }
+      if(k==='ench'){ paint[o.nome]='wv'+o.ench.lv; return; }
+      paint[o.nome] = lv<0 ? 'lvn' : 'lv'+lv; if(t) tags[o.nome]=t; });
+    return {paint, tags};
+  }
 
+  let LAYER = store.get('layer','nota');
   function busca(){
     const segB = `<div class="seg" role="group" aria-label="Finalidade">${[['venda','Comprar'],['aluguel','Alugar'],['todos','Todos']].map(([v,l])=>`<button type="button" data-sfin="${v}" aria-pressed="${S.fin===v}">${l}</button>`).join('')}</div>`;
     const html = `
@@ -224,9 +251,11 @@
     </div></section>
     <div class="wrap">
       <div class="res-head"><div><h1 id="b-title"></h1><p id="b-sub"></p></div>
-        <div class="res-tools"><label class="sr" for="b-sort">Ordenar por</label><select class="sel" id="b-sort">${[['relevancia','Mais relevantes'],['recentes','Mais recentes'],['menor','Menor preço'],['maior','Maior preço'],['area','Maior área']].map(([v,l])=>`<option value="${v}" ${S.sort===v?'selected':''}>${l}</option>`).join('')}</select>
+        <div class="res-tools"><label class="sr" for="b-sort">Ordenar por</label><select class="sel" id="b-sort">${[['relevancia','Mais relevantes'],['recentes','Mais recentes'],['menor','Menor preço'],['maior','Maior preço'],['area','Maior área'],['nota','Nota do bairro']].map(([v,l])=>`<option value="${v}" ${S.sort===v?'selected':''}>${l}</option>`).join('')}</select>
         <button class="toggle-map" type="button" id="b-maptg" aria-pressed="${S.map}">${ic('i-map')} Mapa</button></div></div>
-      <div class="res-layout ${S.map?'':'nomap'}" id="b-layout"><div id="b-list" style="min-width:0"></div><aside class="res-map" aria-label="Mapa dos resultados"><div class="map" id="b-map"></div></aside></div>
+      <div class="res-layout ${S.map?'':'nomap'}" id="b-layout"><div id="b-list" style="min-width:0"></div><aside class="res-map" aria-label="Mapa dos resultados"><div class="map" id="b-map"></div>
+        <div class="layerbar" role="group" aria-label="Pintar bairros por"><span class="lbl-up">Pintar bairros por</span>${Object.entries(LAYERS).map(([k,l])=>`<button class="vchip" type="button" data-layer="${k}" aria-pressed="${LAYER===k}">${l[0]}</button>`).join('')}</div>
+        <div class="maplegend" id="b-leg" aria-live="polite"></div></aside></div>
     </div>`;
     VC.mount('portal', html, {nav: S.fin==='aluguel'?'alugar':S.fin==='venda'?'comprar':null, title:'Busca', keepScroll:false});
 
@@ -255,9 +284,10 @@
     $('#b-form').addEventListener('click', e=>{ const b=e.target.closest('[data-sfin]'); if(b){ S.fin=b.dataset.sfin; S.pmin=null; S.pmax=null; $$('[data-sfin]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.sfin===S.fin)); update(); } });
     $('#b-form').addEventListener('submit', e=>{ e.preventDefault(); const q=$('#b-q').value.trim(); const p=parse(q); const keep={fin:p.set.fin||S.fin, sort:S.sort, map:S.map}; S=Object.assign(S0(), keep, p.set); S.frase=p.hit?q:''; if(!p.hit&&q) S.q=q; $$('[data-sfin]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.sfin===S.fin)); update(); });
     $('#b-sort').addEventListener('change', e=>{ S.sort=e.target.value; update(); });
+    $('.res-map').addEventListener('click', e=>{ const b=e.target.closest('[data-layer]'); if(!b) return; LAYER = LAYER===b.dataset.layer ? 'none' : b.dataset.layer; store.set('layer', LAYER); $$('[data-layer]').forEach(x=>x.setAttribute('aria-pressed', x.dataset.layer===LAYER)); update(true); });
     $('#b-maptg').addEventListener('click', e=>{ S.map=!S.map; e.currentTarget.setAttribute('aria-pressed',S.map); $('#b-layout').classList.toggle('nomap',!S.map); if(S.map) A.layoutPins($('#b-map')); });
     $('#b-und').addEventListener('click', e=>{ const x=e.target.closest('[data-rm]'); if(!x) return; const [g,v]=x.dataset.rm.split('|');
-      if(['tipos','bairros','tags'].includes(g)) S[g]=S[g].filter(i=>i!==v); else if(g==='preco'){S.pmin=null;S.pmax=null;} else if(g==='q'){S.q='';S.frase='';$('#b-q').value='';} else if(g==='an') S.an=null; else S[g]= g==='amin'?null:0; update(); });
+      if(['tipos','bairros','tags','bq'].includes(g)) S[g]=S[g].filter(i=>i!==v); else if(g==='preco'){S.pmin=null;S.pmax=null;} else if(g==='q'){S.q='';S.frase='';$('#b-q').value='';} else if(g==='an') S.an=null; else S[g]= g==='amin'?null:0; update(); });
     $('#b-list').addEventListener('click', e=>{
       const m=e.target.closest('[data-more]'); if(m){ S.limit+=12; update(true); }
       const em=e.target.closest('[data-empty]'); if(em){ const a=em.dataset.empty; if(a==='preco'){S.pmin=null;S.pmax=null;} else if(a==='tudo'){ S=Object.assign(S0(),{fin:S.fin,map:S.map}); $('#b-q').value=''; } else { S.bairros=[a]; } update(); }
@@ -285,6 +315,7 @@
       if(S.qmin) pills.push(['qmin|', S.qmin+'+ quartos']); if(S.bmin) pills.push(['bmin|', S.bmin+'+ banheiros']); if(S.vmin) pills.push(['vmin|', S.vmin+'+ vagas']);
       if(S.amin) pills.push(['amin|', 'A partir de '+S.amin+' m²']);
       S.tags.forEach(t=>pills.push(['tags|'+t, TAGS[t]]));
+      S.bq.forEach(k=>pills.push(['bq|'+k, BQ[k][0]]));
       if(S.q) pills.push(['q|', '"'+S.q+'"']);
       $('#b-und').innerHTML = pills.length ? `<span>${S.frase?'Entendi:':'Filtros:'}</span>`+pills.map(([k,l])=>`<span class="u">${esc(l)}<button type="button" data-rm="${esc(k)}" aria-label="Tirar ${esc(l)}">${ic('i-x','i-12')}</button></span>`).join('') : '';
       // título
@@ -299,12 +330,15 @@
         $('#b-list').innerHTML = `<div class="empty">${A.vazia}<b>${b?`Nada ${prep(b)} ${esc(b)} com esses filtros.`:'Nada com esses filtros.'}</b><p>${S.pmax||S.pmin?'Tira o filtro de preço ou olha os bairros vizinhos.':'Tira um filtro ou olha os bairros vizinhos.'}</p>
           <div class="row">${S.pmax||S.pmin?'<button class="btn btn-outline btn-sm" type="button" data-empty="preco">Tirar filtro de preço</button>':''}${viz.map(([v,c])=>`<button class="btn btn-outline btn-sm" type="button" data-empty="${esc(v)}">Ver ${prep(v)} ${esc(v)} (${c})</button>`).join('')}<button class="btn btn-ghost btn-sm" type="button" data-empty="tudo">Limpar tudo</button></div></div>`;
       } else {
-        $('#b-list').innerHTML = `<div class="cards">${list.map(card).join('')}</div>`+
+        $('#b-list').innerHTML = `<div class="cards">${list.map(im=>card(im,{nota:1})).join('')}</div>`+
           (n>S.limit ? `<div class="more-row"><span>Mostrando ${list.length} de ${n}</span><button class="btn btn-outline" type="button" data-more>Ver mais imóveis</button></div>` : '')+
           `<div class="alert-box"><div><b>Avisa quando aparecer outro assim?</b><p>A gente manda um e-mail quando entrar imóvel novo com esses filtros.</p></div><button class="btn btn-primary btn-sm" type="button" data-alert>${ic('i-bell')} Criar alerta</button></div>`;
       }
       // mapa
-      map.innerHTML = A.mapa({focus:S.bairros[0], poiLabels:true}) + all.map(im=>`<button class="pin" type="button" data-id="${im.id}" data-x="${im.x.toFixed(1)}" data-y="${im.y.toFixed(1)}" aria-label="${esc(im.tit)}, ${pinPrice(im)}">${pinPrice(im)}</button>`).join('') + '<span class="map-note">Mapa ilustrativo</span>';
+      const lp = layerPaint(LAYER), lg = LAYERS[LAYER];
+      $('#b-leg').hidden = !lg;
+      if(lg) $('#b-leg').innerHTML = `<b>${lg[1]}</b><div>${lg[3].map(([l,c])=>`<span><i style="background:var(--${c})"></i>${l}</span>`).join('')}</div><span class="cap">${lg[2]}</span>`;
+      map.innerHTML = A.mapa({focus:S.bairros[0], poiLabels:!lg, paint:lp.paint, tags:lp.tags}) + all.map(im=>`<button class="pin" type="button" data-id="${im.id}" data-x="${im.x.toFixed(1)}" data-y="${im.y.toFixed(1)}" aria-label="${esc(im.tit)}, ${pinPrice(im)}">${pinPrice(im)}</button>`).join('') + '<span class="map-note">Mapa ilustrativo</span>';
       A.layoutPins(map);
       syncDone();
     }
@@ -452,6 +486,7 @@
             <dl class="costs" style="border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:14px;padding:16px 20px">${costs.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}<dt class="sum">Total por mês</dt><dd class="sum">${brl(total(im)+Math.max(18,seguro))}</dd></dl></section>`}
           ${m2 ? `<section><div class="ph"><span class="t">${ic('i-chart','i-20')}Preço comparado ao bairro</span><span class="d">${diff<0?`Este imóvel está ${-diff}% abaixo da média ${prep(b.n)} ${b.n}.`:diff>0?`Este imóvel está ${diff}% acima da média ${prep(b.n)} ${b.n}.`:'Na média do bairro.'}</span></div>
             <div class="cmp">${[['Este imóvel',m2,true],['Média '+(prep(b.n)==='na'?'da':prep(b.n)==='em'?'de':'do')+' '+b.n,b.m2],['Média de Guará',guaM2]].map(([l,v,me])=>{ const mx=Math.max(m2,b.m2,guaM2)*1.1; return `<div class="cmp-row ${me?'me':''}"><span>${esc(l)}</span><div class="bar"><i style="width:${(v/mx*100).toFixed(1)}%"></i></div><b>${brl(v)}/m²</b></div>`; }).join('')}</div></section>` : ''}
+          ${VC.sobreBairro ? VC.sobreBairro(im) : ''}
           <section id="d-loc"><div class="ph"><span class="t">${ic('i-map','i-20')}Localização</span><span class="d">${esc(im.bairro)}, Guaratinguetá. O endereço exato é passado por quem anuncia.</span></div>
             <div class="near"><div class="map" id="d-map">${A.mapa({focus:im.bairro, poiLabels:false})}<span class="pin dot" data-x="${im.x.toFixed(1)}" data-y="${im.y.toFixed(1)}" aria-hidden="true"></span><span class="map-note">Mapa ilustrativo</span></div>
             <ul>${poisD.slice(0,5).map(p=>`<li>${ic(p.ic,'i-20')}<span>${esc(p.n)}<small>${esc(p.sub)}</small></span><b>${p.km.toFixed(1).replace('.',',')} km<small>${tempo(p.km)}</small></b></li>`).join('')}</ul></div></section>
@@ -506,7 +541,7 @@
     VC.mount('portal', html, {title:'Salvos'});
   }
 
-  VC.route(/^(inicio|bairros|corretores)$/, home);
+  VC.route(/^(inicio|corretores)$/, home); // #bairros agora é o ranking (bairros.js)
   VC.route(/^busca$/, busca);
   VC.route(/^comprar$/, ()=>{ setS({fin:'venda'}); history.replaceState(null,'','#busca'); busca(); });
   VC.route(/^alugar$/, ()=>{ setS({fin:'aluguel'}); history.replaceState(null,'','#busca'); busca(); });

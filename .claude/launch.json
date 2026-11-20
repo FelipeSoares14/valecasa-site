@@ -12,6 +12,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8770"],
       "port": 8770
+    },
+    {
+      "name": "valecasa-ds",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8775", "--directory", "C:/Users/felip/ProjetosClaude/valecasa-site"],
+      "port": 8775
     }
   ]
 }

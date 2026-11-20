@@ -1,0 +1,431 @@
+<title>ValeCasa Tipos de Imóvel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: catálogo de consulta. Barra roxa de marca, busca + filtros por categoria, grade de ícones e painel de detalhe fixo à direita (abaixo no celular). */
+:root{
+  --vc-green-500:#03FE9F; --vc-green-ink:#00331F; --vc-green-700:#007F50;
+  --vc-purple-600:#4D00AF; --vc-purple-500:#6514D6; --vc-purple-100:#E2D2FF; --vc-purple-50:#F3ECFF; --vc-purple-900:#22004F;
+  --bg:#F7F6FB; --surface:#FFFFFF; --surface-2:#F1EFF7; --line:#E3E0EC; --line-strong:#C9C5D6;
+  --ink:#1B1825; --ink-2:#4E4A5E; --ink-3:#6D687E; --purple-text:#4D00AF; --sel:#F3ECFF; --coral:#E5483B;
+  --font:"Geologica",ui-sans-serif,"Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019; --surface:#1B1824; --surface-2:#24202F; --line:#302B3D; --line-strong:#463F57;
+  --ink:#F3F1F8; --ink-2:#C4BFD3; --ink-3:#8F89A3; --purple-text:#B48CFF; --sel:#2A1A55; --coral:#FF6B5E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;margin:0}
+:focus-visible{outline:2px solid var(--vc-purple-500);outline-offset:2px}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.top{background:linear-gradient(135deg,var(--vc-purple-900),var(--vc-purple-600) 70%,var(--vc-purple-500));color:#fff;padding-inline:20px;padding-block:28px 32px}
+.top-in{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px 40px;align-items:flex-end;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:46px;height:auto;color:var(--vc-green-500)}
+.brand h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.brand p{margin:4px 0 0;color:#E2D2FF;font-size:14px}
+.prog{display:flex;flex-direction:column;gap:8px;min-width:240px;flex:0 1 360px}
+.prog-row{display:flex;justify-content:space-between;font-size:13px;color:#E2D2FF;font-variant-numeric:tabular-nums}
+.prog-row b{color:#fff;font-size:22px;font-weight:700}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--vc-green-500);border-radius:4px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:24px 64px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.tools{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line-strong);border-radius:6px;padding:0 12px}
+.search:focus-within{border-color:var(--vc-purple-500)}
+.search input{flex:1;min-width:0;border:0;background:none;font:400 15px var(--font);color:var(--ink);padding:11px 0;outline:none}
+.search .ic{width:20px;height:20px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--vc-green-500);border-color:var(--vc-green-500);color:var(--vc-green-ink);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--vc-green-ink)}
+.chip.done::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--vc-green-700)}
+
+.cat{margin-top:22px}
+.cat h2{font-size:15px;font-weight:600;margin:0 0 10px;display:flex;align-items:baseline;gap:10px}
+.cat h2 small{font-family:var(--mono);font-size:11px;color:var(--ink-3);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;color:var(--ink);font:inherit;text-align:center;min-width:0}
+.tile:hover{border-color:var(--line-strong)}
+.tile[aria-pressed="true"]{background:var(--sel);border-color:var(--vc-purple-600);color:var(--purple-text)}
+.tile .ic{width:28px;height:28px}
+.tile span{font-size:12px;line-height:1.25;color:var(--ink-2);overflow-wrap:anywhere}
+.tile[aria-pressed="true"] span{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.tags>span:first-child{font-size:12px;color:var(--ink-3)}
+.tag{font-size:12.5px;font-weight:500;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:4px;padding:3px 10px;cursor:help}
+.pending{border:1px dashed var(--line-strong);border-radius:8px;padding:14px;font-size:13px;color:var(--ink-3)}
+.empty{padding:40px 0;color:var(--ink-3);font-size:14px}
+
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stage{background:var(--surface-2);display:grid;place-items:center;padding:24px;position:relative}
+.g24{width:168px;height:168px;position:relative;border:1px solid var(--line-strong);background:var(--surface);
+  background-image:repeating-linear-gradient(0deg,var(--line) 0 1px,transparent 1px 7px),repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 7px);color:var(--ink)}
+.g24::before{content:"";position:absolute;inset:15px;border:1px dashed var(--coral);opacity:.7}
+.g24 .ic{position:absolute;inset:0;width:100%;height:100%}
+.d-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.d-body h3{margin:0;font-size:18px;font-weight:700;line-height:1.25}
+.d-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.pill{border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--ink-2)}
+.pill.fam{background:var(--vc-purple-50);color:var(--vc-purple-600)}
+.file{font-family:var(--mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+.alias{font-size:13px;color:var(--ink-2)}
+.alias b{font-weight:600;color:var(--ink)}
+.sizes{display:flex;gap:16px;align-items:flex-end;color:var(--ink)}
+.sizes div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sizes small{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.on-brand{display:flex;gap:8px}
+.on-brand div{flex:1;border-radius:8px;display:grid;place-items:center;padding:12px}
+.acts{display:flex;flex-direction:column;gap:8px}
+.btn{font:600 13px/1 var(--font);border-radius:999px;padding:10px 16px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--vc-green-500);color:var(--vc-green-ink)}
+.btn-outline{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.copied{font-size:12px;color:var(--vc-green-700);min-height:18px}
+.note{font-size:12px;color:var(--ink-3)}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo-mark" viewBox="0 0 123 89"><g fill="currentColor"><path d="M76.4272 0H56.1262L38.5603 42.4373L21.5337 0H0L29.238 66.6545H46.8039L76.4272 0Z"/><path d="M93.8 22.3076H76.234L46.5723 89.0003H66.8732L84.4392 46.563L101.466 89.0003H122.999L93.8 22.3076Z"/></g></symbol>
+  <symbol id="ui-search" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></symbol>
+  <symbol id="vc-tipo-casa" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 6h13.5l3 3.75H2.25l3-3.75ZM3.75 9.75v10.5M20.25 9.75v10.5M2.25 20.25h19.5M6 20.25V13.5h3v6.75M12 20.25V13.5h6v6.75M12 15.75h6M12 18h6"/></symbol>
+  <symbol id="vc-tipo-sobrado" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 2.25h13.5l3 3.75H2.25l3-3.75ZM3.75 6v14.25M20.25 6v14.25M2.25 20.25h19.5M3.75 12.75h16.5M6 8.25h3.75v2.25H6V8.25ZM6 20.25V15h3v5.25M12 20.25V15h6v5.25M12 17.625h6"/></symbol>
+  <symbol id="vc-tipo-casa-de-condominio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3.75h19.5v2.25H2.25V3.75ZM3 6v14.25M5.25 6v14.25M18.75 6v14.25M21 6v14.25M9.375 10.5h5.25l1.875 2.25h-9l1.875-2.25ZM8.25 12.75v7.5M15.75 12.75v7.5M11.25 20.25v-3.75h1.5v3.75M2.25 20.25h19.5"/></symbol>
+  <symbol id="vc-tipo-casa-de-vila" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3.75 21.75 10.5M3.75 4.27v15.98h16.5V9.98M3.75 12.75h16.5M6 8.25h3v2.25H6V8.25ZM12.75 20.25v-4.5h3v4.5"/></symbol>
+  <symbol id="vc-tipo-apartamento" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5M3.75 21V8.25h6M9.75 21V3h10.5v18M6 11.25h1.5M6 14.25h1.5M6 17.25h1.5M12 6h1.5m3 0H18M12 9h1.5m3 0H18M12 12h1.5m3 0H18M12 15h1.5m3 0H18M13.5 21v-3h3v3"/></symbol>
+  <symbol id="vc-tipo-cobertura" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M3.75 11.25h16.5M5.25 21V6.75h6v4.5M4.5 6.75h6.75M18.75 11.25V21M11.25 9h7.5M18.75 9v2.25M13.875 6.75a2.25 2.25 0 0 1 4.5 0h-4.5ZM16.125 6.75V9M8.25 14.25h1.5m4.5 0h1.5M10.125 21v-3.75h3.75V21"/></symbol>
+  <symbol id="vc-tipo-kitnet" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 4.5h13.5M2.25 4.5v15.75M15.75 4.5v15.75M2.25 12.375h13.5M4.875 12.375V8.625h2.25v3.75M10.875 12.375V8.625h2.25v3.75M4.875 20.25V16.5h2.25v3.75M10.875 20.25V16.5h2.25v3.75M15.75 12.375h1.5l4.5 7.875M18.75 15h1.5M20.25 17.625h1.5M2.25 20.25h19.5"/></symbol>
+  <symbol id="vc-tipo-studio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 20.25h19.5M3.75 20.25v-6.75M3.75 16.5h7.5v3.75M6 16.5v-.75a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v.75M13.5 20.25v-6.75h7.5v6.75M13.5 15.75h7.5M15.75 13.5V12h3v1.5M17.25 3.75V6M15 8.25a2.25 2.25 0 0 1 4.5 0h-4.5Z"/></symbol>
+  <symbol id="vc-tipo-flat" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M5.25 21V6.75h13.5V21M6.75 2.25h10.5V4.5H6.75V2.25ZM8.25 4.5v2.25M15.75 4.5v2.25M8.25 9.75h1.5m4.5 0h1.5M8.25 12.75h1.5m4.5 0h1.5M7.5 15h9l-1.5 1.5H9L7.5 15ZM10.125 21v-4.5M13.875 21v-4.5"/></symbol>
+  <symbol id="vc-tipo-loft" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 20.25h19.5M3.75 20.25V3.75h16.5v16.5M6 6h4.5v3.75H6V6ZM8.25 6v3.75M12 12h8.25M14.25 12v-1.875H18M18 12V8.25M6.75 20.25h1.3125v-2.0625h1.3125v-2.0625h1.3125V14.0625h1.3125V12H12"/></symbol>
+  <symbol id="vc-tipo-terreno-lote" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 12.75C18.7 10.35 15.45 8.35 12 6.75 8.55 8.35 5.3 10.35 2.25 12.75 5.6 14.4 8.85 16.4 12 18.75c3.15-2.35 6.4-4.35 9.75-6ZM16.125 12l1.125.75-1.125.75M7.875 12l-1.125.75 1.125.75"/></symbol>
+  <symbol id="vc-tipo-chacara" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75 7.125 8.25 12 12.75M3.75 11.4v8.85h6.75V11.4M6 20.25v-3.75h2.25v3.75M18 4.5c-1.5.75-3 2.25-3 4.125 0 .75.375 1.5.75 1.875-.75.75-1.5 1.875-1.5 3a3.75 3.75 0 0 0 7.5 0c0-1.125-.75-2.25-1.5-3 .375-.375.75-1.125.75-1.875 0-1.875-1.5-3.375-3-4.125ZM18 13.5v6.75M2.25 20.25h19.5"/></symbol>
+  <symbol id="vc-tipo-fazenda-sitio" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75h19.5M3 8.25v10.5M12 8.25v10.5M21 8.25v10.5M2.25 10.5C5.25 9.5 18.75 9.5 21.75 10.5M2.25 14.625h19.5M12 9.75l-9 9M12 9.75l9 9"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
+      <div>
+        <h1>Ícones de tipos de imóvel</h1>
+        <p>Casa, apartamento, terreno e os demais tipos usados na busca e nos anúncios, na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+      </div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+    <div class="tools">
+      <label class="search" for="q"><svg class="ic"><use href="#ui-search"/></svg><input id="q" type="search" placeholder="Buscar: casa, kitnet, sítio…" autocomplete="off"></label>
+      <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+    </div>
+    <div id="list"></div>
+  </main>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</div>
+
+<script>
+const DATA = {
+ "versao": "1.0",
+ "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
+ "categorias": [
+  {
+   "id": "casas",
+   "nome": "Casas",
+   "total": 4,
+   "cobertos": 4
+  },
+  {
+   "id": "apartamentos",
+   "nome": "Apartamentos e Unidades",
+   "total": 6,
+   "cobertos": 6
+  },
+  {
+   "id": "terrenos-rurais",
+   "nome": "Terrenos e Rurais",
+   "total": 3,
+   "cobertos": 3
+  }
+ ],
+ "etiquetas": [],
+ "icones": [
+  {
+   "id": "casa",
+   "nome": "Casa",
+   "categoria": "casas",
+   "origem": "time:casa comum",
+   "aliases": [
+    "Casa térrea",
+    "Residência"
+   ]
+  },
+  {
+   "id": "sobrado",
+   "nome": "Sobrado",
+   "categoria": "casas",
+   "origem": "novo",
+   "aliases": [
+    "Casa de dois andares",
+    "Casa assobradada"
+   ]
+  },
+  {
+   "id": "casa-de-condominio",
+   "nome": "Casa de Condomínio",
+   "categoria": "casas",
+   "origem": "novo",
+   "aliases": [
+    "Casa em condomínio",
+    "Condomínio fechado",
+    "Condomínio horizontal"
+   ]
+  },
+  {
+   "id": "casa-de-vila",
+   "nome": "Casa de Vila",
+   "categoria": "casas",
+   "origem": "time:casa de vila",
+   "aliases": [
+    "Vila",
+    "Casa em vila",
+    "Vila de casas"
+   ]
+  },
+  {
+   "id": "apartamento",
+   "nome": "Apartamento",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Apto",
+    "Prédio",
+    "Edifício"
+   ]
+  },
+  {
+   "id": "cobertura",
+   "nome": "Cobertura",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Penthouse",
+    "Cobertura duplex",
+    "Cobertura linear"
+   ]
+  },
+  {
+   "id": "kitnet",
+   "nome": "Kitnet",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Quitinete",
+    "Kitchenette",
+    "Conjugado"
+   ]
+  },
+  {
+   "id": "studio",
+   "nome": "Studio",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Estúdio",
+    "Apartamento studio"
+   ]
+  },
+  {
+   "id": "flat",
+   "nome": "Flat",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Apart-hotel",
+    "Apart hotel",
+    "Hotel residência"
+   ]
+  },
+  {
+   "id": "loft",
+   "nome": "Loft",
+   "categoria": "apartamentos",
+   "origem": "novo",
+   "aliases": [
+    "Loft industrial",
+    "Pé-direito duplo",
+    "Mezanino"
+   ]
+  },
+  {
+   "id": "terreno-lote",
+   "nome": "Terreno / Lote",
+   "categoria": "terrenos-rurais",
+   "origem": "time:terreno",
+   "aliases": [
+    "Terreno",
+    "Lote",
+    "Área",
+    "Loteamento"
+   ]
+  },
+  {
+   "id": "chacara",
+   "nome": "Chácara",
+   "categoria": "terrenos-rurais",
+   "origem": "novo",
+   "aliases": [
+    "Chácara de recreio",
+    "Casa de campo"
+   ]
+  },
+  {
+   "id": "fazenda-sitio",
+   "nome": "Fazenda / Sítio",
+   "categoria": "terrenos-rurais",
+   "origem": "time:rural",
+   "aliases": [
+    "Fazenda",
+    "Sítio",
+    "Rancho",
+    "Haras",
+    "Área rural",
+    "Porteira"
+   ]
+  }
+ ]
+};
+(function(){
+  const cats = DATA.categorias, icons = DATA.icones;
+  const byCat = id => icons.filter(i => i.categoria === id);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+  let cat = 'todas', sel = icons[0] && icons[0].id;
+  try { const h = location.hash.slice(1); if (h && icons.some(i => i.id === h)) sel = h; } catch(e){}
+
+  // progresso
+  const tot = cats.reduce((a,c)=>a+c.total,0), cob = cats.reduce((a,c)=>a+c.cobertos,0);
+  document.getElementById('prog').innerHTML =
+    `<div class="prog-row"><span><b>${icons.length}</b> ícones desenhados</span><span>${cob} de ${tot} tipos da lista</span></div>
+     <div class="bar"><i style="width:${(cob/tot*100).toFixed(1)}%"></i></div>
+     <div class="prog-row"><span>Versão ${DATA.versao}</span><span>${cats.filter(c=>c.cobertos>=c.total).map(c=>c.nome).join(', ') || ''} ${cats.some(c=>c.cobertos>=c.total)?'completa':''}</span></div>`;
+
+  // filtros
+  const chips = document.getElementById('chips');
+  function drawChips(){
+    chips.innerHTML = '';
+    const mk = (id, label, n, done) => {
+      const b = document.createElement('button'); b.type='button'; b.className='chip'+(done?' done':'');
+      b.setAttribute('aria-pressed', String(cat===id)); b.innerHTML = `${label} <small>${n}</small>`;
+      b.onclick = () => { cat = id; drawChips(); drawList(); }; chips.appendChild(b);
+    };
+    mk('todas','Todas',icons.length,false);
+    cats.forEach(c => mk(c.id, c.nome, `${c.cobertos}/${c.total}`, c.cobertos>=c.total));
+  }
+
+  const q = document.getElementById('q');
+  q.addEventListener('input', drawList);
+  const list = document.getElementById('list');
+  function drawList(){
+    const t = norm(q.value.trim());
+    const match = i => !t || norm([i.nome, i.id, ...(i.aliases||[]), i.origem||''].join(' ')).includes(t);
+    list.innerHTML = '';
+    let any = false;
+    const tagsAll = DATA.etiquetas || [];
+    cats.filter(c => cat==='todas' || c.id===cat).forEach(c => {
+      const items = byCat(c.id).filter(match);
+      const tags = tagsAll.filter(e => e.categoria===c.id && (!t || norm(e.nome).includes(t)));
+      if (t && !items.length && !tags.length) return;
+      if (tags.length) any = true;
+      const sec = document.createElement('section'); sec.className='cat';
+      sec.innerHTML = `<h2>${c.nome} <small>${c.cobertos}/${c.total} itens</small></h2>`;
+      if (items.length){
+        any = true;
+        const g = document.createElement('div'); g.className='grid';
+        items.forEach(i => {
+          const b = document.createElement('button'); b.type='button'; b.className='tile';
+          b.setAttribute('aria-pressed', String(i.id===sel));
+          b.innerHTML = `<svg class="ic"><use href="#vc-tipo-${i.id}"/></svg><span>${i.nome}</span>`;
+          b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
+          g.appendChild(b);
+        });
+        sec.appendChild(g);
+      }
+      if (tags.length) {
+        const r = document.createElement('div'); r.className='tags';
+        r.innerHTML = '<span>Sem ícone, usar como etiqueta de texto:</span>' +
+          tags.map(e => `<span class="tag" title="${e.motivo}">${e.nome}</span>`).join('');
+        sec.appendChild(r);
+      }
+      if (!t && c.cobertos < c.total) {
+        const p = document.createElement('div'); p.className='pending';
+        p.textContent = `${c.total - c.cobertos} itens desta categoria ainda vão ser desenhados.`;
+        sec.appendChild(p);
+      }
+      list.appendChild(sec);
+    });
+    if (t && !any) list.innerHTML = `<p class="empty">Nenhum ícone para “${q.value}”. Tente outro nome, como “casa” ou “terreno”.</p>`;
+  }
+
+  function origem(i){
+    const o = i.origem || 'novo';
+    if (o.startsWith('comodidade:')) return `<span class="pill fam">Mesmo desenho da comodidade ${o.slice(11)}</span>`;
+    if (o.startsWith('heroicons:')) return `<span class="pill fam">Heroicons ${o.slice(10)}</span>`;
+    if (o.startsWith('time:')) return `<span class="pill fam">Redesenho do ícone do time (${o.slice(5)})</span>`;
+    return '<span class="pill fam">Desenho novo</span>';
+  }
+  function svgSource(id){
+    const s = document.getElementById('vc-tipo-'+id);
+    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">${s.innerHTML.trim()}</svg>`;
+  }
+  const det = document.getElementById('detail');
+  function drawDetail(){
+    const i = icons.find(x => x.id===sel); if (!i) { det.hidden = true; return; }
+    const c = cats.find(x => x.id===i.categoria);
+    const u = `<use href="#vc-tipo-${i.id}"/>`;
+    det.innerHTML = `
+      <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
+      <div class="d-body">
+        <h3>${i.nome}</h3>
+        <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${origem(i)}${i.extra?'<span class="pill">Extra</span>':''}</div>
+        ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
+        <div class="file">svg/${i.id}.svg</div>
+        <div class="sizes">
+          <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
+          <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
+          <div><svg class="ic" style="width:28px;height:28px">${u}</svg><small>28</small></div>
+          <div><svg class="ic" style="width:40px;height:40px">${u}</svg><small>40</small></div>
+        </div>
+        <div class="on-brand">
+          <div style="background:#4D00AF;color:#03FE9F"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#03FE9F;color:#4D00AF"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+        </div>
+        <div class="acts">
+          <button class="btn btn-primary" type="button" data-copy="svg">Copiar SVG</button>
+          <button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>
+        </div>
+        <div class="copied" id="copied"></div>
+        <p class="note">Os arquivos ficam na pasta <code>icones-tipos</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).</p>
+      </div>`;
+    det.hidden = false;
+    det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
+      const txt = b.dataset.copy==='svg' ? svgSource(i.id)
+        : `<svg class="icon" width="24" height="24"><use href="tipos-sprite.svg#vc-tipo-${i.id}"/></svg>`;
+      const out = det.querySelector('#copied');
+      const ok = () => out.textContent = b.dataset.copy==='svg' ? 'SVG copiado.' : 'Código copiado.';
+      const fail = () => { out.textContent = 'Não deu para copiar aqui. Selecione o código abaixo e use Ctrl+C.'; const pre=document.createElement('pre'); pre.className='file'; pre.textContent=txt; out.after(pre); };
+      try { navigator.clipboard.writeText(txt).then(ok, fail); } catch(e) { fail(); }
+    });
+  }
+  drawChips(); drawList(); drawDetail();
+})();
+</script>
