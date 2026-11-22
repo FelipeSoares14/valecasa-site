@@ -188,6 +188,7 @@ svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-widt
 .toc b{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
 .toc a{color:var(--ink-2);text-decoration:none;font-size:14px;padding:5px 10px;border-radius:var(--r-sm)}
 .toc a:hover{background:var(--surface-2);color:var(--ink)}
+@media (max-width:900px){.toc{display:none}}
 
 main{min-width:0}
 section{padding-top:56px;display:flex;flex-direction:column;gap:20px}
@@ -314,20 +315,31 @@ code,.mono{font-family:var(--mono);font-size:12px}
 .photo .br{position:absolute;bottom:8px;right:8px;z-index:1;width:40px;height:40px;border-radius:var(--r-xs);background:#fff;display:grid;place-items:center;font:800 9px var(--font);color:var(--vc-purple-700);box-shadow:var(--shadow-1)}
 
 /* card de imóvel */
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}
-.card{display:flex;flex-direction:column;gap:4px;min-width:0;color:inherit;text-decoration:none}
-.card .photo{margin-bottom:6px;transition:filter .2s}
+/* Card/Comum e Card/Lançamento: 285 px de largura, foto de 192 px; texto em pilha com gap 4, bloco de informação com gap 8 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,285px));gap:24px}
+.card{display:flex;flex-direction:column;gap:8px;min-width:0;color:inherit;text-decoration:none}
+.card .photo{aspect-ratio:auto;height:192px;transition:filter .2s}
 .card:hover .photo{filter:brightness(1.05)}
-.card .hood{font-size:12px;color:var(--vc-coral);font-weight:500;display:flex;gap:4px;align-items:center}
-.card .price{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.card .price small{font-size:13px;font-weight:600}
-.card .breakdown{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.card .title{font-size:13px;font-weight:600;line-height:1.35;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card .name{font-size:16px;font-weight:700}
-.specs{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;font-weight:600;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums}
+.card .txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.card .info{display:flex;flex-direction:column;gap:8px;min-width:0}
+.card .bairro{font-size:12px;line-height:1.4;color:var(--vc-coral);font-weight:500}
+.card .price{font-size:18px;font-weight:700;line-height:1.35;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.card .price small{font-size:14px;font-weight:500}
+.card .breakdown{font-size:14px;line-height:1.55;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.card .title{font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .name{font-size:18px;font-weight:700;line-height:1.25}
+/* atributos: ícone 20 px com traço 1,67 px */
+.specs{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px;font-size:14px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .specs span{display:inline-flex;align-items:center;gap:4px}
-.card .from{font-size:14px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
-.card .from b{color:var(--ink);font-size:16px}
+.specs svg.i{width:20px;height:20px;color:var(--ink)}
+.card.launch-card .photo{border-radius:8px}
+.card.launch-card .media{position:relative}
+.card.launch-card .lc-status{position:absolute;left:8px;bottom:8px;z-index:1;background:#fff;color:#140E1B;font:600 11px/1.2 var(--font);text-transform:uppercase;padding:4px 12px;border-radius:var(--r-pill)}
+.card.launch-card .lc-logo{position:absolute;right:8px;bottom:-20px;z-index:1;width:52px;height:52px;border-radius:var(--r-sm);background:#fff;border:1px solid #F1EFF7;display:grid;place-items:center;font:800 11px var(--font);color:var(--vc-purple-700)}
+.card.launch-card .specs{margin-top:0;gap:12px;font-size:12px;font-weight:600;line-height:1;color:var(--ink)}
+.card .divider{height:1px;background:var(--line)}
+.card .from{display:flex;align-items:baseline;gap:6px;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.card .from b{color:var(--ink);font-size:18px;line-height:1.2;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 
 /* atributos do imóvel */
 .attrs{display:flex;flex-wrap:wrap;gap:10px}
@@ -478,6 +490,11 @@ code,.mono{font-family:var(--mono);font-size:12px}
   <symbol id="i-area" viewBox="0 0 24 24"><path d="M3.75 20.25h16.5L3.75 3.75z"/><path d="M7.5 16.5h4.5V12"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path d="M3.75 20.25 5 16.4A8.25 8.25 0 1 1 7.9 19.1z"/><path d="M9 9c0 3 3 6 6 6l.9-1.4-2-1-1 1c-1-.5-2-1.5-2.5-2.5l1-1-1-2z"/></symbol>
   <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.75" y="3.75" width="16.5" height="16.5" rx="4.5"/><circle cx="12" cy="12" r="3.75"/><path d="M17.25 6.75h.008"/></symbol>
+  <!-- Atributos dos cards (escolhidos pelo time, fora do Heroicons): grade 20 px, traço 1,67 -->
+  <symbol id="c-bed" viewBox="0 0 20 20"><path stroke-width="1.66667" d="M1.66602 16.6673V10.0007C1.66602 9.55862 1.84161 9.1347 2.15417 8.82214C2.46673 8.50958 2.89065 8.33398 3.33268 8.33398H16.666C17.108 8.33398 17.532 8.50958 17.8445 8.82214C18.1571 9.1347 18.3327 9.55862 18.3327 10.0007V16.6673 M3.33398 8.33398V5.00065C3.33398 4.55862 3.50958 4.1347 3.82214 3.82214C4.1347 3.50958 4.55862 3.33398 5.00065 3.33398H15.0007C15.4427 3.33398 15.8666 3.50958 16.1792 3.82214C16.4917 4.1347 16.6673 4.55862 16.6673 5.00065V8.33398 M10 3.33398V8.33398 M1.66602 15H18.3327"/></symbol>
+  <symbol id="c-shower" viewBox="0 0 20 20"><path stroke-width="1.66667" d="M3.33398 3.33398L5.41732 5.41732 M11.2505 5.41715C10.4743 4.65647 9.42923 4.23284 8.34245 4.23833C7.25566 4.24382 6.21495 4.67798 5.44647 5.44647C4.67798 6.21495 4.24382 7.25566 4.23833 8.34245C4.23284 9.42923 4.65647 10.4743 5.41715 11.2505 M12.4993 4.16602L4.16602 12.4993 M11.666 14.166V14.1743 M8.33398 13.334V13.3423 M10.834 10.834V10.8423 M13.334 8.33398V8.34232 M9.16602 16.666V16.6743 M14.166 11.666V11.6743 M16.666 9.16602V9.17435"/></symbol>
+  <symbol id="c-car" viewBox="0 0 20 20"><path stroke-width="1.66667" d="M15.8327 14.1673H17.4993C17.9993 14.1673 18.3327 13.834 18.3327 13.334V10.834C18.3327 10.084 17.7493 9.41732 17.0827 9.25065C15.5827 8.83398 13.3327 8.33398 13.3327 8.33398C13.3327 8.33398 12.2493 7.16732 11.4993 6.41732C11.0827 6.08398 10.5827 5.83398 9.99935 5.83398H4.16602C3.66602 5.83398 3.24935 6.16732 2.99935 6.58398L1.83268 9.00065C1.72233 9.32251 1.66602 9.6604 1.66602 10.0007V13.334C1.66602 13.834 1.99935 14.1673 2.49935 14.1673H4.16602 M7.49935 14.1667C7.49935 15.0871 6.75316 15.8333 5.83268 15.8333C4.91221 15.8333 4.16602 15.0871 4.16602 14.1667C4.16602 13.2462 4.91221 12.5 5.83268 12.5C6.75316 12.5 7.49935 13.2462 7.49935 14.1667Z M7.5 14.166H12.5 M15.8333 14.1667C15.8333 15.0871 15.0871 15.8333 14.1667 15.8333C13.2462 15.8333 12.5 15.0871 12.5 14.1667C12.5 13.2462 13.2462 12.5 14.1667 12.5C15.0871 12.5 15.8333 13.2462 15.8333 14.1667Z"/></symbol>
+  <symbol id="c-land" viewBox="0 0 20 20"><path stroke-width="1.66667" d="M10 6.66602L15 4.16602L10 1.66602V9.99935 M6.66595 9.99219L2.08261 12.6089C1.95436 12.6815 1.84769 12.7869 1.77348 12.9143C1.69926 13.0417 1.66016 13.1864 1.66016 13.3339C1.66016 13.4813 1.69926 13.626 1.77348 13.7534C1.84769 13.8808 1.95436 13.9862 2.08261 14.0589L9.16595 18.1089C9.41931 18.2551 9.70672 18.3321 9.99928 18.3321C10.2918 18.3321 10.5792 18.2551 10.8326 18.1089L17.9159 14.0589C18.0442 13.9862 18.1509 13.8808 18.2251 13.7534C18.2993 13.626 18.3384 13.4813 18.3384 13.3339C18.3384 13.1864 18.2993 13.0417 18.2251 12.9143C18.1509 12.7869 18.0442 12.6815 17.9159 12.6089L13.3326 10.0005 M5.4082 10.707L14.5915 15.957 M14.591 10.707L5.41602 15.957"/></symbol>
   <!-- Comodidades de lançamentos (ValeCasa, grade Heroicons) -->
   <symbol id="a-academia" viewBox="0 0 24 24"><rect x="3.75" y="6.75" width="3" height="10.5" rx="1.125"/><rect x="17.25" y="6.75" width="3" height="10.5" rx="1.125"/><path d="M6.75 12h10.5M2.25 12h1.5m16.5 0h1.5"/></symbol>
   <symbol id="a-acessibilidade" viewBox="0 0 24 24"><circle cx="10.5" cy="4.125" r="1.5"/><path d="M10.5 7.5v5.25H15l2.25 5.25h2.25M10.5 9.75h3.75M6.413 12.038a5.25 5.25 0 1 0 8.259 6.337"/></symbol>
@@ -894,6 +911,14 @@ code,.mono{font-family:var(--mono);font-size:12px}
         <div class="icon-cell custom"><svg class="i"><use href="#i-ig"/></svg><span>instagram · próprio</span></div>
       </div>
       <p class="note">Os de borda tracejada não existem no Heroicons (quarto, banheiro, vaga, área, WhatsApp, Instagram). Eles foram desenhados no mesmo grid de 24 px e traço 1.5 para conviver com a biblioteca. Para WhatsApp e Instagram, vale trocar pelos logos oficiais de cada rede.</p>
+      <h3 class="sub">Atributos dos cards</h3>
+      <div class="icon-grid">
+        <div class="icon-cell custom"><svg class="i" style="width:20px;height:20px"><use href="#c-bed"/></svg><span>bed · quartos</span></div>
+        <div class="icon-cell custom"><svg class="i" style="width:20px;height:20px"><use href="#c-shower"/></svg><span>shower · banheiros</span></div>
+        <div class="icon-cell custom"><svg class="i" style="width:20px;height:20px"><use href="#c-car"/></svg><span>garage · vagas</span></div>
+        <div class="icon-cell custom"><svg class="i" style="width:20px;height:20px"><use href="#c-land"/></svg><span>land · área</span></div>
+      </div>
+      <p class="note">Escolhidos pelo time para a linha de atributos do Card/Comum e do Card/Lançamento. Não são do Heroicons: vêm desenhados em 20 × 20 px com traço 1,67 px e são usados só nesse tamanho, na cor do texto. Arquivos em <code>icones-cards/svg/</code> (quartos, banheiros, vagas, area).</p>
     </section>
 
     <!-- ILUSTRAÇÃO -->
@@ -1072,51 +1097,98 @@ code,.mono{font-family:var(--mono);font-size:12px}
       <div class="sec-head">
         <span class="eyebrow">Componentes</span>
         <h2>Cards de imóvel</h2>
-        <p>Cards sem borda nem fundo: a foto é o contêiner. A ordem do texto é fixa em todas as listagens: bairro (coral), preço total, composição do preço, título em duas linhas no máximo e a linha de atributos.</p>
+        <p>Cards sem borda nem fundo: a foto é o contêiner. Os dois cards têm 285 px de largura e foto de 192 px de altura. A ordem do texto é fixa em todas as listagens.</p>
       </div>
-      <h3 class="sub">Aluguel / venda</h3>
+      <h3 class="sub">Card/Comum · aluguel e venda</h3>
       <div class="cards">
         <a class="card" href="#cards">
-          <div class="photo"><span class="tl badge b-rent">Aluguel</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
-          <span class="hood">Jardim Padroeira</span>
-          <span class="price">R$ 2.150<small>/total</small></span>
-          <span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span>
-          <span class="title">Kitnet com cozinha compartilhada e área de serviço</span>
-          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>2</span><span><svg class="i"><use href="#i-bath"/></svg>3</span><span><svg class="i"><use href="#i-car"/></svg>2</span><span><svg class="i"><use href="#i-area"/></svg>78m²</span></div>
+          <div class="photo"></div>
+          <div class="txt">
+            <span class="bairro">Jardim Padroeira</span>
+            <div class="info">
+              <div><span class="price">R$ 2.150<small>/total</small></span><br><span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span></div>
+              <span class="title">Kitnet com cozinha compartilhada e área de serviço</span>
+            </div>
+            <div class="specs"><span><svg class="i" aria-label="Quartos" role="img"><use href="#c-bed"/></svg>2</span><span><svg class="i" aria-label="Banheiros" role="img"><use href="#c-shower"/></svg>3</span><span><svg class="i" aria-label="Vagas" role="img"><use href="#c-car"/></svg>2</span><span><svg class="i" aria-label="Área" role="img"><use href="#c-land"/></svg>78m²</span></div>
+          </div>
         </a>
         <a class="card" href="#cards">
-          <div class="photo v2"><span class="tl badge b-rent">Aluguel</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
-          <span class="hood">Pedregulho</span>
-          <span class="price">R$ 2.150<small>/total</small></span>
-          <span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span>
-          <span class="title">Excelente casa em rua tradicional no Pedregulho</span>
-          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>2</span><span><svg class="i"><use href="#i-bath"/></svg>3</span><span><svg class="i"><use href="#i-car"/></svg>2</span><span><svg class="i"><use href="#i-area"/></svg>78m²</span></div>
+          <div class="photo v2"></div>
+          <div class="txt">
+            <span class="bairro">Pedregulho</span>
+            <div class="info">
+              <div><span class="price">R$ 2.150<small>/total</small></span><br><span class="breakdown">Aluguel R$ 1.850 + Cond. R$ 300</span></div>
+              <span class="title">Excelente casa em rua tradicional no Pedregulho</span>
+            </div>
+            <div class="specs"><span><svg class="i" aria-label="Quartos" role="img"><use href="#c-bed"/></svg>2</span><span><svg class="i" aria-label="Banheiros" role="img"><use href="#c-shower"/></svg>3</span><span><svg class="i" aria-label="Vagas" role="img"><use href="#c-car"/></svg>2</span><span><svg class="i" aria-label="Área" role="img"><use href="#c-land"/></svg>78m²</span></div>
+          </div>
         </a>
         <a class="card" href="#cards">
-          <div class="photo"><span class="tl badge b-sale">Venda</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="true" data-fav><svg class="i"><use href="#i-heart"/></svg></button></div>
-          <span class="hood">Colônia</span>
-          <span class="price">R$ 500.000</span>
-          <span class="breakdown">Cond. R$ 320 · IPTU R$ 665/ano</span>
-          <span class="title">Chácara com piscina na estrada asfaltada</span>
-          <div class="specs"><span><svg class="i"><use href="#i-bed"/></svg>3</span><span><svg class="i"><use href="#i-bath"/></svg>2</span><span><svg class="i"><use href="#i-car"/></svg>4</span><span><svg class="i"><use href="#i-area"/></svg>187m²</span></div>
+          <div class="photo"></div>
+          <div class="txt">
+            <span class="bairro">Colônia</span>
+            <div class="info">
+              <div><span class="price">R$ 500.000</span><br><span class="breakdown">Cond. R$ 320 · IPTU R$ 665/ano</span></div>
+              <span class="title">Chácara com piscina na estrada asfaltada</span>
+            </div>
+            <div class="specs"><span><svg class="i" aria-label="Quartos" role="img"><use href="#c-bed"/></svg>3</span><span><svg class="i" aria-label="Banheiros" role="img"><use href="#c-shower"/></svg>2</span><span><svg class="i" aria-label="Vagas" role="img"><use href="#c-car"/></svg>4</span><span><svg class="i" aria-label="Área" role="img"><use href="#c-land"/></svg>187m²</span></div>
+          </div>
         </a>
       </div>
-      <h3 class="sub">Lançamento</h3>
+      <div class="panel scroll" style="padding:0">
+        <table class="rules">
+          <thead><tr><th>Card/Comum</th><th>Texto e cor</th><th>Espaço</th></tr></thead>
+          <tbody>
+            <tr><td>Foto</td><td>285 × 192 px, raio 6</td><td>8 px até o texto</td></tr>
+            <tr><td>Bairro</td><td>12 · Medium · 140% · coral</td><td rowspan="2">gap 4 entre bairro, informação e atributos</td></tr>
+            <tr><td>Total</td><td>18 · Bold · <code>--ink</code>; "/total" em 14 Medium</td></tr>
+            <tr><td>Composição</td><td>14 · Regular · 155% · <code>--ink-3</code></td><td rowspan="2">gap 8 entre valores e título</td></tr>
+            <tr><td>Título</td><td>14 · Regular · <code>--ink</code>, até 2 linhas</td></tr>
+            <tr><td>Atributos</td><td>Ícone 20 px, traço 1,67 px, <code>--ink</code> · número 14 Bold <code>--ink-2</code></td><td>gap 16 entre itens, 4 entre ícone e número</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub">Card/Lançamento</h3>
       <div class="cards">
-        <a class="card" href="#cards">
-          <div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="br">TP</span></div>
-          <span class="hood"><svg class="i" style="width:12px;height:12px"><use href="#i-pin"/></svg>Vila Paraíba · Guaratinguetá</span>
-          <span class="name">Village Tulipa</span>
-          <div class="specs" style="margin-top:0;font-weight:500;color:var(--ink-2)"><span><svg class="i"><use href="#i-bed"/></svg>3 e 4</span><span><svg class="i"><use href="#i-car"/></svg>2 vagas</span><span><svg class="i"><use href="#i-area"/></svg>45 e 67m²</span></div>
-          <span class="from">A partir de <b>R$ 799.000</b></span>
+        <a class="card launch-card" href="#cards">
+          <div class="media"><div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="lc-status">Em obras</span></div><span class="lc-logo">TP</span></div>
+          <div class="txt">
+            <span class="bairro">Vila Paraíba</span>
+            <div class="info">
+              <span class="name">Village Tulipa</span>
+              <div class="specs"><span><svg class="i" aria-label="Quartos" role="img"><use href="#c-bed"/></svg>3 e 4</span><span><svg class="i" aria-label="Vagas" role="img"><use href="#c-car"/></svg>2 vagas</span><span><svg class="i" aria-label="Área" role="img"><use href="#c-land"/></svg>45 e 67 m²</span></div>
+              <div class="divider"></div>
+              <span class="from">A partir de <b>R$ 799.000</b></span>
+            </div>
+          </div>
         </a>
-        <a class="card" href="#cards">
-          <div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="br">AP</span></div>
-          <span class="hood"><svg class="i" style="width:12px;height:12px"><use href="#i-pin"/></svg>Centro · Guaratinguetá</span>
-          <span class="name">Jardim das Figueiras</span>
-          <div class="specs" style="margin-top:0;font-weight:500;color:var(--ink-2)"><span><svg class="i"><use href="#i-bed"/></svg>2 e 3</span><span><svg class="i"><use href="#i-car"/></svg>1 vaga</span><span><svg class="i"><use href="#i-area"/></svg>52 e 74m²</span></div>
-          <span class="from">A partir de <b>R$ 412.000</b></span>
+        <a class="card launch-card" href="#cards">
+          <div class="media"><div class="photo v3"><span class="tl badge b-launch">Lançamento</span><button class="icon-btn tr" aria-label="Salvar" aria-pressed="false" data-fav><svg class="i"><use href="#i-heart"/></svg></button><span class="lc-status">Pronto</span></div><span class="lc-logo">AP</span></div>
+          <div class="txt">
+            <span class="bairro">Centro</span>
+            <div class="info">
+              <span class="name">Jardim das Figueiras</span>
+              <div class="specs"><span><svg class="i" aria-label="Quartos" role="img"><use href="#c-bed"/></svg>2 e 3</span><span><svg class="i" aria-label="Vagas" role="img"><use href="#c-car"/></svg>1 vaga</span><span><svg class="i" aria-label="Área" role="img"><use href="#c-land"/></svg>52 e 74 m²</span></div>
+              <div class="divider"></div>
+              <span class="from">A partir de <b>R$ 412.000</b></span>
+            </div>
+          </div>
         </a>
+      </div>
+      <div class="panel scroll" style="padding:0">
+        <table class="rules">
+          <thead><tr><th>Card/Lançamento</th><th>Texto e cor</th><th>Espaço</th></tr></thead>
+          <tbody>
+            <tr><td>Foto</td><td>285 × 192 px, raio 8 · selo Lançamento, favoritar e status da obra sobre a foto</td><td>8 px até o texto</td></tr>
+            <tr><td>Status</td><td>11 · SemiBold · caixa-alta · <code>--ink</code> sobre branco, pílula</td><td>padding 4 × 12</td></tr>
+            <tr><td>Logo da construtora</td><td>52 × 52 px, raio 6, borda <code>#F1EFF7</code>, branco</td><td>canto inferior direito, metade para fora da foto</td></tr>
+            <tr><td>Bairro</td><td>12 · Medium · 140% · coral</td><td>gap 4 até o bloco de informação</td></tr>
+            <tr><td>Nome</td><td>18 · Bold · 125% · <code>--ink</code></td><td rowspan="2">gap 8 entre nome, atributos, divisor e preço</td></tr>
+            <tr><td>Atributos</td><td>Ícone 20 px, traço 1,67 px · valor 12 SemiBold <code>--ink</code></td></tr>
+            <tr><td>Divisor</td><td>1 px · <code>--line</code></td><td></td></tr>
+            <tr><td>Preço</td><td>"A partir de" 14 Regular <code>--ink-2</code> · valor 18 Bold, −1%</td><td>alinhados pela linha de base, gap 6</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 

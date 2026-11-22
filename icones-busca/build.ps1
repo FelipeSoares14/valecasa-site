@@ -57,11 +57,12 @@ Copy-Item "$root\busca.json", "$root\dist\busca-sprite.svg" $stage
 $readme = @"
 # Ícones da Busca ValeCasa · v$ver
 
-$($ids.Count) ícones para as sugestões da busca, na grade do Heroicons v2 (24x24, traço 1.5, só <path>, cor herdada do texto).
+$($ids.Count) ícones para a busca, o mapa e o anúncio, na grade do Heroicons v2 (24x24, traço 1.5, só <path>, cor herdada do texto).
 
 ## Grupos
-- Lugares: Cidade, Bairro, Rua, Edifício, Condomínio
+- Lugares: Cidade, Bairro, Rua, Edifício, Condomínio, Empreendimento
 - Pessoas e empresas: Perfil, Corretores, Imobiliárias, Construtoras
+- Mapa e anúncio: Mapa com pino, Camadas do mapa, Rota até o imóvel, Parque e natureza, Chácara, Planta baixa, Chave, Casa com chave, Selo
 
 ## Conteúdo
 - svg/              um arquivo por ícone (ex.: svg/bairro.svg)
