@@ -12,7 +12,7 @@ Site e materiais digitais da campanha Vale Casa (imóveis em Guaratinguetá).
 - `design-system/`: design system da marca
 - `auditoria/` e `analise-figma/`: estudos
 - `icones-comodidades/`: SVGs dos ícones, catálogo e scripts (veja o `LEIAME.md`)
-- `icones-espacos/` e `icones-tipos/`: ícones de Espaços (cômodos) e de Tipos de imóvel, no mesmo esquema (svg/, índice .json, build.ps1, dist/)
+- `icones-espacos/`, `icones-tipos/` e `icones-busca/`: ícones de Espaços (cômodos), de Tipos de imóvel e da Busca (lugares e pessoas/empresas do dropdown), no mesmo esquema (svg/, índice .json, build.ps1, dist/)
 - `ilustracoes/`: ilustrações de estados vazios
 - `3d/`: scripts do Blender que geram os modelos do espelho de vendas 3D (`alto-do-pedregulho.py`, prédio; `bosque-dos-pinheiros.py`, loteamento). Cada um exporta para `img/<nome>.gltf.json` (o arquivo que o site carrega) e salva o `.blend` no Drive. Unidades se chamam `U_<andar><final>` e lotes `L_<quadra><lote>`
 

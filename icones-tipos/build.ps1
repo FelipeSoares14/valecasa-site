@@ -18,26 +18,37 @@ foreach ($i in $data.icones) {
   }
 }
 
-# Confere se índice e arquivos batem
-$ids = @($data.icones | ForEach-Object { $_.id })
-$files = @(Get-ChildItem "$root\svg" -Filter *.svg | ForEach-Object { $_.BaseName })
-$semArquivo = $ids | Where-Object { $files -notcontains $_ }
-$semIndice = $files | Where-Object { $ids -notcontains $_ }
-$dup = $ids | Group-Object | Where-Object Count -gt 1 | ForEach-Object Name
-if ($semArquivo) { throw "No índice, mas sem SVG: $($semArquivo -join ', ')" }
-if ($semIndice) { throw "SVG sem entrada no índice: $($semIndice -join ', ')" }
-if ($dup) { throw "ids repetidos no índice: $($dup -join ', ')" }
+# Estilos: contorno (svg\), duotone (svg-duotone\) e preenchido (svg-preenchido\)
+$estilos = @(
+  @{ id = 'contorno';   pasta = 'svg';            sufixo = '';            attrs = 'fill="none" stroke="currentColor" stroke-width="1.5"' },
+  @{ id = 'duotone';    pasta = 'svg-duotone';    sufixo = '-duotone';    attrs = 'fill="none" stroke="currentColor" stroke-width="1.5"' },
+  @{ id = 'preenchido'; pasta = 'svg-preenchido'; sufixo = '-preenchido'; attrs = 'fill="currentColor" stroke="none"' }
+)
 
-# Sprite
-$symbols = foreach ($id in $ids) {
-  $svg = [IO.File]::ReadAllText("$root\svg\$id.svg")
-  # Sem o <metadata> de procedência (C2PA): no sprite ele só pesaria
-  $inner = [regex]::Match($svg, '(?s)<svg[^>]*>(.*)</svg>').Groups[1].Value -replace '(?s)<metadata>.*?</metadata>', ''
-  $inner = $inner.Trim()
-  if ($inner -match '<(circle|rect|ellipse|line|polygon|polyline)\b') { throw "$id.svg tem forma solta; converta para <path>" }
-  "  <symbol id=`"vc-tipo-$id`" viewBox=`"0 0 24 24`">$inner</symbol>"
+# Confere se índice e arquivos batem, nos três estilos
+$ids = @($data.icones | ForEach-Object { $_.id })
+$dup = $ids | Group-Object | Where-Object Count -gt 1 | ForEach-Object Name
+if ($dup) { throw "ids repetidos no índice: $($dup -join ', ')" }
+foreach ($e in $estilos) {
+  $files = @(Get-ChildItem "$root\$($e.pasta)" -Filter *.svg | ForEach-Object { $_.BaseName })
+  $semArquivo = $ids | Where-Object { $files -notcontains $_ }
+  $semIndice = $files | Where-Object { $ids -notcontains $_ }
+  if ($semArquivo) { throw "$($e.pasta): no índice, mas sem SVG: $($semArquivo -join ', ')" }
+  if ($semIndice) { throw "$($e.pasta): SVG sem entrada no índice: $($semIndice -join ', ')" }
 }
-$sprite = "<svg xmlns=`"http://www.w3.org/2000/svg`" fill=`"none`" stroke=`"currentColor`" stroke-width=`"1.5`" stroke-linecap=`"round`" stroke-linejoin=`"round`">`n$($symbols -join "`n")`n</svg>`n"
+
+# Sprite: cada símbolo leva os próprios atributos de cor, então funciona em qualquer página
+$symbols = foreach ($e in $estilos) {
+  foreach ($id in $ids) {
+    $svg = [IO.File]::ReadAllText("$root\$($e.pasta)\$id.svg")
+    # Sem o <metadata> de procedência (C2PA): no sprite ele só pesaria
+    $inner = [regex]::Match($svg, '(?s)<svg[^>]*>(.*)</svg>').Groups[1].Value -replace '(?s)<metadata>.*?</metadata>', ''
+    $inner = ($inner.Trim() -replace '\r?\n\s*', '')
+    if ($inner -match '<(circle|rect|ellipse|line|polygon|polyline)\b') { throw "$($e.pasta)\$id.svg tem forma solta; converta para <path>" }
+    "  <symbol id=`"vc-tipo-$id$($e.sufixo)`" viewBox=`"0 0 24 24`" $($e.attrs)>$inner</symbol>"
+  }
+}
+$sprite = "<svg xmlns=`"http://www.w3.org/2000/svg`">`n$($symbols -join "`n")`n</svg>`n"
 [IO.File]::WriteAllText("$root\dist\tipos-sprite.svg", $sprite, $utf8)
 
 # Catálogo
@@ -47,40 +58,44 @@ $html = $tpl.Replace('/*__DATA__*/', $jsonText.Trim()).Replace('<!--__SPRITE__--
 
 # Pacote .zip para o time
 $ver = $data.versao
+Get-ChildItem "$root\dist" -Filter 'tipos-valecasa-v*.zip' | Remove-Item -Force
 $stage = Join-Path $env:TEMP "vc-tipos-$ver"
 if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
-New-Item -ItemType Directory -Path "$stage\svg" | Out-Null
-Copy-Item "$root\svg\*.svg" "$stage\svg\"
+foreach ($e in $estilos) {
+  New-Item -ItemType Directory -Path "$stage\$($e.pasta)" | Out-Null
+  Copy-Item "$root\$($e.pasta)\*.svg" "$stage\$($e.pasta)\"
+}
 Copy-Item "$root\tipos.json", "$root\dist\tipos-sprite.svg" $stage
 $readme = @"
 # Ícones de Tipos de Imóvel ValeCasa · v$ver
 
-$($ids.Count) ícones de tipos de imóvel na grade do Heroicons v2: 24x24, traço 1.5, só <path>, cor herdada do texto (currentColor).
+$($ids.Count) ícones de tipos de imóvel em três estilos, na grade do Heroicons v2 (24x24, só <path>, cor herdada do texto).
+
+## Estilos
+- svg/              contorno: traço 1.5, pontas e cantos arredondados (padrão outline do Heroicons)
+- svg-duotone/      duotone: o mesmo contorno sobre uma área de fundo em 20% da cor
+- svg-preenchido/   preenchido: silhueta sólida com portas e janelas vazadas (padrão solid do Heroicons)
 
 ## Conteúdo
-- svg/                 um arquivo por tipo (ex.: svg/sobrado.svg)
-- tipos-sprite.svg   todos os ícones num arquivo só, com ids vc-tipo-<nome>
-- tipos.json         nome em português, categoria e origem de cada ícone
-
-## Origem dos desenhos
-- novo: desenhado para os Tipos de imóvel
-- comodidade:<id>: mesmo desenho da comodidade de mesmo conceito
-- heroicons:<nome>: ícone oficial do Heroicons (MIT)
+- tipos-sprite.svg   os três estilos num arquivo só: vc-tipo-<nome>, vc-tipo-<nome>-duotone, vc-tipo-<nome>-preenchido
+- tipos.json         nome em português, categoria, origem e sinônimos de cada ícone
 
 ## Uso com sprite
-<svg class="icon" width="24" height="24"><use href="/assets/tipos-sprite.svg#vc-tipo-sobrado"/></svg>
+<svg class="icon" width="24" height="24"><use href="/assets/tipos-sprite.svg#vc-tipo-sobrado-preenchido"/></svg>
 
 ## Uso inline
-Cole o conteúdo de svg/sobrado.svg. A cor segue o CSS color do elemento pai.
+Cole o conteúdo do SVG. A cor segue o CSS color do elemento pai.
+
+## Quando usar cada estilo
+Contorno é o padrão. Preenchido marca o item ativo (filtro selecionado, aba atual). Duotone serve para destaques grandes, como os atalhos de busca da home.
 
 ## Tamanhos
 16 px em listas e filtros, 20 px no card do imóvel, 28 px nos atalhos de busca da home.
 "@
 [IO.File]::WriteAllText("$stage\LEIAME.md", $readme, $utf8)
 $zip = "$root\dist\tipos-valecasa-v$ver.zip"
-if (Test-Path $zip) { Remove-Item $zip -Force }
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 [IO.Compression.ZipFile]::CreateFromDirectory($stage, $zip)
 Remove-Item $stage -Recurse -Force
 
-"OK: $($ids.Count) ícones · sprite, catálogo e $(Split-Path $zip -Leaf) gerados em dist\"
+"OK: $($ids.Count) ícones x $($estilos.Count) estilos · sprite, catálogo e $(Split-Path $zip -Leaf) gerados em dist\"

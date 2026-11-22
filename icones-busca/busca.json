@@ -1,0 +1,84 @@
+{
+ "versao": "1.1",
+ "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
+ "categorias": [
+  {
+   "id": "lugares",
+   "nome": "Lugares",
+   "total": 5,
+   "cobertos": 5
+  },
+  {
+   "id": "pessoas-empresas",
+   "nome": "Pessoas e empresas",
+   "total": 4,
+   "cobertos": 4
+  }
+ ],
+ "etiquetas": [],
+ "icones": [
+  {
+   "id": "cidade",
+   "nome": "Cidade",
+   "categoria": "lugares",
+   "origem": "time:CIDADE",
+   "aliases": ["Município", "Centro", "Guaratinguetá"]
+  },
+  {
+   "id": "bairro",
+   "nome": "Bairro",
+   "categoria": "lugares",
+   "origem": "time:BAIRRO",
+   "aliases": ["Vizinhança", "Região", "Loteamento", "Vila"]
+  },
+  {
+   "id": "rua",
+   "nome": "Rua",
+   "categoria": "lugares",
+   "origem": "time:rua",
+   "aliases": ["Avenida", "Logradouro", "Endereço", "Travessa"]
+  },
+  {
+   "id": "edificio",
+   "nome": "Edifício",
+   "categoria": "lugares",
+   "origem": "novo",
+   "aliases": ["Prédio", "Residencial", "Torre"]
+  },
+  {
+   "id": "condominio",
+   "nome": "Condomínio",
+   "categoria": "lugares",
+   "origem": "novo",
+   "aliases": ["Condomínio fechado", "Residencial fechado", "Village"]
+  },
+  {
+   "id": "perfil",
+   "nome": "Perfil",
+   "categoria": "pessoas-empresas",
+   "origem": "heroicons:user",
+   "aliases": ["Pessoa", "Usuário", "Proprietário", "Anunciante particular"]
+  },
+  {
+   "id": "corretor",
+   "nome": "Corretores",
+   "categoria": "pessoas-empresas",
+   "origem": "novo",
+   "aliases": ["Corretor", "Corretora", "Corretor autônomo", "CRECI"]
+  },
+  {
+   "id": "imobiliaria",
+   "nome": "Imobiliárias",
+   "categoria": "pessoas-empresas",
+   "origem": "novo",
+   "aliases": ["Imobiliária", "Agência", "Escritório imobiliário"]
+  },
+  {
+   "id": "construtora",
+   "nome": "Construtoras",
+   "categoria": "pessoas-empresas",
+   "origem": "novo",
+   "aliases": ["Construtora", "Incorporadora", "Loteadora", "Obra"]
+  }
+ ]
+}

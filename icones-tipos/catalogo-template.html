@@ -43,6 +43,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
 .search .ic{width:20px;height:20px;color:var(--ink-3)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font:500 13px var(--font);color:var(--ink-2);background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.est-label{font-size:12px;color:var(--ink-3);align-self:center;margin-right:2px}
 .chip small{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
 .chip[aria-pressed="true"]{background:var(--vc-green-500);border-color:var(--vc-green-500);color:var(--vc-green-ink);font-weight:600}
 .chip[aria-pressed="true"] small{color:var(--vc-green-ink)}
@@ -103,7 +104,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
       <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
       <div>
         <h1>Ícones de tipos de imóvel</h1>
-        <p>Casa, apartamento, terreno e os demais tipos usados na busca e nos anúncios, na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+        <p>Casa, apartamento, terreno e os demais tipos usados na busca e nos anúncios, na grade Heroicons, em três estilos: contorno, duotone e preenchido. Clique num ícone para ver os detalhes e copiar o código.</p>
       </div>
     </div>
     <div class="prog" id="prog"></div>
@@ -114,6 +115,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
   <main>
     <div class="tools">
       <label class="search" for="q"><svg class="ic"><use href="#ui-search"/></svg><input id="q" type="search" placeholder="Buscar: casa, kitnet, sítio…" autocomplete="off"></label>
+      <div class="chips" id="estilos" role="group" aria-label="Estilo"></div>
       <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
     </div>
     <div id="list"></div>
@@ -128,6 +130,18 @@ const DATA = /*__DATA__*/;
   const byCat = id => icons.filter(i => i.categoria === id);
   const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
   let cat = 'todas', sel = icons[0] && icons[0].id;
+  const estilos = DATA.estilos || [{id:'contorno',nome:'Contorno',sufixo:'',pasta:'svg'}];
+  let est = estilos[0].id;
+  const E = () => estilos.find(e => e.id === est);
+  const estBox = document.getElementById('estilos');
+  function drawEstilos(){
+    estBox.innerHTML = '<span class="est-label">Estilo</span>';
+    estilos.forEach(e => {
+      const b = document.createElement('button'); b.type='button'; b.className='chip';
+      b.setAttribute('aria-pressed', String(e.id===est)); b.textContent = e.nome;
+      b.onclick = () => { est = e.id; drawEstilos(); drawList(); drawDetail(); }; estBox.appendChild(b);
+    });
+  }
   try { const h = location.hash.slice(1); if (h && icons.some(i => i.id === h)) sel = h; } catch(e){}
 
   // progresso
@@ -172,7 +186,7 @@ const DATA = /*__DATA__*/;
         items.forEach(i => {
           const b = document.createElement('button'); b.type='button'; b.className='tile';
           b.setAttribute('aria-pressed', String(i.id===sel));
-          b.innerHTML = `<svg class="ic"><use href="#vc-tipo-${i.id}"/></svg><span>${i.nome}</span>`;
+          b.innerHTML = `<svg class="ic"><use href="#vc-tipo-${i.id}${E().sufixo}"/></svg><span>${i.nome}</span>`;
           b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
           g.appendChild(b);
         });
@@ -202,21 +216,24 @@ const DATA = /*__DATA__*/;
     return '<span class="pill fam">Desenho novo</span>';
   }
   function svgSource(id){
-    const s = document.getElementById('vc-tipo-'+id);
-    return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">${s.innerHTML.trim()}</svg>`;
+    const s = document.getElementById('vc-tipo-'+id+E().sufixo);
+    const raiz = est === 'preenchido'
+      ? 'fill="currentColor" viewBox="0 0 24 24"'
+      : 'fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"';
+    return `<svg xmlns="http://www.w3.org/2000/svg" ${raiz} aria-hidden="true" data-slot="icon">${s.innerHTML.trim()}</svg>`;
   }
   const det = document.getElementById('detail');
   function drawDetail(){
     const i = icons.find(x => x.id===sel); if (!i) { det.hidden = true; return; }
     const c = cats.find(x => x.id===i.categoria);
-    const u = `<use href="#vc-tipo-${i.id}"/>`;
+    const u = `<use href="#vc-tipo-${i.id}${E().sufixo}"/>`;
     det.innerHTML = `
       <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
       <div class="d-body">
         <h3>${i.nome}</h3>
         <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${origem(i)}${i.extra?'<span class="pill">Extra</span>':''}</div>
         ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
-        <div class="file">svg/${i.id}.svg</div>
+        <div class="file">${E().pasta}/${i.id}.svg</div>
         <div class="sizes">
           <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
           <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
@@ -238,13 +255,13 @@ const DATA = /*__DATA__*/;
     det.hidden = false;
     det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {
       const txt = b.dataset.copy==='svg' ? svgSource(i.id)
-        : `<svg class="icon" width="24" height="24"><use href="tipos-sprite.svg#vc-tipo-${i.id}"/></svg>`;
+        : `<svg class="icon" width="24" height="24"><use href="tipos-sprite.svg#vc-tipo-${i.id}${E().sufixo}"/></svg>`;
       const out = det.querySelector('#copied');
       const ok = () => out.textContent = b.dataset.copy==='svg' ? 'SVG copiado.' : 'Código copiado.';
       const fail = () => { out.textContent = 'Não deu para copiar aqui. Selecione o código abaixo e use Ctrl+C.'; const pre=document.createElement('pre'); pre.className='file'; pre.textContent=txt; out.after(pre); };
       try { navigator.clipboard.writeText(txt).then(ok, fail); } catch(e) { fail(); }
     });
   }
-  drawChips(); drawList(); drawDetail();
+  drawEstilos(); drawChips(); drawList(); drawDetail();
 })();
 </script>

@@ -1,5 +1,5 @@
 {
- "versao": "1.0",
+ "versao": "1.1",
  "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
  "categorias": [
   {
@@ -22,6 +22,26 @@
   }
  ],
  "etiquetas": [],
+ "estilos": [
+  {
+   "id": "contorno",
+   "nome": "Contorno",
+   "sufixo": "",
+   "pasta": "svg"
+  },
+  {
+   "id": "duotone",
+   "nome": "Duotone",
+   "sufixo": "-duotone",
+   "pasta": "svg-duotone"
+  },
+  {
+   "id": "preenchido",
+   "nome": "Preenchido",
+   "sufixo": "-preenchido",
+   "pasta": "svg-preenchido"
+  }
+ ],
  "icones": [
   {
    "id": "casa",
