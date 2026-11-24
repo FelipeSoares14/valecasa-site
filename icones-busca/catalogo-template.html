@@ -105,7 +105,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
       <svg viewBox="0 0 123 89" aria-hidden="true"><use href="#logo-mark"/></svg>
       <div>
         <h1>Ícones da busca</h1>
-        <p>Lugares e pessoas ou empresas das sugestões da busca, mais os ícones do mapa e do anúncio, na grade Heroicons. Clique num ícone para ver os detalhes e copiar o código.</p>
+        <p>Lugares e pessoas ou empresas das sugestões da busca, desenhados pelo time na grade Heroicons, em três estilos (contorno, duotone e preenchido) e numa versão animada. Clique num ícone para ver os detalhes e copiar o código.</p>
       </div>
     </div>
     <div class="prog" id="prog"></div>
@@ -126,6 +126,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
 
 <script>
 const DATA = /*__DATA__*/;
+const ANIM = /*__ANIM__*/;
 (function(){
   const cats = DATA.categorias, icons = DATA.icones;
   const byCat = id => icons.filter(i => i.categoria === id);
@@ -134,6 +135,10 @@ const DATA = /*__DATA__*/;
   const estilos = DATA.estilos || [{id:'contorno',nome:'Contorno',sufixo:'',pasta:'svg'}];
   let est = estilos[0].id;
   const E = () => estilos.find(e => e.id === est);
+  // Ícone no estilo atual: os animados entram inline (animação não roda dentro de <use>)
+  const ic = (id, style = '') => est === 'animado' && ANIM[id]
+    ? ANIM[id].replace('class="vc-anim', `style="${style}" class="ic vc-anim`)
+    : `<svg class="ic" style="${style}"><use href="#vc-busca-${id}${E().sufixo}"/></svg>`;
   const estBox = document.getElementById('estilos');
   function drawEstilos(){
     estBox.innerHTML = '<span class="est-label">Estilo</span>';
@@ -187,7 +192,7 @@ const DATA = /*__DATA__*/;
         items.forEach(i => {
           const b = document.createElement('button'); b.type='button'; b.className='tile';
           b.setAttribute('aria-pressed', String(i.id===sel));
-          b.innerHTML = `<svg class="ic"><use href="#vc-busca-${i.id}${E().sufixo}"/></svg><span>${i.nome}</span>`;
+          b.innerHTML = `${ic(i.id)}<span>${i.nome}</span>`;
           b.onclick = () => { sel = i.id; drawList(); drawDetail(); };
           g.appendChild(b);
         });
@@ -217,6 +222,7 @@ const DATA = /*__DATA__*/;
     return '<span class="pill fam">Desenho novo</span>';
   }
   function svgSource(id){
+    if (est === 'animado' && ANIM[id]) return ANIM[id];
     const s = document.getElementById('vc-busca-'+id+E().sufixo);
     const raiz = est === 'preenchido'
       ? 'fill="currentColor" viewBox="0 0 24 24"'
@@ -229,29 +235,29 @@ const DATA = /*__DATA__*/;
     const c = cats.find(x => x.id===i.categoria);
     const u = `<use href="#vc-busca-${i.id}${E().sufixo}"/>`;
     det.innerHTML = `
-      <div class="stage"><div class="g24"><svg class="ic">${u}</svg></div></div>
+      <div class="stage"><div class="g24">${ic(i.id)}</div></div>
       <div class="d-body">
         <h3>${i.nome}</h3>
         <div class="d-meta"><span class="pill">${c ? c.nome : ''}</span>${origem(i)}${i.extra?'<span class="pill">Extra</span>':''}</div>
         ${(i.aliases&&i.aliases.length)?`<p class="alias"><b>Também usado para:</b> ${i.aliases.join(', ')}</p>`:''}
         <div class="file">${E().pasta}/${i.id}.svg</div>
         <div class="sizes">
-          <div><svg class="ic" style="width:16px;height:16px">${u}</svg><small>16</small></div>
-          <div><svg class="ic" style="width:20px;height:20px">${u}</svg><small>20</small></div>
-          <div><svg class="ic" style="width:28px;height:28px">${u}</svg><small>28</small></div>
-          <div><svg class="ic" style="width:40px;height:40px">${u}</svg><small>40</small></div>
+          <div>${ic(i.id, "width:16px;height:16px")}<small>16</small></div>
+          <div>${ic(i.id, "width:20px;height:20px")}<small>20</small></div>
+          <div>${ic(i.id, "width:28px;height:28px")}<small>28</small></div>
+          <div>${ic(i.id, "width:40px;height:40px")}<small>40</small></div>
         </div>
         <div class="on-brand">
-          <div style="background:#4D00AF;color:#03FE9F"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
-          <div style="background:#03FE9F;color:#4D00AF"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
-          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)"><svg class="ic" style="width:28px;height:28px">${u}</svg></div>
+          <div style="background:#4D00AF;color:#03FE9F">${ic(i.id, "width:28px;height:28px")}</div>
+          <div style="background:#03FE9F;color:#4D00AF">${ic(i.id, "width:28px;height:28px")}</div>
+          <div style="background:#FFFFFF;color:#1B1825;border:1px solid var(--line)">${ic(i.id, "width:28px;height:28px")}</div>
         </div>
         <div class="acts">
           <button class="btn btn-primary" type="button" data-copy="svg">Copiar SVG</button>
-          <button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>
+          ${est === 'animado' ? '' : '<button class="btn btn-outline" type="button" data-copy="use">Copiar uso com sprite</button>'}
         </div>
         <div class="copied" id="copied"></div>
-        <p class="note">Os arquivos ficam na pasta <code>icones-busca</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).</p>
+        <p class="note">${est === 'animado' ? 'Passe o mouse ou toque para ver o movimento. Cole o SVG direto no HTML (em sprite ou &lt;img&gt; ele não anima) e inclua <code>animados/vc-anim.js</code> para a animação ir até o fim.' : 'Os arquivos ficam na pasta <code>icones-busca</code> e no .zip da versão. A cor vem do texto (<code>currentColor</code>).'}</p>
       </div>`;
     det.hidden = false;
     det.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => {

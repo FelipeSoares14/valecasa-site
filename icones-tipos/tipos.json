@@ -1,5 +1,5 @@
 {
- "versao": "1.1",
+ "versao": "1.2",
  "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
  "categorias": [
   {
@@ -40,6 +40,12 @@
    "nome": "Preenchido",
    "sufixo": "-preenchido",
    "pasta": "svg-preenchido"
+  },
+  {
+   "id": "animado",
+   "nome": "Animado",
+   "sufixo": "-animado",
+   "pasta": "animados"
   }
  ],
  "icones": [
@@ -166,10 +172,11 @@
    "id": "chacara",
    "nome": "Chácara",
    "categoria": "terrenos-rurais",
-   "origem": "novo",
+   "origem": "time:35-chácara",
    "aliases": [
     "Chácara de recreio",
-    "Casa de campo"
+    "Casa de campo",
+    "Sede"
    ]
   },
   {

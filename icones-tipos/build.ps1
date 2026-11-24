@@ -51,9 +51,20 @@ $symbols = foreach ($e in $estilos) {
 $sprite = "<svg xmlns=`"http://www.w3.org/2000/svg`">`n$($symbols -join "`n")`n</svg>`n"
 [IO.File]::WriteAllText("$root\dist\tipos-sprite.svg", $sprite, $utf8)
 
+# Animados: SVG com partes e CSS próprio, usados inline (não entram no sprite)
+$anim = [ordered]@{}
+foreach ($id in $ids) {
+  $f = "$root\animados\$id.svg"
+  if (-not (Test-Path $f)) { throw "animados: falta $id.svg (rode gerar-animados.py)" }
+  $svg = [IO.File]::ReadAllText($f).Trim()
+  if ($svg -match '<(circle|rect|ellipse|line|polygon|polyline)\b') { throw "animados\$id.svg tem forma solta; converta para <path>" }
+  $anim[$id] = $svg
+}
+$animJson = $anim | ConvertTo-Json -Compress
+
 # Catálogo
 $tpl = [IO.File]::ReadAllText("$root\catalogo-template.html")
-$html = $tpl.Replace('/*__DATA__*/', $jsonText.Trim()).Replace('<!--__SPRITE__-->', ($symbols -join "`n"))
+$html = $tpl.Replace('/*__DATA__*/', $jsonText.Trim()).Replace('/*__ANIM__*/', $animJson).Replace('<!--__SPRITE__-->', ($symbols -join "`n"))
 [IO.File]::WriteAllText("$root\dist\catalogo-tipos.html", $html, $utf8)
 
 # Pacote .zip para o time
@@ -65,16 +76,19 @@ foreach ($e in $estilos) {
   New-Item -ItemType Directory -Path "$stage\$($e.pasta)" | Out-Null
   Copy-Item "$root\$($e.pasta)\*.svg" "$stage\$($e.pasta)\"
 }
+New-Item -ItemType Directory -Path "$stage\animados" | Out-Null
+Copy-Item "$root\animados\*" "$stage\animados\"
 Copy-Item "$root\tipos.json", "$root\dist\tipos-sprite.svg" $stage
 $readme = @"
 # Ícones de Tipos de Imóvel ValeCasa · v$ver
 
-$($ids.Count) ícones de tipos de imóvel em três estilos, na grade do Heroicons v2 (24x24, só <path>, cor herdada do texto).
+$($ids.Count) ícones de tipos de imóvel em três estilos estáticos e uma versão animada, na grade do Heroicons v2 (24x24, só <path>, cor herdada do texto).
 
 ## Estilos
 - svg/              contorno: traço 1.5, pontas e cantos arredondados (padrão outline do Heroicons)
 - svg-duotone/      duotone: o mesmo contorno sobre uma área de fundo em 20% da cor
 - svg-preenchido/   preenchido: silhueta sólida com portas e janelas vazadas (padrão solid do Heroicons)
+- animados/         animado: o contorno separado em partes que se mexem como a coisa que representam (1,1 s, mola), mais o vc-anim.js
 
 ## Conteúdo
 - tipos-sprite.svg   os três estilos num arquivo só: vc-tipo-<nome>, vc-tipo-<nome>-duotone, vc-tipo-<nome>-preenchido
@@ -86,8 +100,11 @@ $($ids.Count) ícones de tipos de imóvel em três estilos, na grade do Heroicon
 ## Uso inline
 Cole o conteúdo do SVG. A cor segue o CSS color do elemento pai.
 
+## Animados
+Cole o SVG de animados/ direto no HTML: dentro de sprite ou de <img> ele não anima. Toca ao passar o mouse, focar ou tocar no ícone ou no link/botão que o contém. Inclua animados/vc-anim.js para a animação ir até o fim mesmo se o mouse sair antes. Quem pediu menos movimento no sistema vê o ícone parado.
+
 ## Quando usar cada estilo
-Contorno é o padrão. Preenchido marca o item ativo (filtro selecionado, aba atual). Duotone serve para destaques grandes, como os atalhos de busca da home.
+Contorno é o padrão. Preenchido marca o item ativo (filtro selecionado, aba atual). Duotone serve para destaques grandes, como os atalhos de busca da home. Animado é para pontos de interação de destaque, como os atalhos da home e o filtro de tipo; use com moderação.
 
 ## Tamanhos
 16 px em listas e filtros, 20 px no card do imóvel, 28 px nos atalhos de busca da home.

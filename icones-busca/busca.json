@@ -1,5 +1,5 @@
 {
- "versao": "1.3",
+ "versao": "2.2",
  "estilo": "Grade Heroicons v2: 24x24, stroke 1.5, currentColor, só <path>, pontas e cantos arredondados, margem 2.25",
  "categorias": [
   {
@@ -13,35 +13,55 @@
    "nome": "Pessoas e empresas",
    "total": 4,
    "cobertos": 4
-  },
-  {
-   "id": "mapa-anuncio",
-   "nome": "Mapa e anúncio",
-   "total": 9,
-   "cobertos": 9
   }
  ],
  "etiquetas": [],
+ "estilos": [
+  {
+   "id": "contorno",
+   "nome": "Contorno",
+   "sufixo": "",
+   "pasta": "svg"
+  },
+  {
+   "id": "duotone",
+   "nome": "Duotone",
+   "sufixo": "-duotone",
+   "pasta": "svg-duotone"
+  },
+  {
+   "id": "preenchido",
+   "nome": "Preenchido",
+   "sufixo": "-preenchido",
+   "pasta": "svg-preenchido"
+  },
+  {
+   "id": "animado",
+   "nome": "Animado",
+   "sufixo": "-animado",
+   "pasta": "animados"
+  }
+ ],
  "icones": [
   {
    "id": "cidade",
    "nome": "Cidade",
    "categoria": "lugares",
-   "origem": "time:hand off/novos/Cidade (34-placa-direcao)",
+   "origem": "time:icones dribble/search/Cidade.svg",
    "aliases": ["Município", "Centro", "Guaratinguetá"]
   },
   {
    "id": "bairro",
    "nome": "Bairro",
    "categoria": "lugares",
-   "origem": "time:hand off/novos/Bairro (07-bosque-arvores)",
+   "origem": "time:icones dribble/search/BAIRRO.svg",
    "aliases": ["Vizinhança", "Região", "Loteamento", "Vila"]
   },
   {
    "id": "rua",
    "nome": "Rua",
    "categoria": "lugares",
-   "origem": "heroicons:map-pin",
+   "origem": "time:icones dribble/search/rua.svg · heroicons:map-pin",
    "aliases": ["Avenida", "Logradouro", "Endereço", "Travessa"]
   },
   {
@@ -55,106 +75,43 @@
    "id": "condominio",
    "nome": "Condomínio",
    "categoria": "lugares",
-   "origem": "time:hand off/novos/Condomínio (45-industria)",
+   "origem": "time:icones dribble/search/Condomínio.svg",
    "aliases": ["Condomínio fechado", "Residencial fechado", "Village"]
   },
   {
    "id": "empreendimento",
    "nome": "Empreendimento",
    "categoria": "lugares",
-   "origem": "time:hand off/novos/Asset-6 (29-chaves)",
+   "origem": "time:icones dribble/search/EMPREENDIMENTO.svg",
    "aliases": ["Lançamento", "Chaves", "Pronto para morar"]
   },
   {
    "id": "perfil",
    "nome": "Perfil",
    "categoria": "pessoas-empresas",
-   "origem": "heroicons:user",
+   "origem": "time:icones dribble/search/perfil.svg · heroicons:user-circle",
    "aliases": ["Pessoa", "Usuário", "Proprietário", "Anunciante particular"]
   },
   {
    "id": "corretor",
    "nome": "Corretores",
    "categoria": "pessoas-empresas",
-   "origem": "novo",
+   "origem": "time:icones dribble/search/Corretor.svg",
    "aliases": ["Corretor", "Corretora", "Corretor autônomo", "CRECI"]
   },
   {
    "id": "imobiliaria",
    "nome": "Imobiliárias",
    "categoria": "pessoas-empresas",
-   "origem": "time:hand off/novos/Imobiliária (17-loja)",
-   "aliases": ["Imobiliária", "Agência", "Escritório imobiliário"]
+   "origem": "time:icones dribble/search/Imobiliaria.svg",
+   "aliases": ["Imobiliária", "Agência", "Equipe de corretores", "Escritório imobiliário"]
   },
   {
    "id": "construtora",
    "nome": "Construtoras",
    "categoria": "pessoas-empresas",
-   "origem": "novo",
+   "origem": "time:icones dribble/search/Construtora.svg",
    "aliases": ["Construtora", "Incorporadora", "Loteadora", "Obra"]
-  },
-  {
-   "id": "mapa-pino",
-   "nome": "Mapa com pino",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-8 (31-mapa-pino)",
-   "aliases": ["Ver no mapa", "Localização"]
-  },
-  {
-   "id": "camadas-mapa",
-   "nome": "Camadas do mapa",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-3 (08-camadas-mapa)",
-   "aliases": ["Satélite", "Tipo de mapa"]
-  },
-  {
-   "id": "rota-casa",
-   "nome": "Rota até o imóvel",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-10 (33-rota-casa)",
-   "aliases": ["Como chegar", "Trajeto"]
-  },
-  {
-   "id": "parque",
-   "nome": "Parque e natureza",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-1 (03-parque-natureza)",
-   "aliases": ["Perto de parque", "Área verde"]
-  },
-  {
-   "id": "chacara",
-   "nome": "Chácara",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Chácara (35-fazenda-sitio)",
-   "aliases": ["Sítio", "Fazenda", "Zona rural"]
-  },
-  {
-   "id": "planta",
-   "nome": "Planta baixa",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Planta (41-planta-baixa)",
-   "aliases": ["Ver planta", "Layout"]
-  },
-  {
-   "id": "chave",
-   "nome": "Chave",
-   "categoria": "mapa-anuncio",
-   "origem": "heroicons:key",
-   "aliases": ["Pronto para morar", "Entrega das chaves"]
-  },
-  {
-   "id": "casa-chave",
-   "nome": "Casa com chave",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-7 (30-casa-chave)",
-   "aliases": ["Aluguel", "Imóvel disponível"]
-  },
-  {
-   "id": "selo",
-   "nome": "Selo",
-   "categoria": "mapa-anuncio",
-   "origem": "time:hand off/novos/Asset-15 (48-selo-premio)",
-   "aliases": ["Destaque", "Verificado", "Premiado"]
   }
  ]
 }
